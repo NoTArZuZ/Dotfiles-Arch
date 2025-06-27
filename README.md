@@ -1,7 +1,7 @@
 # Arch Dusk Dotfiles
 *with suckless software included!*
 
-[image](./Assets/27-1751047263.png)
+![image](./Assets/27-1751047263.png)
 
 ## Installation
 
