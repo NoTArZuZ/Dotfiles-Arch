@@ -12,6 +12,9 @@ play = [
 ]
 open = [
 	{ run = 'xdg-open "$@"', desc = "Open" },
+	{ run = 'helix "$@"', block = true, desc = "helix" },
+	{ run = 'mpv "$@"', orphan = true, desc = "mpv" },
+	{ run = 'nsxiv -a -b "$@"', orphan = true, desc = "nsxiv" },
 ]
 [preview]
 image_quality = 75

@@ -2,6 +2,7 @@
 .gitignore
 .git
 README.md
+Assets
 dmenu-sus
 dusk-sus
 slstatus-sus
