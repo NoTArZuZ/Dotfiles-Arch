@@ -11,7 +11,7 @@
 4. cd ~/Dotfiles and stow .
 5. Base installation done!
 
-*Run "configdiff" and "stow ." after git pull*
+*Run "stow ." and then "diffconfig" after git pull*
 
 ## Extra
 *mostly reminders for myself*
