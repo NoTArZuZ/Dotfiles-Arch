@@ -4,6 +4,6 @@ set -euo pipefail
 
 . $HOME/Scripts/script-vars
 
-list=$(find -L $HOME/Scripts -type f -executable | wc -l)
-choose=$(find -L $HOME/Scripts -type f -executable -printf '%f\n' | sort | $menu "Run script:" -R -l $list)
-exec ${HOME}/Scripts/${choose}
+list=$(find -L $scriptdir -type f -executable | wc -l)
+choose=$(find -L $scriptdir -type f -executable -printf '%f\n' | sort | $menu "Run script:" -R -l $list)
+exec $scriptdir/${choose}

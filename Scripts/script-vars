@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Dependencies: dmenu type capable menus and clipboard manager
 # You can change variables however you want
 
