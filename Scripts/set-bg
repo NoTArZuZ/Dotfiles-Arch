@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Dependencies: an image viewer that can output wanted image path to stdout
+
+set -euo pipefail
+
+. $HOME/Scripts/script-vars
+
+# Better than past Qtile Dotfiles
+# Functions
+selectbg() {
+  bgfile=$($imgview ${wallpaperdir})
+  setwallpaper
+}
+
+randombg() {
+  bgfile=$(find ${wallpaperdir} -type f | shuf -n 1)
+  setwallpaper
+}
+
+setwallpaper() {
+  ln -sf $bgfile $HOME/.cache/wallcache
+  $setbg $HOME/.cache/wallcache
+  notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
+}
+
+# Arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -s) selectbg; exit 0 ;;
+    -r) randombg; exit 0 ;;
+    *) printf "[-s] - set wallpaper [-r] - random wallpaper\n"; exit 1 ;;
+  esac
+done
+
+# Main Choice
+mainmethod=$(printf "Select\nRandom" | $menu "New Wallpaper: " -l 2 -R)
+case $mainmethod in
+  Select) selectbg ;;
+  Random)
+    rollmore="No"
+    until [ "$rollmore" = "Yes" ]; do
+      randombg
+      rollmore=$(printf "No\nYes" | $menu "Do you like it?" -l 2 -R)
+    done
+  ;;
+  *) exit 1 ;;
+esac

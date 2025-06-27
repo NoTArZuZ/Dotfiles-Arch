@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Dependencies: a color picker that outputs hex to stdout
+
+set -euo pipefail
+
+. $HOME/Scripts/script-vars
+
+# Better than past Qtile Dotfiles
+# Functions
+pickcolor() {
+  hex=$($colpick)
+  echo $hex >>  $HOME/.cache/colorcache
+  echo $hex | $cp2cb
+  notify-send --icon=info "Color Picker Tool" "The picked color is: $hex and copied to clipboard"
+}
+
+listcache() {
+  if [ -e $HOME/.cache/colorcache ]; then
+    selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color: " -l $(cat $HOME/.cache/colorcache | wc -l) -R)
+    echo $selecthex | $cp2cb
+    notify-send --icon=info "Color Picker Tool" "The $selecthex color is copied to clipboard"
+  else
+    notify-send --icon=error "Color Picker Tool" "Color cache is empty"
+    exit 1
+  fi
+}
+
+clearcache() {
+  if [ -e $HOME/.cache/colorcache ]; then
+    rm $HOME/.cache/colorcache
+    notify-send --icon=info "Color Picker Tool" "Cleared color cache"
+  else
+    notify-send --icon=error "Color Picker Tool" "Color cache is empty, nothing is removed"
+    exit 1
+  fi
+}
+
+# Arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p) pickcolor; exit 0 ;;
+    -l) listcache; exit 0 ;;
+    -c) clearcache; exit 0 ;;
+    *) printf "[-p] - pick color [-r] - list colors from cache [-c] - clear color cache\n"; exit 1 ;;
+  esac
+done
+
+# Main Choice
+mainmethod=$(printf "Pick\nList\nClear" | $menu "Choose: " -l 3 -R)
+case $mainmethod in
+  Pick) pickcolor ;;
+  List) listcache ;;
+  Clear) clearcache ;;
+  *) exit 1 ;;
+esac

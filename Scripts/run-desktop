@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Dependencies: j4-dmenu-desktop
+
+set -euo pipefail
+
+. $HOME/Scripts/script-vars
+
+# Better than past Qtile Dotfiles
+# Tried to make this one myself but damn awk dont like spaces in paths
+j4-dmenu-desktop --dmenu="$menu 'Launch: ' -l 10 -R"

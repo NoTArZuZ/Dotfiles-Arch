@@ -1,0 +1,5 @@
+    <device screen="0" driver="radeonsi">
+        <application name="Default">
+        <option name="adaptive_sync" value="true" />
+        </application>
+    </device>

@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+# Dependencies: maim, libnotify
+
+set -euo pipefail
+
+. $HOME/Scripts/script-vars
+
+# Better than past Qtile Dotfiles
+# Better screenshots management (like in ShareX)
+dirshotpath=${screenshotdir}/$(date +%Y-%m)
+shotpath=${dirshotpath}/$(date +%d-%s).png
+shotdirs=$(command ls -1 ${screenshotdir})
+
+if [ ! -d $dirshotpath ]; then
+  mkdir -p $dirshotpath
+fi
+
+# Functions
+monitorboth() {
+  sleep 1
+  $shotmon $shotpath
+  cat $shotpath | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Monitor screenshot"
+}
+
+monitorcopy() {
+  sleep 1
+  $shotmon | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Succesfully copied Monitor screenshot"
+}
+
+monitorfile() {
+  sleep 1
+  $shotmon $shotpath
+  notify-send --icon=info "Screenshot Tool" "Succesfully saved Monitor screenshot"
+}
+
+windowboth() {
+  $shotwin $(xdotool selectwindow) $shotpath
+  cat $shotpath | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Window screenshot"
+}
+
+windowcopy() {
+  $shotwin $(xdotool selectwindow) | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Succesfully copied Window screenshot"
+}
+
+windowfile() {
+  $shotwin $(xdotool selectwindow) $shotpath
+  notify-send --icon=info "Screenshot Tool" "Succesfully saved Window screenshot"
+}
+
+areaboth() {
+  $shotarea $shotpath
+  cat $shotpath | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Area screenshot"
+}
+
+areacopy() {
+  $shotarea | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Succesfully copied Area screenshot"
+}
+
+areafile() {
+  $shotarea $shotpath
+  notify-send --icon=info "Screenshot Tool" "Succesfully saved Area screenshot"
+}
+
+browseshots() {
+  dirtoview=$(printf "$shotdirs" | $menu "Choose: " -l $(printf "$shotdirs" | wc -l) -R)
+  markedshot=$($imgview ${screenshotdir}/${dirtoview})
+  if [ -z $markedshot ]; then
+    exit 0
+  fi
+  cat $markedshot | $cp2cbimg
+  notify-send --icon=info "Screenshot Tool" "Successfully copied $markedshot to clipboard"
+}
+
+makeshot() {
+  shotmethod=$(printf "Monitor\nArea\nWindow" | $menu "Screenshot Method: " -l 3 -R)
+  savemethod=$(printf "Both\nSave\nCopy" | $menu "Save Method: " -l 3 -R)
+  case $savemethod in
+    Both)
+      if [ "$shotmethod" = "Monitor" ]; then
+        monitorboth
+      elif [ "$shotmethod" = "Area" ]; then
+        areaboth
+      elif [ "$shotmethod" = "Window" ]; then
+        windowboth
+      fi
+    ;;
+    Save)
+      if [ "$shotmethod" = "Monitor" ]; then
+        monitorfile
+      elif [ "$shotmethod" = "Area" ]; then
+        areafile
+      elif [ "$shotmethod" = "Window" ]; then
+        windowfile
+      fi
+    ;;
+    Copy)
+      if [ "$shotmethod" = "Monitor" ]; then
+        monitorcopy
+      elif [ "$shotmethod" = "Area" ]; then
+        areacopy
+      elif [ "$shotmethod" = "Window" ]; then
+        windowcopy
+      fi
+    ;;
+    *) exit 1 ;;
+  esac
+}
+
+# Arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -mb) monitorboth; exit 0 ;;
+    -mc) monitorcopy; exit 0 ;;
+    -mf) monitorfile; exit 0 ;;
+    -wb) windowboth; exit 0 ;;
+    -wc) windowcopy; exit 0 ;;
+    -wf) windowfile; exit 0 ;;
+    -ab) areaboth; exit 0 ;;
+    -ac) areacopy; exit 0 ;;
+    -af) areafile; exit 0 ;;
+    -b) browseshots; exit 0;;
+    *)
+      printf "[-m] - monitor [-w] - window [-a] - area\n[-b] - save and copy [-c] - copy [-f] - save\nWrite above arguments together!\n[-b] - browse screenshots\n"
+      exit 1
+    ;;
+  esac
+done
+
+# Main Choice
+mainmethod=$(printf "Screenshot\nBrowse Screenshots" | $menu "Choose: " -l 2 -R)
+case $mainmethod in
+  Screenshot) makeshot ;;
+  Browse\ Screenshots) browseshots ;;
+  *) exit 1 ;;
+esac

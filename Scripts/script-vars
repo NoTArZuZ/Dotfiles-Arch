@@ -1,0 +1,21 @@
+#!/bin/sh
+# Dependencies: dmenu type capable menus and clipboard manager
+# You can change variables however you want
+
+# one-liners
+menu="dmenu -bw 2 -c -p"
+term="st"
+shell="bash"
+setbg="feh --bg-scale"
+imgview="nsxiv -r -t -a -o"
+colpick="scolorpicker -t"
+shotmon="maim"
+shotwin="maim -i"
+shotarea="maim -s -u"
+cp2cb="xclip -r -selection clipboard"
+cp2cbimg="xclip -selection clipboard -t image/png"
+
+# directories
+scriptdir="$HOME/Scripts"
+wallpaperdir="$HOME/Wallpapers"
+screenshotdir="$HOME/Screenshots"
