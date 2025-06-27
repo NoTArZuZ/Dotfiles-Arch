@@ -41,7 +41,7 @@ alias "ezfd"="find / -name "$*" 2>/dev/null"
 alias "ufetch"="/home/$USER/ufetch-arch"
 alias "clear"="clear && ufetch"
 alias "config"="git -C ~/Dotfiles"
-alias "configdiff"="~/diffdotfiles"
+alias "diffconfig"="~/diffdotfiles"
 # Argument config
 alias "ls"="eza --icons -a1"
 alias "ll"="eza --icons --git -al"
