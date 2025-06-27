@@ -32,5 +32,13 @@ alias "grep"="grep --color=auto"
 alias "hx"="helix"
 alias "ufetch"="/home/$USER/ufetch-arch"
 
+export FZF_DEFAULT_OPTS='
+  --color=dark
+  --color=fg:-1,bg:-1,hl:4,fg+:15,bg+:0,hl+:6
+  --color=info:5,prompt:2,pointer:2,marker:1,spinner:4,header:4
+  --style minimal
+'
+
 ufetch
+FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
 eval "$(zoxide init bash)"

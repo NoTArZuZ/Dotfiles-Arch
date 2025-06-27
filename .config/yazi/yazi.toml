@@ -5,10 +5,10 @@ sort_dir_first = true
 show_hidden = true
 [opener]
 edit = [
-	{ run = 'hx "$@"', block = true },
+	{ run = 'helix "$@"', block = true },
 ]
 play = [
-	{ run = 'mpc add "$@"', orphan = true },
+	{ run = 'mpv "$@"', orphan = true },
 ]
 open = [
 	{ run = 'xdg-open "$@"', desc = "Open" },

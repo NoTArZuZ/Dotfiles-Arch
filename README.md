@@ -3,7 +3,7 @@
 
 ## Installation
 
-1. Install required packages (including AUR): base base-devel linux linux-firmware grub efibootmgr git networkmanager dhcpcd sudo vim htop rtorrent ufw pulsemixer polkit-gnome pipewire pipewire-pulse wireplumber rtkit xorg xorg-xinit xdotool xclip libnotify dunst feh maim yazi picom nsxiv mpv cromite-bin qt5-styleplugins yay zoxide ttf-jetbrains-mono-nerd ttf-ubuntu-font-family ttf-apple-emoji ttf-noto-nerd flatpak libva helix eza conky vnstat stow
+1. Install required packages (including AUR): base base-devel linux linux-firmware grub efibootmgr git networkmanager dhcpcd sudo vim htop rtorrent ufw pulsemixer polkit-gnome pipewire pipewire-pulse wireplumber rtkit xorg xorg-xinit xdotool xclip libnotify dunst feh maim yazi picom nsxiv mpv cromite-bin qt5-styleplugins yay zoxide ttf-jetbrains-mono-nerd ttf-ubuntu-font-family ttf-apple-emoji ttf-noto-nerd flatpak libva helix eza conky vnstat stow fzf
 2. Enable services: dhcpcd, NetworkManager, ufw, pipewire, pipewire-pulse, wireplumber, vnstat
 3. Move {dusk,dmenu,st,slstatus}-sus to user's home and build them
 4. cd ~/Dotfiles and stow .
