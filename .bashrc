@@ -114,6 +114,8 @@ cpb() {
 shopt -s checkwinsize
 shopt -s histappend
 ufetch
-# eval "$(starship init bash)"
+if [ -f /usr/bin/starship ]; then
+	eval "$(starship init bash)"
+fi
 FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
 eval "$(zoxide init bash)"

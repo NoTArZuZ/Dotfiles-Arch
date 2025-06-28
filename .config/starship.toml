@@ -1,0 +1,50 @@
+
+format = """
+[ $time\
+$username\
+$cmd_duration\
+$directory\
+$git_branch\
+$git_commit\
+$git_status\
+$character\
+$status](bold white)"""
+
+[character]
+success_symbol = '[ ](bold black)'
+error_symbol = '[ ](bold black)'
+
+[username]
+format = "[[$user ](bold black bg:white)](bold white)"
+show_always = true
+disabled = true
+
+[directory]
+format = "[ [$path](bold white bg:black) ](bold white bg:black)"
+
+[hostname]
+ssh_only = false
+format = '[$hostname](bold purple)'
+
+[time]
+format = "[ [ $time ](bold black bg:white)](bold white)"
+disabled = false
+
+[cmd_duration]
+format = "[took [$duration ](bold red bg:white)](bold black bg:white)"
+
+[status]
+format = '[$symbol $status ](bold red)'
+disabled = false
+
+[git_branch]
+format = "[ [$symbol$branch ](bold black bg:purple)](bold black bg:purple)"
+
+[git_commit]
+only_detached = false
+format = '[\($hash$tag\) ](bold black bg:purple)'
+
+[git_status]
+format = '[[\[$all_status$ahead_behind\] ](bold black bg:purple) ](bold purple bg:black)'
+# modified = '[\($count\)!](bold black bg:purple)'
+# staged = '[++\($count\)](bold black bg:purple)'
