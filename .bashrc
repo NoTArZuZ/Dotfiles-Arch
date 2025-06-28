@@ -1,18 +1,10 @@
-# /etc/skel/.bashrc
-#
-# This file is sourced by all *interactive* bash shells on startup,
-# including some apparently interactive shells such as scp and rcp
-# that can't tolerate any output.  So make sure this doesn't display
-# anything or bad things will happen !
+# Bash Init File
 
-
-# Test for an interactive shell.  There is no need to set anything
-# past this point for scp and rcp, and it's important to refrain from
-# outputting anything in those cases.
 [[ $- != *i* ]] && return
 
 # Prompt
-PS1="\[\e[1;34m\] 󰣇 \[\e[1;32m\] \w \[\033[1;35m\]󰅂\[\e[0;37m\] "
+PS1=" \[\e[4;37m\]\t\[\e[0m\] \[\e[1;34m\]\w \[\033[1;32m\]󰅂\[\e[0;37m\] "
+PS0="\[\e[0m\]" # Reset colours after pressing enter
 
 # Variables
 PROMPT_COMMAND='history -a'
@@ -122,5 +114,6 @@ cpb() {
 shopt -s checkwinsize
 shopt -s histappend
 ufetch
+# eval "$(starship init bash)"
 FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
 eval "$(zoxide init bash)"
