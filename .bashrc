@@ -31,33 +31,46 @@ export FZF_DEFAULT_OPTS='
   --style minimal
 '
 
-# Pacman Aliases
-alias "pacS"="yay -S"
-alias "pacSs"="yay -Ss"
-alias "pacScc"="yay -Scc"
-alias "pacSyu"="sudo pacman -Syu"
+# Aliases
+# Pacman
+alias "pacS"='yay -S'
+alias "pacSs"='yay -Ss'
+alias "pacScc"='yay -Scc'
+alias "pacSyu"='sudo pacman -Syu'
 alias "pacSq"="yay -Slq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -S"
-alias "pacRc"="sudo pacman -Rcuns"
-alias "pacRd"="sudo pacman -Rdd"
-alias "pacR"="sudo pacman -R"
+alias "pacR"='yay -R'
+alias "pacRd"='yay -Rdd'
+alias "pacRc"='yay -Rcuns'
+alias "pacRq"="yay -Qq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -Rcuns"
 # Abbreviations
-alias "yazi"="TERM=foot yazi"
-alias "pwmix"="pulsemixer"
-alias "hx"="helix"
+alias "yazi"='TERM=foot yazi'
+alias "pwmix"='pulsemixer'
+alias "hx"='helix'
 # One-liners
-alias "ezfd"="find / -name "$*" 2>/dev/null"
-alias "ufetch"="/home/$USER/ufetch-arch"
-alias "clear"="clear && ufetch"
-alias "config"="git -C ~/Dotfiles"
-alias "diffconfig"="~/diffdotfiles"
+alias "ezfd"='find / -name $* 2>/dev/null'
+alias "ufetch"='/home/$USER/ufetch-arch'
+alias "clear"='clear && ufetch'
+alias "config"='git -C ~/Dotfiles'
+alias "diffconfig"='~/diffdotfiles'
+alias "getwinclass"='xdotool getwindowclassname "$(xdotool selectwindow)"'
+alias "getwintitle"='xdotool getwindowname "$(xdotool selectwindow)"'
+alias "procf"='ps aux | grep'
+alias "mkxz"='tar cvJf'
+alias "mkgz"='tar cvzf'
+alias "llblk"='df -hT'
 # Argument config
-alias "ls"="eza --icons -a1"
-alias "ll"="eza --icons --git -al"
-alias "tree"="eza --icons -aT"
-alias "grep"="grep --color=auto"
-alias "diff"="diff --color"
+alias "mv"='mv -i'
+alias "cp"='cp -i'
+alias "ln"='ln -i'
+alias "rm"='rm -I'
+alias "ls"='eza --icons -a1'
+alias "ll"='eza --icons --git -al'
+alias "tree"='eza --icons -aT'
+alias "grep"='grep --color=auto'
+alias "diff"='diff --color'
 
 # Functions
+# Extract various archives
 extract() {
 	for archive in "$@"; do
 		if [ -f "$archive" ]; then
@@ -77,12 +90,15 @@ extract() {
 		fi
 	done
 }
+# Find file by content in pwd
 ftext() {
 	grep -iIHrn --color=always "$1" . | less -r
 }
+# Find file by content in specified dir
 fetext() {
 	grep -iIHrn --color=always $1 $2 | less -r
 }
+# Copy a FILE with progress bar
 cpb() {
     set -e
     strace -q -ewrite cp -- "${1}" "${2}" 2>&1 |
