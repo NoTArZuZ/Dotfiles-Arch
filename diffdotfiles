@@ -11,7 +11,7 @@ BRed='\033[1;31m'
 BCyan='\033[1;36m'
 
 echo 
-echo -e "${BRed}! Checking suckless software !${NoCol}"
+echo -e " ${BRed}! Checking suckless software !${NoCol}"
 echo 
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dusk-sus${NoCol}"
 diff --color ~/dusk-sus/config.h ~/Dotfiles/dusk-sus/config.h
@@ -23,12 +23,12 @@ echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}slstatus-sus${NoCol}"
 diff --color ~/slstatus-sus/config.h ~/Dotfiles/slstatus-sus/config.h
 echo 
 
-echo -e "${BRed}! Checking PATH scripts !${NoCol}"
+echo -e " ${BRed}! Checking PATH scripts !${NoCol}"
 echo 
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}hub-script${NoCol}"
 diff --color /usr/local/bin/hub-script ~/Dotfiles/.local/bin/hub-script
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}conky-toggle${NoCol}"
 diff --color /usr/local/bin/conky-toggle ~/Dotfiles/.local/bin/conky-toggle
 echo
-echo -e "${BGreen}! Everything is synced !${NoCol}"
+echo -e " ${BGreen}! Everything is synced !${NoCol}"
 echo 
