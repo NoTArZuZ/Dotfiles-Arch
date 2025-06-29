@@ -10,8 +10,8 @@ MANPREFIX = ${PREFIX}/share/man
 PKG_CONFIG = pkg-config
 
 # Optional dependency on libxi for mouse related features
-#HAVE_LIBXI = -DHAVE_LIBXI=1
-#XINPUTLIBS = `$(PKG_CONFIG) --libs xi xfixes`
+HAVE_LIBXI = -DHAVE_LIBXI=1
+XINPUTLIBS = `$(PKG_CONFIG) --libs xi xfixes`
 
 # Optional dependency on fribidi for RTL languages
 #HAVE_FRIBIDI = -DHAVE_FRIBIDI=1
@@ -58,7 +58,7 @@ LIBS = ${XINERAMALIBS} ${FREETYPELIBS} ${XRENDER} ${XCBLIBS} ${KVMLIB} ${YAJLLIB
 # Optional compiler optimisations may create smaller binaries and
 # faster code, but increases compile time.
 # See https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
-#OPTIMISATIONS = -march=native -flto=auto -O3
+OPTIMISATIONS = -march=native -flto=auto -O3
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE ${HAVE_LIBXI} ${HAVE_FRIBIDI} ${HAVE_DBUS} -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DUSE_KEYCODES=${USE_KEYCODES} -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS} ${HOSTFLAGS}
