@@ -18,6 +18,7 @@ menu_padding_left=0
 menu_padding_right=0
 menu_padding_top=0
 menu_padding_bottom=0
+sub_spacing=0
 color_menu_bg=#282c34 100
 color_menu_border=#51afef 100
 color_norm_bg=#282c34 100
