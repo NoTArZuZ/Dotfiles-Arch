@@ -23,5 +23,5 @@
 * Add Color and ILoveCandy to pacman (ParallelDownloads = 5 if not set)
 * Install Microsoft fonts
 * Change "monospace" font to something better in /etc/fonts/local.conf
-* Move .local/bin/{hub-script,conky-toggle} and .local/bin/update-status.sh to /usr/local/bin directory
+* Move .local/bin/{hub-script,conky-toggle,update-status.sh} to /usr/local/bin directory
 * do sensors-detect (carefully) for conky temps
