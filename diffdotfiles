@@ -14,11 +14,11 @@ echo
 echo -e " ${BRed}! Checking suckless software !${NoCol}"
 echo 
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dusk-sus${NoCol}"
-diff -r -q ~/dusk-sus/config.h ~/Dotfiles/dusk-sus/config.h | grep -v "^Only in" || :
+diff -r -q ~/dusk-sus ~/Dotfiles/dusk-sus | grep -v "^Only in" || :
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dmenu-sus${NoCol}"
-diff -r -q ~/dmenu-sus/config.h ~/Dotfiles/dmenu-sus/config.h | grep -v "^Only in" || :
+diff -r -q ~/dmenu-sus ~/Dotfiles/dmenu-sus | grep -v "^Only in" || :
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}st-sus${NoCol}"
-diff -r -q ~/st-sus/config.h ~/Dotfiles/st-sus/config.h | grep -v "^Only in" || :
+diff -r -q ~/st-sus ~/Dotfiles/st-sus | grep -v "^Only in" || :
 echo 
 
 echo -e " ${BRed}! Checking PATH scripts !${NoCol}"
