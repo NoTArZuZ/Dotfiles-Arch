@@ -50,6 +50,7 @@ alias "procf"='ps aux | grep'
 alias "mkxz"='tar cvJf'
 alias "mkgz"='tar cvzf'
 alias "llblk"='df -hT'
+alias "qdiff"='diff -r -q'
 # Argument config
 alias "mv"='mv -i'
 alias "cp"='cp -i'

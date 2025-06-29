@@ -1,0 +1,26 @@
+Launch,^checkout(apps)
+Scripts,^checkout(scripts)
+Settings,^checkout(settings)
+
+^tag(apps)
+Cromite,cromite
+Steam,steam
+Mumble,mumble
+Conky,conky-toggle
+Terminal,st
+
+^tag(scripts)
+hub-script,hub-script
+Screenshot Monitor,~/Scripts/maim-scrshot -mb
+Screenshot Area,~/Scripts/maim-scrshot -ab
+Screenshot Window,~/Scripts/maim-scrshot -wb
+Browse Screenshots,~/Scripts/maim-scrshot -wb
+Pick Color,~/Scripts/color-picker -p
+List Colors,~/Scripts/color-picker -l
+Set Wallpaper,~/Scripts/set-bg -s
+Random Wallpaper,~/Scripts/set-bg -r
+
+^tag(settings)
+Exit,duskc run_command quit
+Shutdown,shutdown now
+Restart,reboot

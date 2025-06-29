@@ -14,11 +14,11 @@ echo
 echo -e " ${BRed}! Checking suckless software !${NoCol}"
 echo 
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dusk-sus${NoCol}"
-diff --color ~/dusk-sus/config.h ~/Dotfiles/dusk-sus/config.h
+diff -r -q ~/dusk-sus/config.h ~/Dotfiles/dusk-sus/config.h | grep -v "^Only in" || :
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dmenu-sus${NoCol}"
-diff --color ~/dmenu-sus/config.h ~/Dotfiles/dmenu-sus/config.h
+diff -r -q ~/dmenu-sus/config.h ~/Dotfiles/dmenu-sus/config.h | grep -v "^Only in" || :
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}st-sus${NoCol}"
-diff --color ~/st-sus/config.h ~/Dotfiles/st-sus/config.h
+diff -r -q ~/st-sus/config.h ~/Dotfiles/st-sus/config.h | grep -v "^Only in" || :
 echo 
 
 echo -e " ${BRed}! Checking PATH scripts !${NoCol}"
@@ -30,5 +30,5 @@ diff --color /usr/local/bin/conky-toggle ~/Dotfiles/.local/bin/conky-toggle
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}update-status.sh${NoCol}"
 diff --color /usr/local/bin/update-status.sh ~/Dotfiles/.local/bin/update-status.sh
 echo
-echo -e " ${BGreen}! Everything is synced !${NoCol}"
+echo -e " ${BGreen}! Diff check DONE !${NoCol}"
 echo 

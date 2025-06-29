@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
     -p) pickcolor; exit 0 ;;
     -l) listcache; exit 0 ;;
     -c) clearcache; exit 0 ;;
-    *) printf "[-p] - pick color [-r] - list colors from cache [-c] - clear color cache\n"; exit 1 ;;
+    *) printf "[-p] - pick color [-l] - list colors from cache [-c] - clear color cache\n"; exit 1 ;;
   esac
 done
 
