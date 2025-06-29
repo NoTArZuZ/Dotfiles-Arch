@@ -20,5 +20,6 @@
 * For Variable Refresh Rate properly paste code from drirc-mesa to /usr/share/drirc.d/00-mesa-defaults.conf
 * Add Color and ILoveCandy to pacman (ParallelDownloads = 5 if not set)
 * Install Microsoft fonts
+* Change "monospace" font to something better in /etc/fonts/local.conf
 * Move .local/bin/{hub-script,conky-toggle} and .local/bin/update-status.sh to /usr/local/bin directory
 * do sensors-detect (carefully) for conky temps
