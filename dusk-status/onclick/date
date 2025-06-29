@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+notify-send -i info "Date and Time" "$(date +%c)"

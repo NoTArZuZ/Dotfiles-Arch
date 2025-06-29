@@ -44,15 +44,13 @@
 #include "focusmaster.h"
 #include "focusurgent.h"
 #include "inplacerotate.h"
-#include "ipc.h"
-#include "ipc/ipc.h"
-#include "ipc/util.h"
 #include "killunsel.h"
 #include "movemouse.h"
 #include "resizemouse.h"
 #include "placemouse.h"
 #include "swallowmouse.h"
 #include "mark.h"
+#include "maximize.h"
 #include "nomodbuttons.h"
 #include "push.h"
 #include "semi_scratchpads.h"
@@ -62,6 +60,7 @@
 #include "rotatestack.h"
 #include "savefloats.h"
 #include "setborderpx.h"
+#include "settitle.h"
 #ifdef XINERAMA
 #include "sortscreens.h"
 #endif // XINERAMA
@@ -82,3 +81,11 @@
 
 /* Layouts */
 #include "layout_flextile-deluxe.h"
+
+/* Debug */
+#include "x11_debug.h"
+
+/* dbus */
+#ifdef HAVE_DBUS
+#include "dbus_server.h"
+#endif

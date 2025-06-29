@@ -123,12 +123,33 @@ nexttiled(Client *c)
 }
 
 Client *
+nextvisible(Client *c)
+{
+	for (; c && !ISVISIBLE(c); c = c->next);
+	return c;
+}
+
+Client *
+nexthidden(Client *c)
+{
+	for (; c && !HIDDEN(c); c = c->next);
+	return c;
+}
+
+Client *
+snexthidden(Client *c)
+{
+	for (; c && !HIDDEN(c); c = c->snext);
+	return c;
+}
+
+Client *
 nthmaster(Client *c, int n, int reduce)
 {
 	if (!c)
 		return NULL;
 
-	return nthtiled(c, MIN(n, c->ws->nmaster), 1);
+	return nthtiled(c, MIN(n, c->ws->nmaster), reduce);
 }
 
 Client *
@@ -137,7 +158,7 @@ nthstack(Client *c, int n, int reduce)
 	if (!c)
 		return NULL;
 
-	return nthtiled(c, n + c->ws->nmaster, 1);
+	return nthtiled(c, n + c->ws->nmaster, reduce);
 }
 
 Client *
@@ -146,6 +167,20 @@ nthtiled(Client *c, int n, int reduce)
 	Client *prev = NULL;
 	int i;
 	for (i = 1, c = nexttiled(c); c && (i++ < n); prev = c, c = nexttiled(c->next));
+
+	if (!c && reduce) {
+		c = prev;
+	}
+
+	return c;
+}
+
+Client *
+nthvisible(Client *c, int n, int reduce)
+{
+	Client *prev = NULL;
+	int i;
+	for (i = 1, c = nextvisible(c); c && (i++ < n); prev = c, c = nextvisible(c->next));
 
 	if (!c && reduce) {
 		c = prev;

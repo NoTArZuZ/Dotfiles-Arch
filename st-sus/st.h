@@ -44,9 +44,12 @@ enum glyph_attribute {
 	ATTR_WIDE           = 1 << 10,
 	ATTR_WDUMMY         = 1 << 11,
 	ATTR_BOXDRAW        = 1 << 13,
+	ATTR_DIRTYUNDERLINE = 1 << 14,
 	ATTR_LIGA           = 1 << 15,
 	ATTR_SIXEL          = 1 << 16,
+	ATTR_HIGHLIGHT      = 1 << 17,
 	ATTR_BOLD_FAINT = ATTR_BOLD | ATTR_FAINT,
+	ATTR_FTCS_PROMPT    = 1 << 18,  /* OSC 133 ; A ST */
 };
 
 typedef struct _ImageList {
@@ -58,6 +61,7 @@ typedef struct _ImageList {
 	int height;
 	int x;
 	int y;
+	int reflow_y;
 	int cols;
 	int cw;
 	int ch;
@@ -110,6 +114,8 @@ typedef struct {
 	uint32_t mode;    /* attribute flags */
 	uint32_t fg;      /* foreground  */
 	uint32_t bg;      /* background  */
+	int ustyle;	      /* underline style */
+	int ucolor[3];    /* underline color */
 } Glyph;
 
 typedef Glyph *Line;
@@ -132,13 +138,13 @@ typedef struct {
 typedef struct {
 	int row;      /* nb row */
 	int col;      /* nb col */
-	int maxcol;
 	Line *line;   /* screen */
 	Line *alt;    /* alternate screen */
 	Line hist[HISTSIZE]; /* history buffer */
-	int histi;    /* history index */
-	int histn;    /* number of history entries */
-	int scr;      /* scroll back */
+	int histi;           /* history index */
+	int histf;           /* nb history available */
+	int scr;             /* scroll back */
+	int wrapcwidth[2];   /* used in updating WRAPNEXT when resizing */
 	int *dirty;   /* dirtyness of lines */
 	TCursor c;    /* cursor */
 	int ocx;      /* old cursor col */
@@ -154,6 +160,7 @@ typedef struct {
 	ImageList *images;     /* sixel images */
 	ImageList *images_alt; /* sixel images for alternate screen */
 	Rune lastc;   /* last printed char outside of sequence, 0 if control */
+	char* cwd;    /* current working directory */
 } Term;
 
 typedef union {
@@ -168,6 +175,7 @@ typedef union {
 typedef struct {
 	int tw, th; /* tty width and height */
 	int w, h; /* window width and height */
+	int hborderpx, vborderpx;
 	int ch; /* char height */
 	int cw; /* char width  */
 	int mode; /* window state/mode flags */
@@ -192,6 +200,12 @@ typedef struct {
 	Draw draw;
 	Visual *vis;
 	XSetWindowAttributes attrs;
+	/* Here, we use the term *pointer* to differentiate the cursor
+	 * one sees when hovering the mouse over the terminal from, e.g.,
+	 * a green rectangle where text would be entered. */
+	Cursor vpointer, bpointer; /* visible and hidden pointers */
+	int pointerisvisible;
+	Cursor upointer;
 	int scr;
 	int isfixed; /* is fixed geometry? */
 	int depth; /* bit depth */
@@ -311,6 +325,8 @@ extern char *scroll;
 extern char *stty_args;
 extern char *vtiden;
 extern wchar_t *worddelimiters;
+extern wchar_t *kbds_sdelim;
+extern wchar_t *kbds_ldelim;
 extern int allowaltscreen;
 extern int allowwindowops;
 extern char *termname;
@@ -318,6 +334,7 @@ extern unsigned int tabspaces;
 extern unsigned int defaultfg;
 extern unsigned int defaultbg;
 extern unsigned int defaultcs;
+extern int extpipeactive;
 
 extern const int boxdraw, boxdraw_bold, boxdraw_braille;
 extern float alpha;

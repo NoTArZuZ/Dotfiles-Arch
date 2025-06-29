@@ -68,7 +68,7 @@ areafile() {
 }
 
 browseshots() {
-  dirtoview=$(printf "$shotdirs" | $menu "Choose: " -l $(printf "$shotdirs" | wc -l) -R)
+  dirtoview=$(printf "$shotdirs" | $menu "Choose: " -l $(printf "$shotdirs" | wc -l) -1 -R)
   markedshot=$($imgview ${screenshotdir}/${dirtoview})
   if [ -z $markedshot ]; then
     exit 0
@@ -78,8 +78,8 @@ browseshots() {
 }
 
 makeshot() {
-  shotmethod=$(printf "Monitor\nArea\nWindow" | $menu "Screenshot Method: " -l 3 -R)
-  savemethod=$(printf "Both\nSave\nCopy" | $menu "Save Method: " -l 3 -R)
+  shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method: " -l 3 -1 -R | $cutemoji)
+  savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method: " -l 3 -1 -R | $cutemoji)
   case $savemethod in
     Both)
       if [ "$shotmethod" = "Monitor" ]; then
@@ -133,7 +133,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(printf "Screenshot\nBrowse Screenshots" | $menu "Choose: " -l 2 -R)
+mainmethod=$(echo -e ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose: " -l 2 -1 -R | $cutemoji)
 case $mainmethod in
   Screenshot) makeshot ;;
   Browse\ Screenshots) browseshots ;;

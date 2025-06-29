@@ -23,6 +23,8 @@ fuzzymatch(void)
 	char c;
 	int number_of_matches = 0, i, pidx, sidx, eidx;
 	int text_len = strlen(text), itext_len;
+	struct item *lhpprefix, *hpprefixend;
+	lhpprefix = hpprefixend = NULL;
 	matches = matchend = NULL;
 
 	/* walk through all items */
@@ -73,11 +75,24 @@ fuzzymatch(void)
 		matches = matchend = NULL;
 		for (i = 0, it = fuzzymatches[i];  i < number_of_matches && it && \
 				it->text; i++, it = fuzzymatches[i]) {
-			appenditem(it, &matches, &matchend);
+			if (it->hp)
+				appenditem(it, &lhpprefix, &hpprefixend);
+			else
+				appenditem(it, &matches, &matchend);
 		}
 		free(fuzzymatches);
 	}
+	if (lhpprefix) {
+		hpprefixend->right = matches;
+		matches = lhpprefix;
+	}
 	curr = sel = matches;
+
+	if (instant && matches && matches==matchend) {
+		puts(matches->text);
+		cleanup();
+		exit(0);
+	}
 
 	calcoffsets();
 }

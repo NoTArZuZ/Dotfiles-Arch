@@ -19,8 +19,6 @@ echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dmenu-sus${NoCol}"
 diff --color ~/dmenu-sus/config.h ~/Dotfiles/dmenu-sus/config.h
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}st-sus${NoCol}"
 diff --color ~/st-sus/config.h ~/Dotfiles/st-sus/config.h
-echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}slstatus-sus${NoCol}"
-diff --color ~/slstatus-sus/config.h ~/Dotfiles/slstatus-sus/config.h
 echo 
 
 echo -e " ${BRed}! Checking PATH scripts !${NoCol}"
@@ -29,6 +27,8 @@ echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}hub-script${NoCol}"
 diff --color /usr/local/bin/hub-script ~/Dotfiles/.local/bin/hub-script
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}conky-toggle${NoCol}"
 diff --color /usr/local/bin/conky-toggle ~/Dotfiles/.local/bin/conky-toggle
+echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}update-status.sh${NoCol}"
+diff --color /usr/local/bin/update-status.sh ~/Dotfiles/.local/bin/update-status.sh
 echo
 echo -e " ${BGreen}! Everything is synced !${NoCol}"
 echo 

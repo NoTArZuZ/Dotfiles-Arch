@@ -63,7 +63,7 @@ draw_workspaces(Bar *bar, BarArg *a)
 				}
 
 			nextscheme =
-				nextws == nextws->mon->selws
+				nextws == nextws->mon->selws && nextws->visible
 				? nextws->scheme[SELECTED]
 				: nextws->visible
 				? nextws->scheme[VISIBLE]
@@ -120,8 +120,16 @@ draw_workspaces(Bar *bar, BarArg *a)
 			if (plw && nextws)
 				drw_arrow(drw, x + w, y, plw, h, a->value, scheme[wsscheme][ColBg], scheme[nextscheme][ColBg], scheme[SchemeNorm][ColBg]);
 
-			drawindicator(ws, NULL, hasclients(ws), x, y, w , h, -1, 0, wsindicatortype);
-			drawindicator(ws, NULL, ws->pinned, x, y, w, h, -1, 0, wspinnedindicatortype);
+			drawindicator(ws, NULL, hasclients(ws), x, y, w , h, -1, 0, indicators[IndicatorWsOcc]);
+			drawindicator(ws, NULL, ws->pinned, x, y, w, h, -1, 0, indicators[IndicatorPinnedWs]);
+
+			if (!ws->visible) {
+				drawindicator(ws, NULL, 1, x, y, w, h, -1, 0, indicators[IndicatorWsNorm]);
+			} else if (ws == selws) {
+				drawindicator(ws, NULL, 1, x, y, w, h, -1, 0, indicators[IndicatorWsSel]);
+			} else {
+				drawindicator(ws, NULL, 1, x, y, w, h, -1, 0, indicators[IndicatorWsVis]);
+			}
 
 			if (bar->vert) {
 				y += bh;
@@ -279,7 +287,11 @@ saveclientclass(Client *c)
 	XGetClassHint(dpy, c->win, &ch);
 	strlcpy(c->label, ch.res_class ? ch.res_class : broken, sizeof c->label);
 	if (lowercase_workspace_labels)
-		c->label[0] = tolower(c->label[0]);
+		for (char *p = c->label; *p; ++p) *p = tolower(*p);
+    if (ch.res_class)
+        XFree(ch.res_class);
+    if (ch.res_name)
+        XFree(ch.res_name);
 }
 
 void

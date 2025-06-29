@@ -61,13 +61,13 @@ static const uint64_t
 	CfgReqPosRelativeToMonitor = 0x400000000000, // makes configure requests relative to the client's monitor
 	SwallowRetainSize = 0x800000000000, // allows for a client to retain its height and width when swallowed or unswallowed
 	NoWarp = 0x1000000000000, // disallow cursor to warp to this client
-	FlagPlaceholder0x2000000000000 = 0x2000000000000,
+	SwallowNoInheritFullScreen = 0x2000000000000, // prevents the client from inheriting the fullscreen property when swallowed / unswallowed
 	FlagPlaceholder0x4000000000000 = 0x4000000000000,
 	FlagPlaceholder0x8000000000000 = 0x8000000000000,
 	FlagPlaceholder0x10000000000000 = 0x10000000000000,
 	FlagPlaceholder0x20000000000000 = 0x20000000000000,
-	FlagPlaceholder0x40000000000000 = 0x40000000000000,
 	/* Below are flags that are intended to only be used internally */
+	Swallowed = 0x40000000000000,
 	RefreshSizeHints = 0x80000000000000, // used internally to indicate that size hints for the window should be (re-)loaded
 	/* Debug = 0x100000000000000,  // same name and value as debug functionality, see util.h */
 	Invisible = 0x200000000000000, // by default all clients are visible, used by scratchpads to hide clients
@@ -86,7 +86,7 @@ static const uint64_t
 #define CFGREQPOSRELATIVETOMONITOR(C) (C && C->flags & CfgReqPosRelativeToMonitor)
 #define DEBUGGING(C) (C && C->flags & Debug)
 #define DISALLOWED(C) (C && C->flags & Disallowed)
-#define HIDDEN(C) (C && ((C->flags & Hidden) || (getstate(C->win) == IconicState)))
+#define HIDDEN(C) (C && C->flags & Hidden)
 #define ISFIXED(C) (C && C->flags & Fixed)
 #define FLOATING(C) (C && C->flags & Floating)
 #define ISFLOATING(C) (C && C->flags & (Floating|Sticky|Fixed))
@@ -120,6 +120,7 @@ static const uint64_t
 #define NOBORDER(C) (C && C->flags & NoBorder)
 #define NOFOCUSONNETACTIVE(C) (C && C->flags & NoFocusOnNetActive)
 #define NOSWALLOW(C) (C && C->flags & NoSwallow)
+#define SWALLOWED(C) (C && C->flags & Swallowed)
 #define NOWARP(C) (C && C->flags & NoWarp)
 #define ONLYMODBUTTONS(C) (C && C->flags & OnlyModButtons)
 #define REAPPLYRULES(C) (C && C->flags & ReapplyRules)
@@ -132,6 +133,7 @@ static const uint64_t
 #define SKIPTASKBAR(C) (C && C->flags & SkipTaskbar)
 #define STEAMGAME(C) (C && C->flags & SteamGame)
 #define SWALLOWRETAINSIZE(C) (C && C->flags & SwallowRetainSize)
+#define SWALLOWNOINHERITFULLSCREEN(C) (C && C->flags & SwallowNoInheritFullScreen)
 #define SWITCHWORKSPACE(C) (C && C->flags & SwitchWorkspace)
 #define ENABLEWORKSPACE(C) (C && C->flags & EnableWorkspace)
 #define REVERTWORKSPACE(C) (C && C->flags & RevertWorkspace)
@@ -142,6 +144,7 @@ static const uint64_t
 #define TILED(C) (C && C->win && !(C->flags & (Invisible|Hidden|Floating|Fixed|Sticky)) && !ISTRUEFULLSCREEN(c))
 
 #define WASFLOATING(C) (C && C->prevflags & Floating)
+#define WASNOBORDER(C) (C && C->prevflags & NoBorder)
 #define WASFAKEFULLSCREEN(C) (C && C->prevflags & FakeFullScreen)
 #define WASFULLSCREEN(C) (C && C->prevflags & FullScreen)
 

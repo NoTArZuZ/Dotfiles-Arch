@@ -44,15 +44,9 @@
 #include "focusmaster.c"
 #include "focusurgent.c"
 #include "inplacerotate.c"
-#include "ipc.c"
-#ifdef VERSION
-#include "ipc/IPCClient.c"
-#include "ipc/yajl_dumps.c"
-#include "ipc/ipc.c"
-#include "ipc/util.c"
-#endif
 #include "killunsel.c"
 #include "mark.c"
+#include "maximize.c"
 #include "movemouse.c"
 #include "resizemouse.c"
 #include "placemouse.c"
@@ -66,6 +60,7 @@
 #include "rotatestack.c"
 #include "savefloats.c"
 #include "setborderpx.c"
+#include "settitle.c"
 #ifdef XINERAMA
 #include "sortscreens.c"
 #endif // XINERAMA
@@ -85,5 +80,13 @@
 #include "xban.c"
 #endif
 
+/* Debug */
+#include "x11_debug.c"
+
 /* Layouts */
 #include "layout_flextile-deluxe.c"
+
+/* dbus */
+#ifdef HAVE_DBUS
+#include "dbus_server.c"
+#endif

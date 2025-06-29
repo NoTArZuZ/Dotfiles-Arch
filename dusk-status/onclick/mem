@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+total=$(free -h | grep Mem | awk '{print $2}')
+used=$(free -h | grep Mem | awk '{print $3}')
+free=$(free -h | grep Mem | awk '{print $4}')
+
+notify-send -i info "RAM Info" "Total: $total Used: $used Free: $free"

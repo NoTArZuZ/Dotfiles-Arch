@@ -8,6 +8,9 @@
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 #endif
 #define BETWEEN(X, A, B)        ((A) <= (X) && (X) <= (B))
+#define NVL(A, B)               ((A) == NULL ? (B) : (A))
+#define CLAMP(A, MIN, MAX)      ((A) < (MIN) ? (MIN) : ((A) > (MAX) ? (MAX) : (A)))
+#define WRAP(A, MIN, MAX)       ((A) < (MIN) ? (MAX) : ((A) > (MAX) ? (MIN) : (A)))
 
 #ifdef _DEBUG
 #define DEBUG(...) fprintf(stderr, __VA_ARGS__)
@@ -25,8 +28,8 @@ static const uint64_t
 	Swallow = 0x4, // enables swallowing of clients
 	SwallowFloating = 0x8, // allow floating windows to swallow the terminal by default
 	CenteredWindowName = 0x10,
-	BarActiveGroupBorderColor = 0x20, // use border color of active group, otherwise title scheme is used
-	BarMasterGroupBorderColor = 0x40, // use border color of master group, otherwise title scheme is used
+	BarActiveGroupBorderColor = 0x20, // use border color of active group, otherwise normal scheme is used
+	BarMasterGroupBorderColor = 0x40, // use border color of master group, otherwise normal scheme is used
 	ColorEmoji = 0x80,
 	Status2DNoAlpha = 0x100, // option to not use alpha when drawing status2d status
 	Systray = 0x200, // enables systray
@@ -43,10 +46,11 @@ static const uint64_t
 	ViewOnWs = 0x100000, // follow a window to the workspace it is being moved to
 	Xresources = 0x200000, // xrdb patch
 	SnapToWindows = 0x400000, // snap to windows when moving floating clients
-	FuncPlaceholder0x800000 = 0x800000,
+	SnapToGaps = 0x800000, // snap to outer gaps when moving floating clients
 	AltWorkspaceIcons = 0x1000000, // show the workspace name instead of the icons
 	GreedyMonitor = 0x2000000, // when viewing a workspace the monitor is greedy and gives nothing in return (i.e. disables swap of workspaces)
-	SmartLayoutConvertion = 0x4000000, // when moving a workspace from one monitor to another, automatically adjust layout based on monitor orientation (i.e. vertical vs horizontal)
+	SmartLayoutConversion = 0x4000000, // when moving a workspace from one monitor to another, automatically adjust layout based on monitor orientation (i.e. vertical vs horizontal)
+	SmartLayoutConvertion = 0x4000000, // typo correction alias for the above
 	AutoHideScratchpads = 0x8000000, // automatically hide open scratchpads when moving to another workspace
 	RioDrawIncludeBorders = 0x10000000, // indicates whether the area drawn using slop includes the window borders
 	RioDrawSpawnAsync = 0x20000000, // indicates whether to spawn the application alongside or after drawing area using slop
@@ -65,8 +69,8 @@ static const uint64_t
 	FocusFollowMouse = 0x40000000000, // window that rests under the mouse cursor will get focus when changing workspace or killing clients
 	BanishMouseCursorToCorner = 0x80000000000, // makes BanishMouseCursor also move the cursor to top right corner of the screen
 	StackerIcons = 0x100000000000, // adds a stacker icon hints in window titles
-	FuncPlaceholder35184372088832 = 0x200000000000,
-	FuncPlaceholder70368744177664 = 0x400000000000,
+	AltWindowTitles = 0x200000000000, // show alternate window titles, if present
+	BarBorderColBg = 0x400000000000, // optionally use the background colour of the bar for the border as well, rather than border colur
 	FuncPlaceholder140737488355328 = 0x800000000000,
 	FuncPlaceholder281474976710656 = 0x1000000000000,
 	FuncPlaceholder562949953421312 = 0x2000000000000,
@@ -92,4 +96,7 @@ int disabled(const uint64_t functionality);
 void enablefunc(const uint64_t functionality);
 void disablefunc(const uint64_t functionality);
 void togglefunc(const uint64_t functionality);
+#ifdef __linux__
 size_t strlcpy(char * __restrict dst, const char * __restrict src, size_t dsize);
+size_t strlcat(char *dst, const char *src, size_t siz);
+#endif /* __linux__ */

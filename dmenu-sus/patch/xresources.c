@@ -41,6 +41,34 @@ readxresources(void)
 			colors[SchemeNormHighlight][ColBg] = strdup(xval.addr);
 		if (XrmGetResource(xdb, "dmenu.hlforeground", "*", &type, &xval))
 			colors[SchemeNormHighlight][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.hpbackground", "*", &type, &xval))
+			colors[SchemeHp][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.hpforeground", "*", &type, &xval))
+			colors[SchemeHp][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.hoverbackground", "*", &type, &xval))
+			colors[SchemeHover][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.hoverforeground", "*", &type, &xval))
+			colors[SchemeHover][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.greenbackground", "*", &type, &xval))
+			colors[SchemeGreen][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.greenforeground", "*", &type, &xval))
+			colors[SchemeGreen][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.yellowbackground", "*", &type, &xval))
+			colors[SchemeYellow][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.yellowforeground", "*", &type, &xval))
+			colors[SchemeYellow][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.bluebackground", "*", &type, &xval))
+			colors[SchemeBlue][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.blueforeground", "*", &type, &xval))
+			colors[SchemeBlue][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.purplebackground", "*", &type, &xval))
+			colors[SchemePurple][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.purpleforeground", "*", &type, &xval))
+			colors[SchemePurple][ColFg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.redbackground", "*", &type, &xval))
+			colors[SchemeRed][ColBg] = strdup(xval.addr);
+		if (XrmGetResource(xdb, "dmenu.redforeground", "*", &type, &xval))
+			colors[SchemeRed][ColFg] = strdup(xval.addr);
 		XrmDestroyDatabase(xdb);
 	}
 }

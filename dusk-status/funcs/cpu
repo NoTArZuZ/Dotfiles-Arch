@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+perc=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}' | cut -b -1)
+echo "  ${perc}% ┇"

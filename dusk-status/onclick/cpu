@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+temperature=$(cat /sys/class/hwmon/hwmon2/temp1_input | cut -b -2)
+fan=$(cat /sys/class/hwmon/hwmon4/fan2_input)
+
+notify-send -i info "CPU Info" "Temperature: ${temperature}C Fan: ${fan} RPM"

@@ -19,9 +19,8 @@ void
 setfloatpos(Client *c, const char *floatpos, const int auto_float, const int save_floats)
 {
 	char xCh, yCh, wCh, hCh;
-	int x, y, w, h, wx, ww, wy, wh;
-	int oh, ov, ih, iv;
-	unsigned int n;
+	int n, x, y, w, h, wx, ww, wy, wh;
+	int oh = 0, ov = 0, ih = 0, iv = 0;
 
 	if (!c || !floatpos)
 		return;
@@ -59,7 +58,8 @@ setfloatpos(Client *c, const char *floatpos, const int auto_float, const int sav
 		removeflag(c, MoveResize);
 	}
 
-	getgaps(c->ws, &oh, &ov, &ih, &iv, &n);
+	if (enabled(SnapToGaps))
+		getgaps(c->ws, &oh, &ov, &ih, &iv, &n);
 
 	wx = c->ws->wx + ov;
 	wy = c->ws->wy + oh;
@@ -68,7 +68,7 @@ setfloatpos(Client *c, const char *floatpos, const int auto_float, const int sav
 
 	addflag(c, IgnoreSizeHints);
 
-	if (ISVISIBLE(c) && FREEFLOW(c)) {
+	if (FREEFLOW(c)) {
 		getfloatpos(x, xCh, w, wCh, wx, ww, c->x, c->w, c->bw, floatposgrid_x, &c->x, &c->w);
 		getfloatpos(y, yCh, h, hCh, wy, wh, c->y, c->h, c->bw, floatposgrid_y, &c->y, &c->h);
 		if (save_floats) {
