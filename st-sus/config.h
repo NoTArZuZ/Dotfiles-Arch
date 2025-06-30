@@ -8,8 +8,7 @@
 static char *font = "monospace:pixelsize=10";
 /* Spare fonts */
 static char *font2[] = {
-	"Font Awesome:pixelsize=11:antialias=true:autohint=true",
-	"Apple Color Emoji",
+	"monospace:pixelsize=10",
 };
 
 static int borderpx = 2;
@@ -224,8 +223,6 @@ static unsigned int defaultattr = 11;
  */
 ResourcePref resources[] = {
 		{ "font",         STRING,  &font },
-		{ "font1",        STRING,  &font2[0] },
-		{ "font2",        STRING,  &font2[1] },
 		{ "color0",       STRING,  &colorname[0] },
 		{ "color1",       STRING,  &colorname[1] },
 		{ "color2",       STRING,  &colorname[2] },
