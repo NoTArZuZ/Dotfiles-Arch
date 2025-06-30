@@ -118,5 +118,9 @@ ufetch
 if [ -f /usr/bin/starship ]; then
 	eval "$(starship init bash)"
 fi
-FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
-eval "$(zoxide init bash)"
+if [ -f /usr/bin/fzf ]; then
+	FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
+fi
+if [ -f /usr/bin/zoxide ]; then
+	eval "$(zoxide init bash)"
+fi

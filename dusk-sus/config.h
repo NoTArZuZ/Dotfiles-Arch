@@ -470,7 +470,7 @@ static const char *dmenucmd[] = {
 	NULL
 };
 // static const char *rootmenu[]  = { "jgmenu", "--at-pointer", NULL };
-static const char *rootmenu[]  = { "root-menu", NULL };
+static const char *rootmenu[]  = { "root-xmenu", NULL };
 static const char *conkytoggle[]  = { "conky-toggle", NULL };
 static const char *hubscript[]  = { "hub-script", NULL };
 static const char *spcmd_w[] = {"w", "st", "-n", "spterm (w)", "-g", "120x34", NULL };

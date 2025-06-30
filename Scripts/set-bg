@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dependencies: an image viewer that can output wanted image path to stdout
+# Dependencies: Image viewer that outputs wanted image path to stdout
 
 set -euo pipefail
 

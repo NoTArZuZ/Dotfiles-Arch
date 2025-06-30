@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dependencies: maim, libnotify
+# Dependencies: Screenshot app that outputs image data to stdout
 
 set -euo pipefail
 
@@ -68,8 +68,7 @@ areafile() {
 }
 
 browseshots() {
-  dirtoview=$(printf "$shotdirs" | $menu "Choose: " -l $(printf "$shotdirs" | wc -l) -1 -R)
-  markedshot=$($imgview ${screenshotdir}/${dirtoview})
+  markedshot=$($imgview ${screenshotdir})
   if [ -z $markedshot ]; then
     exit 0
   fi

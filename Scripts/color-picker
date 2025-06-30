@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dependencies: a color picker that outputs hex to stdout
+# Dependencies: Color picker that outputs hex to stdout
 
 set -euo pipefail
 

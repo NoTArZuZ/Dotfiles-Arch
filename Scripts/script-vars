@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dependencies: dmenu type capable menus and clipboard manager
+# Dependencies: dmenu type capable menus, CLI clipboard manager and libnotify
 # You can change variables however you want
 
 # one-liners

@@ -11,7 +11,7 @@ BRed='\033[1;31m'
 BCyan='\033[1;36m'
 
 echo 
-echo -e " ${BRed}! Checking suckless software !${NoCol}"
+echo -e " ${BRed}! suckless software${NoCol}"
 echo 
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dusk-sus${NoCol}"
 diff -r -q ~/dusk-sus ~/Dotfiles/dusk-sus | grep -v "^Only in" || :
@@ -23,10 +23,8 @@ echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}slstatus-sus${NoCol}"
 diff -r -q ~/slstatus-sus ~/Dotfiles/slstatus-sus | grep -v "^Only in" || :
 echo 
 
-echo -e " ${BRed}! Checking PATH scripts !${NoCol}"
+echo -e " ${BRed}! PATH scripts${NoCol}"
 echo 
-echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}root-menu${NoCol}"
-diff --color /usr/local/bin/root-menu ~/Dotfiles/.local/bin/root-menu
-echo
-echo -e " ${BGreen}! Diff check DONE !${NoCol}"
+echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}root-xmenu${NoCol}"
+diff --color /usr/local/bin/root-xmenu ~/Dotfiles/.local/bin/root-xmenu
 echo 
