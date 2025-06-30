@@ -16,7 +16,7 @@ pickcolor() {
 
 listcache() {
   if [ -e $HOME/.cache/colorcache ]; then
-    selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color: " -l $(cat $HOME/.cache/colorcache | wc -l) -R)
+    selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -l $(cat $HOME/.cache/colorcache | wc -l) -R)
     echo $selecthex | $cp2cb
     notify-send --icon=info "Color Picker Tool" "The $selecthex color is copied to clipboard"
   else
@@ -46,7 +46,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose: " -l 3 -1 -R | $cutemoji)
+mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -l 3 -1 -R | $cutemoji)
 case $mainmethod in
   Pick) pickcolor ;;
   List) listcache ;;

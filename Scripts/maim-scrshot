@@ -77,8 +77,8 @@ browseshots() {
 }
 
 makeshot() {
-  shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method: " -l 3 -1 -R | $cutemoji)
-  savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method: " -l 3 -1 -R | $cutemoji)
+  shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method:" -l 3 -1 -R | $cutemoji)
+  savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method:" -l 3 -1 -R | $cutemoji)
   case $savemethod in
     Both)
       if [ "$shotmethod" = "Monitor" ]; then
@@ -132,7 +132,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(echo -e ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose: " -l 2 -1 -R | $cutemoji)
+mainmethod=$(echo -e ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -l 2 -1 -R | $cutemoji)
 case $mainmethod in
   Screenshot) makeshot ;;
   Browse\ Screenshots) browseshots ;;

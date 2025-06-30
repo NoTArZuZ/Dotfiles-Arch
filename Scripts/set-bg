@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper: " -l 2 -1 -R | $cutemoji)
+mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -l 2 -1 -R | $cutemoji)
 case $mainmethod in
   Select) selectbg ;;
   Random)

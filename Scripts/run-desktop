@@ -7,4 +7,4 @@ set -euo pipefail
 
 # Better than past Qtile Dotfiles
 # Tried to make this one myself but damn awk dont like spaces in paths
-j4-dmenu-desktop --dmenu="$menu 'Launch: ' -l 10 -1 -R"
+j4-dmenu-desktop --dmenu="$menu 'Launch:' -l 10 -1 -R"
