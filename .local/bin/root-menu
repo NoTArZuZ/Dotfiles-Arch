@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+xmenu <<EOF | sh &
+Launch
+	Cromite				cromite
+	Steam					steam
+	Mumble				mumble
+	Conky					conky
+	Terminal			st
+
+Scripts
+	hub-script					hub-script
+	Screenshot Monitor	~/Scripts/maim-scrshot -mb
+	Screenshot Area			~/Scripts/maim-scrshot -ab
+	Screenshot Window		~/Scripts/maim-scrshot -wb
+	Browse Screenshots	~/Scripts/maim-scrshot -wb
+	Pick Color					~/Scripts/color-picker -p
+	List Colors					~/Scripts/color-picker -l
+	Set Wallpaper				~/Scripts/set-bg -s
+	Random Wallpaper		~/Scripts/set-bg -r
+
+Settings
+	Exit					duskc run_command quit
+	Shutdown			shutdown now
+	Restart				reboot
+EOF
+

@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-date=$(date "+%x %H:%M:%S")
-echo " ${date} ┇"

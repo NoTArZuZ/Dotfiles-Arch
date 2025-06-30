@@ -1,10 +1,12 @@
-.local
-.gitignore
 .git
-README.md
+.local
 Assets
+Extra
+Wallpapers
 dmenu-sus
 dusk-sus
 st-sus
-Wallpapers
-Extra
+slstatus-sus
+xmenu
+.gitignore
+README.md

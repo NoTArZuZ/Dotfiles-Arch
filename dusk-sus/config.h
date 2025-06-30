@@ -180,7 +180,7 @@ static char *colors[SchemeLast][4] = {
  * executed again when doing a restart. */
 static const char *const autostart[] = {
 //	"st", NULL,
-	"update-status.sh", NULL,
+	"slstatus", NULL,
 	"picom", "--vsync", "-b", NULL,
 	NULL /* terminate */
 };
@@ -469,13 +469,14 @@ static const char *dmenucmd[] = {
 	"-c",
 	NULL
 };
-static const char *jgmenu[]  = { "jgmenu", "--at-pointer", NULL };
+// static const char *rootmenu[]  = { "jgmenu", "--at-pointer", NULL };
+static const char *rootmenu[]  = { "root-menu", NULL };
 static const char *conkytoggle[]  = { "conky-toggle", NULL };
 static const char *hubscript[]  = { "hub-script", NULL };
 static const char *spcmd_w[] = {"w", "st", "-n", "spterm (w)", "-g", "120x34", NULL };
 static const char *spcmd_e[] = {"e", "st", "-n", "spterm (e)", "-g", "120x34", NULL };
 static const char *spcmd_r[] = {"r", "st", "-n", "spfm (r)", "-g", "144x41", "-e", "yazi", NULL };
-static const char *statusclickcmd[] = { "~/dusk-status/status-click.sh", NULL };
+static const char *statusclickcmd[] = { "~/slstatus-sus/scripts/status-click.sh", NULL };
 
 static Key keys[] = {
 	/* type       modifier                      key              function                argument */
@@ -630,7 +631,7 @@ static Key keys[] = {
 /* click can be ClkWorkspaceBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                     event mask               button          function          argument */
-	{ ClkRootWin,                0,                       Button3,        spawn,            {.v = jgmenu } }, // spawns jgmenu when right clicking root window
+	{ ClkRootWin,                0,                       Button3,        spawn,            {.v = rootmenu } }, // spawns root menu when right clicking root window
 	{ ClkLtSymbol,               0,                       Button1,        setlayout,        {-1} }, // toggles between current and previous layout
 	{ ClkLtSymbol,               0,                       Button4,        cyclelayout,      {.i = +1 } }, // cycle through the available layouts
 	{ ClkLtSymbol,               0,                       Button5,        cyclelayout,      {.i = -1 } }, // cycle through the available layouts (in reverse)

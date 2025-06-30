@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-perc=$(free | grep Mem | awk '{print $3/$2 * 100.0}' | cut -b -1)
-echo "  ${perc}% ┇"

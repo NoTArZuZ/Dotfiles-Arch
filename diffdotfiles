@@ -19,16 +19,14 @@ echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}dmenu-sus${NoCol}"
 diff -r -q ~/dmenu-sus ~/Dotfiles/dmenu-sus | grep -v "^Only in" || :
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}st-sus${NoCol}"
 diff -r -q ~/st-sus ~/Dotfiles/st-sus | grep -v "^Only in" || :
+echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}slstatus-sus${NoCol}"
+diff -r -q ~/slstatus-sus ~/Dotfiles/slstatus-sus | grep -v "^Only in" || :
 echo 
 
 echo -e " ${BRed}! Checking PATH scripts !${NoCol}"
 echo 
-echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}hub-script${NoCol}"
-diff --color /usr/local/bin/hub-script ~/Dotfiles/.local/bin/hub-script
-echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}conky-toggle${NoCol}"
-diff --color /usr/local/bin/conky-toggle ~/Dotfiles/.local/bin/conky-toggle
-echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}update-status.sh${NoCol}"
-diff --color /usr/local/bin/update-status.sh ~/Dotfiles/.local/bin/update-status.sh
+echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}root-menu${NoCol}"
+diff --color /usr/local/bin/root-menu ~/Dotfiles/.local/bin/root-menu
 echo
 echo -e " ${BGreen}! Diff check DONE !${NoCol}"
 echo 

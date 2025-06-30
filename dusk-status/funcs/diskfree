@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-diskfree=$(df -lh | awk '{if ($6 == "/") { print $4 }}' | head -1)
-echo "󱛟 ${diskfree} free ┇"

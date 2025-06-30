@@ -62,6 +62,17 @@ dmenu.purpleforeground: #e6e6e6
 dmenu.redbackground: #ff6c6b
 dmenu.redforeground: #e6e6e6
 
+xmenu.width: 150
+xmenu.background: #282c34
+xmenu.foreground: #bbc2cf
+xmenu.selbackground: #51afef
+xmenu.selforeground: #000000
+xmenu.separatorWidth: 1
+xmenu.separator: #282c34
+xmenu.border: #51afef
+xmenu.borderWidth: 2
+xmenu.alignment: left
+
 dusk.norm.fg.color: #ffffff
 dusk.norm.bg.color: #282c34
 dusk.norm.border.color: #000000

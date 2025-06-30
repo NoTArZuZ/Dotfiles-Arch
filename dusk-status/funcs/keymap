@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-keymap=$(xkblayout-state print "%s")
-echo " ┇  ${keymap} ┇"
