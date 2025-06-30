@@ -12,14 +12,14 @@ leftmb() {
 	esac
 }
 
-scrollup() {
+mscrollup() {
 	case $BLOCK_STATUS in
 		4) ~/slstatus-sus/scripts/onclick/plusvolume & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac
 }
 
-scrolldown() {
+mscrolldown() {
 	case $BLOCK_STATUS in
 		4) ~/slstatus-sus/scripts/onclick/minusvolume & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
@@ -28,7 +28,7 @@ scrolldown() {
 
 case $BLOCK_BUTTON in
 	1) leftmb ;;
-	4) scrollup ;;
-	5) scrolldown ;;
+	4) mscrollup ;;
+	5) mscrolldown ;;
 	*) notify-send -i error "Dusk" "Invalid button ${BLOCK_BUTTON} for status ${BLOCK_STATUS}" & ;;
 esac

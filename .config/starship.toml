@@ -10,9 +10,11 @@ $git_status\
 $character\
 $status](bold white)"""
 
+# cool characters:    ,    ,   ,    ,  
+
 [character]
-success_symbol = '[ ](bold black)'
-error_symbol = '[ ](bold black)'
+success_symbol = '[ ](bold black)'
+error_symbol = '[ ](bold black)'
 
 [username]
 format = "[[$user ](bold black bg:white)](bold white)"
@@ -27,7 +29,7 @@ ssh_only = false
 format = '[$hostname](bold purple)'
 
 [time]
-format = "[ [ $time ](bold black bg:white)](bold white)"
+format = "[ [ $time ](bold black bg:white)](bold white)"
 disabled = false
 
 [cmd_duration]

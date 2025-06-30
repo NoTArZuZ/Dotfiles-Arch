@@ -18,7 +18,7 @@ randombg() {
 }
 
 setwallpaper() {
-  ln -sf $bgfile $HOME/.cache/wallcache
+  ln -sf "$bgfile" $HOME/.cache/wallcache
   $setbg $HOME/.cache/wallcache
   notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
 }

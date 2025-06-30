@@ -37,9 +37,9 @@ alias "pacRq"="yay -Qq | fzf --multi --preview 'yay -Sii {1}' --preview-window=d
 # Abbreviations
 alias "pwmix"='pulsemixer'
 alias "hx"='helix'
+alias "ufetch"='/home/$USER/ufetch-arch'
 # One-liners
 alias "ezfd"='find / -name $* 2>/dev/null'
-alias "ufetch"='/home/$USER/ufetch-arch'
 alias "clear"='clear && ufetch'
 alias "config"='git -C ~/Dotfiles'
 alias "diffconfig"='~/diffdotfiles'
@@ -108,6 +108,17 @@ cpb() {
         }
     }
     END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
+}
+# Quickly z to folder and edit files with helix
+zhx() {
+	z "${1}"
+	hx .
+}
+# Quickly z to folder, edit files with helix and then z to home
+zzhx() {
+	z "${1}"
+	hx .
+	z
 }
 
 # Startup Commands
