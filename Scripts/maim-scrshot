@@ -7,19 +7,18 @@ set -euo pipefail
 
 # Better than past Qtile Dotfiles
 # Better screenshots management (like in ShareX)
-dirshotpath=${screenshotdir}/$(date +%Y-%m)
-shotpath=${dirshotpath}/$(date +%d-%s).png
-shotdirs=$(command ls -1 ${screenshotdir})
+dirshotpath="${screenshotdir}/$(date +%Y-%m)"
+shotpath="${dirshotpath}/$(date +%d-%s).png"
 
-if [ ! -d $dirshotpath ]; then
-  mkdir -p $dirshotpath
+if [ ! -d "$dirshotpath" ]; then
+  mkdir -p "$dirshotpath"
 fi
 
 # Functions
 monitorboth() {
   sleep 1
-  $shotmon $shotpath
-  cat $shotpath | $cp2cbimg
+  $shotmon "$shotpath"
+  cat "$shotpath" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Monitor screenshot"
 }
 
@@ -31,13 +30,13 @@ monitorcopy() {
 
 monitorfile() {
   sleep 1
-  $shotmon $shotpath
+  $shotmon "$shotpath"
   notify-send --icon=info "Screenshot Tool" "Succesfully saved Monitor screenshot"
 }
 
 windowboth() {
-  $shotwin $(xdotool selectwindow) $shotpath
-  cat $shotpath | $cp2cbimg
+  $shotwin $(xdotool selectwindow) "$shotpath"
+  cat "$shotpath" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Window screenshot"
 }
 
@@ -47,13 +46,13 @@ windowcopy() {
 }
 
 windowfile() {
-  $shotwin $(xdotool selectwindow) $shotpath
+  $shotwin $(xdotool selectwindow) "$shotpath"
   notify-send --icon=info "Screenshot Tool" "Succesfully saved Window screenshot"
 }
 
 areaboth() {
-  $shotarea $shotpath
-  cat $shotpath | $cp2cbimg
+  $shotarea "$shotpath"
+  cat "$shotpath" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Area screenshot"
 }
 
@@ -63,16 +62,16 @@ areacopy() {
 }
 
 areafile() {
-  $shotarea $shotpath
+  $shotarea "$shotpath"
   notify-send --icon=info "Screenshot Tool" "Succesfully saved Area screenshot"
 }
 
 browseshots() {
   markedshot=$($imgview ${screenshotdir})
-  if [ -z $markedshot ]; then
+  if [ -z "$markedshot" ]; then
     exit 0
   fi
-  cat $markedshot | $cp2cbimg
+  cat "$markedshot" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Successfully copied $markedshot to clipboard"
 }
 
@@ -132,7 +131,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(echo -e ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -l 2 -1 -R | $cutemoji)
+mainmethod=$(printf ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -l 2 -1 -R | $cutemoji)
 case $mainmethod in
   Screenshot) makeshot ;;
   Browse\ Screenshots) browseshots ;;

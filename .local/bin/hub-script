@@ -6,4 +6,4 @@ set -euo pipefail
 
 list=$(find -L $scriptdir -type f -executable | wc -l)
 choose=$(find -L $scriptdir -type f -executable -printf '%f\n' | sort | $menu "Run script:" -R -1 -l $list)
-exec ${scriptdir}/${choose}
+exec "${scriptdir}/${choose}"

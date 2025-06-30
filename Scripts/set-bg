@@ -8,12 +8,12 @@ set -euo pipefail
 # Better than past Qtile Dotfiles
 # Functions
 selectbg() {
-  bgfile=$($imgview ${wallpaperdir} | shuf -n 1)
+  bgfile=$($imgview "$wallpaperdir" | shuf -n 1)
   setwallpaper
 }
 
 randombg() {
-  bgfile=$(find ${wallpaperdir} -type f | shuf -n 1)
+  bgfile=$(find "$wallpaperdir" -type f | shuf -n 1)
   setwallpaper
 }
 

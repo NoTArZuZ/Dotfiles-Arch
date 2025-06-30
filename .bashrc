@@ -109,16 +109,16 @@ cpb() {
     }
     END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
 }
-# Quickly z to folder and edit files with helix
+# Quickly z to folder, edit files with helix and then z to home
 zhx() {
 	z "${1}"
 	hx .
+	z
 }
-# Quickly z to folder, edit files with helix and then z to home
+# Quickly z to folder and edit files with helix
 zzhx() {
 	z "${1}"
 	hx .
-	z
 }
 
 # Startup Commands

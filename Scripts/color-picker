@@ -9,15 +9,15 @@ set -euo pipefail
 # Functions
 pickcolor() {
   hex=$($colpick)
-  echo $hex >>  $HOME/.cache/colorcache
-  echo $hex | $cp2cb
+  echo "$hex" >>  $HOME/.cache/colorcache
+  echo "$hex" | $cp2cb
   notify-send --icon=info "Color Picker Tool" "The picked color is: $hex and copied to clipboard"
 }
 
 listcache() {
   if [ -e $HOME/.cache/colorcache ]; then
     selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -l $(cat $HOME/.cache/colorcache | wc -l) -R)
-    echo $selecthex | $cp2cb
+    echo "$selecthex" | $cp2cb
     notify-send --icon=info "Color Picker Tool" "The $selecthex color is copied to clipboard"
   else
     notify-send --icon=error "Color Picker Tool" "Color cache is empty"
