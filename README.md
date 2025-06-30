@@ -14,7 +14,7 @@
 5. Move .local/bin/{hub-script,conky-toggle,root-xmenu} to /usr/local/bin directory
 6. Base installation done!
 
-**Optional Dependencies** - starship zoxide fzf jgmenu libva flatpak rtorrent
+**Optional Dependencies** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop
 
 *Run "stow ." and then "diffconfig" after git pull*
 
