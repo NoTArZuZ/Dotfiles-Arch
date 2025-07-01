@@ -5,10 +5,10 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "monospace:pixelsize=10";
+static char *font = "monospace:size=10";
 /* Spare fonts */
 static char *font2[] = {
-	"monospace:pixelsize=10",
+	"monospace:size=10",
 };
 
 static int borderpx = 2;
