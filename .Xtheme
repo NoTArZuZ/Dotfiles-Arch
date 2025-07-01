@@ -87,7 +87,7 @@ dusk.scratchnorm.bg.color: #282c34
 dusk.scratchnorm.border.color: #1c1f24
 dusk.scratchsel.fg.color: #ffffff
 dusk.scratchsel.bg.color: #51afef
-dusk.scratchsel.border.color: #1c1c34
+dusk.scratchsel.border.color: #1c1f24
 dusk.hidnorm.fg.color: #ffffff
 dusk.hidnorm.bg.color: #282c34
 dusk.hidsel.fg.color: #ffffff
