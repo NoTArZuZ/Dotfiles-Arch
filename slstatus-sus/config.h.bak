@@ -81,10 +81,10 @@ static const char unknown_str[] = "n/a";
  */
 static const struct arg args[] = {
 	/* function format          argument      status_no     update_interval */
-	{ datetime,  "^C0^^B6^  ^f8^^d^^C6^%s^f2^",      "%F %T",    "0",          1  },
-	{ ram_perc,  "^C0^^B2^   ^f8^^d^^C2^%s%%",   NULL,       "1",          1  },
-	{ cpu_perc,  "^C0^^B5^   ^f8^^d^^C5^%s%%",   NULL,       "2",          1  },
-	{ disk_free, "^C0^^B4^ 󱛟 ^f8^^d^^C4^%s free", "/",        "3",          60 },
-	{ run_exec,  "^C0^^B1^ %s ",        "~/slstatus-sus/scripts/funcs/volume", "4", 1 },
-	{ keymap,    " ^C0^^B3^  ^f8^^d^^C3^%s",	    NULL, 	    "5",          1 },
+	{ datetime,  " %s ┇",      "%F %T",      "0",          1  },
+	{ ram_perc,  "  %s%% ┇",   NULL,         "1",          1  },
+	{ cpu_perc,  "  %s%% ┇",   NULL,         "2",          1  },
+	{ disk_free, "󱛟 %s free ┇", "/",          "3",          60 },
+	{ run_exec,  "%s ┇",        "~/slstatus-sus/scripts/funcs/volume", "4", 1 },
+	{ keymap,    " ┇  %s ┇",	  NULL, 	      "5",          1 },
 };

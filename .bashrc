@@ -3,7 +3,7 @@
 [[ $- != *i* ]] && return
 
 # Prompt
-PS1=" \[\e[4;37m\]\t\[\e[0m\] \[\e[1;34m\]\w \[\033[1;32m\]󰅂\[\e[0;37m\] "
+PS1=" \[\e[1;37m\]\t\[\e[0m\] \[\e[1;34m\]\w \[\033[1;32m\]\[\e[0;37m\] "
 PS0="\[\e[0m\]" # Reset colours after pressing enter
 
 # Variables

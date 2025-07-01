@@ -4,7 +4,7 @@ perc=$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | head -1)
 mute=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')
 
 if [ $mute = "no" ]; then
-  echo "  ${perc} ┇"
+  echo "  ${perc}"
 else
-  echo "  muted ┇"
+  echo "  muted"
 fi
