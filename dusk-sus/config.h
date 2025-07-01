@@ -393,10 +393,10 @@ static const int enablegaps  = 1;    /* whether gaps are enabled by default or n
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function, { nmaster, nstack, layout, master axis, stack axis, secondary stack axis, symbol func }, name */
-	{ "^f8^^B5^^C0^   ^f8^",      flextile,         { -1, -1, SPLIT_VERTICAL, TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL }, "tile" },
+	{ "^f12^^B5^^C0^   ^f12^",      flextile,         { -1, -1, SPLIT_VERTICAL, TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL }, "tile" },
 	// { " ┇ ||| ",      flextile,         { -1, -1, NO_SPLIT, LEFT_TO_RIGHT, LEFT_TO_RIGHT, 0, NULL }, "columns" },
 	// { " ┇ === ",      flextile,         { -1, -1, NO_SPLIT, TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL }, "rows" },
-	{ "^f8^^B2^^C0^   ^f8^",      flextile,         { -1, -1, NO_SPLIT, MONOCLE, MONOCLE, 0, NULL }, "monocle" },
+	{ "^f12^^B2^^C0^   ^f12^",      flextile,         { -1, -1, NO_SPLIT, MONOCLE, MONOCLE, 0, NULL }, "monocle" },
 	// { " ┇ ||= ",      flextile,         { -1, -1, SPLIT_VERTICAL, LEFT_TO_RIGHT, TOP_TO_BOTTOM, 0, NULL }, "col" },
 	// { " ┇ >M> ",      flextile,         { -1, -1, FLOATING_MASTER, LEFT_TO_RIGHT, LEFT_TO_RIGHT, 0, NULL }, "floating master" },
 	// { " ┇ [D] ",      flextile,         { -1, -1, SPLIT_VERTICAL, TOP_TO_BOTTOM, MONOCLE, 0, NULL }, "deck" },
@@ -406,10 +406,10 @@ static const Layout layouts[] = {
 	// { " ┇ |M| ",      flextile,         { -1, -1, SPLIT_CENTERED_VERTICAL, LEFT_TO_RIGHT, TOP_TO_BOTTOM, TOP_TO_BOTTOM, NULL }, "centeredmaster" },
 	// { " ┇ -M- ",      flextile,         { -1, -1, SPLIT_CENTERED_HORIZONTAL, TOP_TO_BOTTOM, LEFT_TO_RIGHT, LEFT_TO_RIGHT, NULL }, "centeredmaster horiz" },
 	// { " ┇ ::: ",      flextile,         { -1, -1, NO_SPLIT, GAPLESSGRID_CFACTS, GAPLESSGRID_CFACTS, 0, NULL }, "gapless grid" },
-	{ "^f8^^B3^^C0^   ^f8^",     flextile,         { -1, -1, NO_SPLIT, DWINDLE_CFACTS, DWINDLE_CFACTS, 0, NULL }, "fibonacci dwindle" },
+	{ "^f12^^B3^^C0^   ^f12^",     flextile,         { -1, -1, NO_SPLIT, DWINDLE_CFACTS, DWINDLE_CFACTS, 0, NULL }, "fibonacci dwindle" },
 	// { " ┇ (@) ",      flextile,         { -1, -1, NO_SPLIT, SPIRAL_CFACTS, SPIRAL_CFACTS, 0, NULL }, "fibonacci spiral" },
 	// { " ┇ [T] ",      flextile,         { -1, -1, SPLIT_VERTICAL, LEFT_TO_RIGHT, TATAMI_CFACTS, 0, NULL }, "tatami mats" },
-	{ "^f8^^B1^^C0^   ^f8^",      NULL,             { -1, -1 }, "floating" }, /* no layout function means floating behavior */
+	{ "^f12^^B1^^C0^   ^f12^",      NULL,             { -1, -1 }, "floating" }, /* no layout function means floating behavior */
 };
 
 #define Shift ShiftMask
