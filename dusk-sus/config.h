@@ -14,7 +14,7 @@ static unsigned int attachdefault        = AttachAside; // AttachMaster, AttachA
 
 static const int initshowbar             = 1;   /* 0 means no bar */
 
-static const int bar_height              = 20;   /* 0 means derive from font, >= 1 explicit height */
+static const int bar_height              = 0;   /* 0 means derive from font, >= 1 explicit height */
 static const int vertpad                 = borderpx;  /* vertical (outer) padding of bar */
 static const int sidepad                 = borderpx;  /* horizontal (outer) padding of bar */
 
@@ -129,7 +129,7 @@ static uint64_t functionality = 0
 static int flexwintitle_masterweight     = 15; // master weight compared to hidden and floating window titles
 static int flexwintitle_stackweight      = 4;  // stack weight compared to hidden and floating window titles
 static int flexwintitle_hiddenweight     = 0;  // hidden window title weight
-static int flexwintitle_floatweight      = 0;  // floating window title weight, set to 0 to not show floating windows
+static int flexwintitle_floatweight      = 4;  // floating window title weight, set to 0 to not show floating windows
 static int flexwintitle_separator        = 0;  // width of client separator
 
 static char font1[60] = "monospace:size=10";
