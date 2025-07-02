@@ -95,7 +95,7 @@ dusk.hidsel.bg.color: #51afef
 dusk.urg.fg.color: #ffffff
 dusk.urg.bg.color: #ff6c6b
 dusk.urg.border.color: #ff6c6b
-dusk.marked.fg.color: #46d9ff
+dusk.marked.fg.color: #1c1f24
 dusk.marked.bg.color: #46d9ff
 dusk.marked.border.color: #46d9ff
 dusk.wsnorm.fg.color: #ffffff

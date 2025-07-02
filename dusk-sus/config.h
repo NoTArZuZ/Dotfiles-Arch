@@ -169,7 +169,7 @@ static char *colors[SchemeLast][4] = {
 	[SchemeHidNorm]      = { "#ffffff", "#282c34", "#000000" },
 	[SchemeHidSel]       = { "#ffffff", "#51afef", "#000000" },
 	[SchemeUrg]          = { "#ffffff", "#ff6c6b", "#ff6c6b" },
-	[SchemeMarked]       = { "#46d9ff", "#46d9ff", "#46d9ff" },
+	[SchemeMarked]       = { "#1c1f24", "#46d9ff", "#46d9ff" },
 	[SchemeWsNorm]       = { "#ffffff", "#282c34", "#000000" },
 	[SchemeWsVisible]    = { "#ffffff", "#282c34", "#000000" },
 	[SchemeWsSel]        = { "#ffffff", "#51afef", "#000000" },
@@ -598,7 +598,7 @@ static Key keys[] = {
 //	{ KeyPress,   MODKEY,                       XK_,             focusmaster,            {0} }, // change focus to the first client in the stack (master)
 //	{ KeyPress,   MODKEY,                       XK_,             transfer,               {0} }, // move a client between the master and stack area automatically adjusting nmaster
 //	{ KeyPress,   MODKEY,                       XK_,             transferall,            {0} }, // swaps all clients in the stack area with all clients in the master area
-//	{ KeyPress,   MODKEY,                       XK_,             togglesticky,           {0} }, // makes a client show on all workspaces)
+	{ KeyPress,   MODKEY,                       XK_p,             togglesticky,           {0} }, // makes a client show on all workspaces)
 //	{ KeyPress,   MODKEY,                       XK_,             focusurgent,            {0} }, // focus on the client marked as urgent
 //	{ KeyPress,   MODKEY,                       XK_,             inplacerotate,          {.i = +1} }, // rotate clients within the respective area (master, primary stack, secondary stack) clockwise
 //	{ KeyPress,   MODKEY,                       XK_,             inplacerotate,          {.i = -1} }, // rotate clients within the respective area (master, primary stack, secondary stack) counter-clockwise
