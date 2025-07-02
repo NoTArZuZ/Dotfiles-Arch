@@ -33,14 +33,14 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -l 2 -1 -R | $cutemoji)
+mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -l 2 -1 -R -n | $cutemoji)
 case $mainmethod in
   Select) selectbg ;;
   Random)
     rollmore="No"
     until [ "$rollmore" = "Yes" ]; do
       randombg
-      rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -l 2 -1 -R | $cutemoji)
+      rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -l 2 -1 -R -n | $cutemoji)
     done
   ;;
   *) exit 1 ;;

@@ -46,7 +46,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main Choice
-mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -l 3 -1 -R | $cutemoji)
+mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -l 3 -1 -R -n | $cutemoji)
 case $mainmethod in
   Pick) pickcolor ;;
   List) listcache ;;
