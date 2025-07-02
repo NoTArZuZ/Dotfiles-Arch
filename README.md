@@ -7,7 +7,7 @@
 *The Dotfiles are in active development, so it's not recommended to install them right now. (Unless you want to update them every 2-4 hours)*
 
 1. git clone https://github.com/NoTArZuZ/Dotfiles-Arch **~/Dotfiles**
-2. Install required packages (including AUR): base base-devel linux linux-firmware grub efibootmgr git networkmanager dhcpcd sudo vim htop ufw pulsemixer polkit-gnome pipewire pipewire-pulse wireplumber rtkit xorg xorg-xinit xdotool xclip libnotify dunst feh maim yazi picom nsxiv mpv cromite-bin qt5-styleplugins yay ttf-jetbrains-mono-nerd ttf-ubuntu-font-family ttf-apple-emoji ttf-noto-nerd helix eza conky vnstat stow breezex-cursor-theme j4-dmenu-desktop arc-gtk-theme arc-icon-theme xkblayout-state-git
+2. Install required packages (including AUR): base base-devel linux linux-firmware grub efibootmgr git networkmanager sudo vim htop ufw pulsemixer polkit-gnome pipewire pipewire-pulse wireplumber rtkit xorg xorg-xinit xdotool xclip libnotify dunst feh maim yazi picom nsxiv mpv cromite-bin qt5-styleplugins yay ttf-jetbrains-mono-nerd ttf-ubuntu-font-family ttf-apple-emoji ttf-noto-nerd helix eza conky vnstat stow breezex-cursor-theme j4-dmenu-desktop arc-gtk-theme arc-icon-theme xkblayout-state-git
 3. Enable services: dhcpcd, NetworkManager, ufw, pipewire, pipewire-pulse, wireplumber, vnstat
 4. Move {dusk,dmenu,st,slstatus}-sus and xmenu to user's home and build them
 5. cd ~/Dotfiles and stow .

@@ -128,7 +128,7 @@ static uint64_t functionality = 0
 
 static int flexwintitle_masterweight     = 15; // master weight compared to hidden and floating window titles
 static int flexwintitle_stackweight      = 4;  // stack weight compared to hidden and floating window titles
-static int flexwintitle_hiddenweight     = 0;  // hidden window title weight
+static int flexwintitle_hiddenweight     = 1;  // hidden window title weight
 static int flexwintitle_floatweight      = 4;  // floating window title weight, set to 0 to not show floating windows
 static int flexwintitle_separator        = 0;  // width of client separator
 
