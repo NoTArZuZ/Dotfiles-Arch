@@ -26,7 +26,7 @@ static const float pfact                 = 0.25; /* size of workspace previews r
 static int floatposgrid_x                = 5;   /* float grid columns */
 static int floatposgrid_y                = 5;   /* float grid rows */
 
-static const int horizpadbar             = 0;   /* horizontal (inner) padding for statusbar (increases lrpad) */
+static const int horizpadbar             = 2;   /* horizontal (inner) padding for statusbar (increases lrpad) */
 static const int vertpadbar              = 0;   /* vertical (inner) padding for statusbar (increases bh, overridden by bar_height) */
 
 static const char slopspawnstyle[]       = "-t 0 -c 0.92,0.85,0.69,0.3 -o"; /* do NOT define -f (format) here */
