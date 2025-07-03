@@ -136,22 +136,9 @@ static char font1[60] = "monospace:size=10";
 static char font2[60] = "";
 
 static const char *fonts[]               = { font1, font2 };
-static       char dmenufont[60]          = "monospace:size=10";
-
-static char dmenunormfgcolor[] = "#bbc2cf";
-static char dmenunormbgcolor[] = "#282c34";
-static char dmenuselfgcolor[] = "#000000";
-static char dmenuselbgcolor[] = "#51afef";
-static char dmenubordercolor[] = "#51afef";
 
 /* Xresources preferences to load at startup. */
 static const ResourcePref resources[] = {
-	{ "dmenu.norm.fg.color", STRING, &dmenunormfgcolor },
-	{ "dmenu.norm.bg.color", STRING, &dmenunormbgcolor },
-	{ "dmenu.sel.fg.color", STRING, &dmenuselfgcolor },
-	{ "dmenu.sel.bg.color", STRING, &dmenuselbgcolor },
-	{ "dmenu.border.bg.color", STRING, &dmenubordercolor },
-	{ "dmenu.font", STRING, &dmenufont },
 	{ "dusk.font1", STRING, &font1, sizeof(font1) },
 	{ "dusk.font2", STRING, &font2, sizeof(font2) },
 };
@@ -363,7 +350,7 @@ static const WorkspaceRule wsrules[] = {
 	{  "1",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "󰣇",   "",   "󰣇", },
 	{  "2",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
 	{  "3",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
-	{  "4",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
+	{  "4",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
 	{  "5",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
 //	{  "6",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "6",   "",   "6", },
 //	{  "7",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "7",   "",   "7", },
