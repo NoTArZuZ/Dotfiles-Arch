@@ -2,20 +2,17 @@
 
 xmenu <<EOF | sh &
 Launch
-	Cromite				cromite
-	Steam					steam
-	Mumble				mumble
-	Conky					conky
+	Run App				dmenu_run -bw 2 -l 10 -c
 	Terminal			st
+	Cromite				cromite
+	Mumble				mumble
+	Steam					steam
+	Conky					conky-toggle
 
 Scripts
 	hub-script					hub-script
-	Screenshot Monitor	~/Scripts/maim-scrshot -mb
-	Screenshot Area			~/Scripts/maim-scrshot -ab
-	Screenshot Window		~/Scripts/maim-scrshot -wb
-	Browse Screenshots	~/Scripts/maim-scrshot -wb
-	Pick Color					~/Scripts/color-picker -p
-	List Colors					~/Scripts/color-picker -l
+	Screenshot 					~/Scripts/maim-scrshot
+	Color Picker				~/Scripts/color-picker
 	Set Wallpaper				~/Scripts/set-bg -s
 	Random Wallpaper		~/Scripts/set-bg -r
 
