@@ -1,5 +1,5 @@
---- ../Dotfiles/dusk-sus/config.h	2025-07-04 04:20:00.003103508 +0500
-+++ config.h	2025-07-04 19:07:22.954834838 +0500
+--- ~/Dotfiles/dusk-sus/config.h	2025-07-04 04:20:00.003103508 +0500
++++ ~/dusk-sus/config.h	2025-07-04 19:07:22.954834838 +0500
 @@ -40,7 +40,8 @@
  
  /* Indicators: see lib/bar_indicators.h for options */

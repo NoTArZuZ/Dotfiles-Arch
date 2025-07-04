@@ -1,5 +1,5 @@
---- ../Dotfiles/slstatus-sus/config.h	2025-07-02 01:37:49.096741638 +0500
-+++ config.h	2025-07-04 19:09:12.460838922 +0500
+--- ~/Dotfiles/slstatus-sus/config.h	2025-07-02 01:37:49.096741638 +0500
++++ ~/slstatus-sus/config.h	2025-07-04 19:09:12.460838922 +0500
 @@ -81,10 +81,10 @@
   */
  static const struct arg args[] = {
