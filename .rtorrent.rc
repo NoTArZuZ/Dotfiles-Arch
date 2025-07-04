@@ -8,7 +8,7 @@
 
 # Instance layout (base paths)
 method.insert = cfg.basedir,  private|const|string, (cat,"/home/sus/.config/rtorrent/")
-method.insert = cfg.download, private|const|string, (cat,"/home/sus/Downloads/Torrents")
+method.insert = cfg.download, private|const|string, (cat,"/home/sus/Downloads")
 method.insert = cfg.logs,     private|const|string, (cat,(cfg.basedir),"log/")
 method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent-",(system.time),".log")
 method.insert = cfg.session,  private|const|string, (cat,(cfg.basedir),".session/")
@@ -23,14 +23,14 @@ execute.throw = sh, -c, (cat,\
     "\"",(cfg.watch),"/start\" ")
 
 # Listening port for incoming peer traffic (fixed; you can also randomize it)
-network.port_range.set = 50000-50000
+network.port_range.set = 49164-49164
 network.port_random.set = no
 
 # Tracker-less torrent and UDP tracker support
 # (conservative settings for 'private' trackers, change for 'public')
 dht.mode.set = auto
-protocol.pex.set = no
-trackers.use_udp.set = no
+protocol.pex.set = yes
+trackers.use_udp.set = yes
 
 # Peer settings
 throttle.max_uploads.set = 100
@@ -42,7 +42,7 @@ throttle.min_peers.seed.set = 30
 throttle.max_peers.seed.set = 80
 trackers.numwant.set = 80
 
-protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+protocol.encryption.set = require,require_RC4,allow_incoming,try_outgoing
 
 # Limits for file handle resources, this is optimized for
 # an `ulimit` of 1024 (a common default). You MUST leave
@@ -88,8 +88,8 @@ method.insert = d.data_path, simple,\
 method.insert = d.session_file, simple, "cat=(session.path), (d.hash), .torrent"
 
 # Watch directories (add more as you like, but use unique schedule names)
-schedule2 = watch_start, 10, 10, ((load.start_verbose, (cat, (cfg.watch), "start/*.torrent")))
-schedule2 = watch_load, 11, 10, ((load.verbose, (cat, (cfg.watch), "load/*.torrent")))
+schedule2 = watch_start,5,5,load.start_verbose=/home/sus/Downloads/Torrents/start/*.torrent
+schedule2 = watch_load,11,10,load.verbose=/home/sus/Downloads/Torrents/load/*.torrent
 
 # Run the rTorrent process as a daemon in the background
 # (and control via XMLRPC sockets)
