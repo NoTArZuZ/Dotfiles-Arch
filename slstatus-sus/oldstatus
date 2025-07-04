@@ -1,6 +1,0 @@
-	{ datetime,  " %s ┇",      "%F %T",      "0",          1  },
-	{ ram_perc,  "  %s%% ┇",   NULL,         "1",          1  },
-	{ cpu_perc,  "  %s%% ┇",   NULL,         "2",          1  },
-	{ disk_free, "󱛟 %s free ┇", "/",          "3",          60 },
-	{ run_exec,  "%s ┇",        "~/slstatus-sus/scripts/funcs/volume", "4", 1 },
-	{ keymap,    " ┇  %s ┇",	  NULL, 	      "5",          1 },

@@ -1,0 +1,55 @@
+--- ../Dotfiles/dusk-sus/config.h	2025-07-04 04:20:00.003103508 +0500
++++ config.h	2025-07-04 19:07:22.954834838 +0500
+@@ -40,7 +40,8 @@
+ 
+ /* Indicators: see lib/bar_indicators.h for options */
+ static int indicators[IndicatorLast] = {
+-	[IndicatorWs] = INDICATOR_TOP_RIGHT_TRIANGLE,
++	[IndicatorWs] = INDICATOR_NONE,
++	[IndicatorWsSel] = INDICATOR_BOTTOM_BAR,
+ 	[IndicatorPinnedWs] = INDICATOR_BOTTOM_BAR_SLIM,
+ 	[IndicatorFakeFullScreen] = INDICATOR_PLUS,
+ 	[IndicatorFakeFullScreenActive] = INDICATOR_PLUS_AND_LARGER_SQUARE,
+@@ -122,7 +123,7 @@
+ //	|RestrictFocusstackToMonitor // restrict focusstack to only operate within the monitor, otherwise focus can drift between monitors
+ 	|WinTitleIcons // adds application icons to window titles in the bar
+ //	|StackerIcons // adds a stacker icon hints in window titles
+-	|WorkspaceLabels // adds the class of the master client next to the workspace icon
++//	|WorkspaceLabels // adds the class of the master client next to the workspace icon
+ //	|WorkspacePreview // adds preview images when hovering workspace icons in the bar
+ ;
+ 
+@@ -161,6 +162,16 @@
+ 	[SchemeWsVisible]    = { "#ffffff", "#282c34", "#000000" },
+ 	[SchemeWsSel]        = { "#ffffff", "#51afef", "#000000" },
+ 	[SchemeWsOcc]        = { "#ffffff", "#282c34", "#000000" },
++	[SchemeWsSel1]       = { "#46d9ff", "#282c34", "#000000" },
++	[SchemeWsOcc1]       = { "#46d9ff", "#282c34", "#000000" },
++	[SchemeWsSel2]       = { "#ff6c6b", "#282c34", "#000000" },
++	[SchemeWsOcc2]       = { "#ff6c6b", "#282c34", "#000000" },
++	[SchemeWsSel3]       = { "#da8548", "#282c34", "#000000" },
++	[SchemeWsOcc3]       = { "#da8548", "#282c34", "#000000" },
++	[SchemeWsSel4]       = { "#c678dd", "#282c34", "#000000" },
++	[SchemeWsOcc4]       = { "#c678dd", "#282c34", "#000000" },
++	[SchemeWsSel5]       = { "#51afef", "#282c34", "#000000" },
++	[SchemeWsOcc5]       = { "#51afef", "#282c34", "#000000" },
+ };
+ 
+ /* List of programs to start automatically during startup only. Note that these will not be
+@@ -347,11 +358,11 @@
+ static const WorkspaceRule wsrules[] = {
+ 	/*                                                                     ------------------------------- schemes ------------------------------- ------ icons ------
+ 	   name,  monitor,  pinned,  layout,  mfact,  nmaster,  nstack,  gaps, default,          visible,          selected,         occupied,         def,   vac,  occ,  */
+-	{  "1",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "󰣇",   "",   "󰣇", },
+-	{  "2",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
+-	{  "3",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
+-	{  "4",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
+-	{  "5",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "",   "",   "", },
++	{  "1",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel1,      SchemeWsOcc1,      "󰣇",   "",   "󰣇", },
++	{  "2",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel2,      SchemeWsOcc2,      "",   "",   "", },
++	{  "3",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel3,      SchemeWsOcc3,      "",   "",   "", },
++	{  "4",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel4,      SchemeWsOcc4,      "",   "",   "", },
++	{  "5",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel5,      SchemeWsOcc5,      "",   "",   "", },
+ //	{  "6",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "6",   "",   "6", },
+ //	{  "7",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "7",   "",   "7", },
+ //	{  "8",   -1,       0,       0,       -1,    -1,       -1,      -1,    SchemeWsNorm,     SchemeWsVisible,  SchemeWsSel,      SchemeWsOcc,      "8",   "",   "8", },

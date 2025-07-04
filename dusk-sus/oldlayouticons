@@ -1,4 +1,0 @@
-	{ " ┇   ",      flextile,         { -1, -1, SPLIT_VERTICAL, TOP_TO_BOTTOM, TOP_TO_BOTTOM, 0, NULL }, "tile" },
-	{ " ┇   ",      flextile,         { -1, -1, NO_SPLIT, MONOCLE, MONOCLE, 0, NULL }, "monocle" },
-	{ " ┇ 󰺔  ",     flextile,          { -1, -1, NO_SPLIT, DWINDLE_CFACTS, DWINDLE_CFACTS, 0, NULL }, "fibonacci dwindle" },
-	{ " ┇ 󱂬  ",      NULL,             { -1, -1 }, "floating" }, /* no layout function means floating behavior */
