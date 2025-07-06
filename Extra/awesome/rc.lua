@@ -49,6 +49,13 @@ end
 -- Autorun programs
 awful.spawn.with_shell("~/.config/awesome/autostart.sh")
 
+-- Naughty config
+naughty.config.icon_dirs = { "/usr/share/icons/Arc/status/48/" }
+naughty.config.spacing = 8
+naughty.config.padding = 20
+naughty.config.defaults.margin = 10
+naughty.config.defaults.position = "bottom_right"
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/sus/.config/awesome/theme.lua")

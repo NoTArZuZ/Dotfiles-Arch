@@ -39,6 +39,10 @@ theme.menu_font = "Ubuntu Nerd Font 10"
 
 theme.tooltip_bg = xcolors.background
 
+theme.notification_font = "Ubuntu Nerd Font 12"
+theme.notification_width = 300
+theme.notification_border_color = xcolors.background
+
 theme.gap_single_client = false
 
 -- There are other variable sets
