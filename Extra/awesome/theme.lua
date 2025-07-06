@@ -35,7 +35,12 @@ theme.border_marked = xcolors.color5
 theme.tasklist_align = "center"
 theme.tasklist_bg_focus = theme.bg_normal
 
-theme.menu_font = "Ubuntu Nerd Font 10"
+theme.taglist_spacing = 6
+
+theme.menu_font = "Ubuntu Nerd Font 12"
+theme.menu_fg_focus = "#000000"
+theme.menu_border_width = 2
+theme.menu_border_color = xcolors.color4
 
 theme.tooltip_bg = xcolors.background
 

@@ -17,6 +17,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- My libraries
 local vicious = require("vicious")
 local markup = require("markup")
+local switcher = require("alttab")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -125,7 +126,7 @@ mainmenu = awful.menu({ items = {
         { "Launch", launchmenu },
         { "Scripts", scriptsmenu },
         { "Awesome", awesomemenu, beautiful.awesome_icon }
-    }, theme = { width = 150 }
+    }, theme = { width = 175, height = 20 }
 })
 
 -- Menubar configuration
@@ -221,7 +222,7 @@ local volumewidget = {
 
 awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
-    awful.tag({ " 󰣇 ", "  ", "  ", "  ", "  " }, s, awful.layout.suit.tile)
+    awful.tag({ "󰣇 ", " ", " ", " ", " " }, s, awful.layout.suit.tile)
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen
@@ -231,12 +232,6 @@ awful.screen.connect_for_each_screen(function(s)
                            awful.button({ }, 3, function () awful.layout.inc(-1) end),
                            awful.button({ }, 4, function () awful.layout.inc( 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(-1) end)))
-    -- Create a taglist widget
-    s.taglist = awful.widget.taglist {
-        screen  = s,
-        filter  = awful.widget.taglist.filter.all,
-        buttons = taglist_buttons,
-    }
 
     -- Create a tasklist widget
     s.tasklist = awful.widget.tasklist {
@@ -245,6 +240,13 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = tasklist_buttons,
         widget_template = tasklist_template,
     }
+
+    local fancy_taglist = require("fancytags")
+        s.taglist = fancy_taglist.new({
+            screen = s,
+            taglist = { buttons = mytagbuttons },
+            tasklist = { buttons = mytasklistbuttons }
+    })
 
     separatorA = wibox.widget.textbox()
     separatorA.text = "  "
@@ -339,6 +341,8 @@ globalkeys = gears.table.join(
               {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Tab",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
+    awful.key({ "Mod1",           }, "Tab", function () switcher.switch( 1, "Mod1", "Alt_L", "Shift", "Tab") end,
+              {description = "cycle windows", group = "tag"}),
 
     awful.key({ modkey,           }, "j",
         function ()

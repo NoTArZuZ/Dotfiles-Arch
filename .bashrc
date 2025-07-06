@@ -35,7 +35,7 @@ alias "pacRd"='yay -Rdd'
 alias "pacRc"='yay -Rcuns'
 alias "pacRq"="yay -Qq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -Rcuns"
 # Abbreviations
-alias "pwmix"='pulsemixer'
+alias "pwmix"='wiremix'
 alias "hx"='helix'
 alias "ufetch"='/home/$USER/ufetch-arch'
 # One-liners
