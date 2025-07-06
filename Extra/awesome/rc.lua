@@ -413,8 +413,19 @@ clientkeys = gears.table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
-    awful.key({ modkey,           }, "g",      function () awful.client.floating.toggle() awful.placement.centered() end,
+    awful.key({ modkey,           }, "g",
+        function (c)
+            c.floating = not c.floating
+            awful.placement.centered()
+            c:raise()
+        end ,
               {description = "toggle floating", group = "client"}),
+    awful.key({ modkey,           }, "p",
+        function (c)
+            c.sticky = not c.sticky
+            c:raise()
+        end ,
+              {description = "toggle sticky", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
@@ -625,12 +636,6 @@ client.connect_signal("request::titlebars", function(c)
             },
             buttons = buttons,
             layout  = wibox.layout.flex.horizontal
-        },
-        { -- Right
-            awful.titlebar.widget.floatingbutton (c),
-            awful.titlebar.widget.stickybutton   (c),
-            awful.titlebar.widget.ontopbutton    (c),
-            layout = wibox.layout.fixed.horizontal()
         },
         layout = wibox.layout.align.horizontal,
     }

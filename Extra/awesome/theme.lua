@@ -35,7 +35,9 @@ theme.border_marked = xcolors.color5
 theme.tasklist_align = "center"
 theme.tasklist_bg_focus = theme.bg_normal
 
-theme.menu_font = "monospace 10"
+theme.menu_font = "Ubuntu Nerd Font 10"
+
+theme.tooltip_bg = xcolors.background
 
 theme.gap_single_client = false
 

@@ -6,6 +6,9 @@ super + Return
 super + d
 	dmenu_run -bw 2 -l 10 -c
 
+super + shift + d
+	hub-script
+
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd
@@ -31,7 +34,7 @@ super + y
 	bspc node newest.marked.local -n newest.!automatic.local
 
 # swap the current node and the biggest window
-super + g
+super + s
 	bspc node -s biggest.window
 
 #
@@ -39,11 +42,11 @@ super + g
 #
 
 # set the window state
-super + {t,shift + t,s,f}
+super + {t,shift + t,g,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
-super + ctrl + {m,x,y,z}
+super + ctrl + {m,x,p,z}
 	bspc node -g {marked,locked,sticky,private}
 
 #
@@ -53,10 +56,6 @@ super + ctrl + {m,x,y,z}
 # focus the node in the given direction
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
-
-# focus the node for the given path jump
-super + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
 
 # focus the next/previous window in the current desktop
 super + {_,shift + }c
