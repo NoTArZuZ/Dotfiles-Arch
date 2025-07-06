@@ -1,0 +1,19 @@
+--- ~/Dotfiles/slstatus-sus/config.h	2025-07-06 01:11:20.141661632 +0500
++++ ~/sltatus-sus/config.h	2025-07-02 01:37:49.096741638 +0500
+@@ -81,10 +81,10 @@
+  */
+ static const struct arg args[] = {
+ 	/* function format          argument      status_no     update_interval */
+-	{ datetime,  "^fs^^C6^^f4^󰔟 %s^f4^^fr^^r0,h,d,2^^f2^",  "%F %T", "0", 1  },
+-	{ ram_perc,  "^fs^^C2^^f4^  %s%%^f4^^fr^^r0,h,d,2^",   NULL,    "1", 1  },
+-	{ cpu_perc,  "^fs^^C5^^f4^  %s%%^f4^^fr^^r0,h,d,2^",   NULL,    "2", 1  },
+-	{ disk_free, "^fs^^C4^^f4^󱛟 %s free^f4^^fr^^r0,h,d,2^", "/",     "3", 60 },
+-	{ run_exec,  "^fs^^C1^^f4^%s^f4^^fr^^r0,h,d,2^",        "~/slstatus-sus/scripts/funcs/volume", "4", 1 },
+-	{ keymap,    " ^fs^^C3^^f4^ %s^f4^^fr^^r0,h,d,2^",	    NULL, 	 "5", 1 },
++	{ datetime,  "^C0^^B6^ 󰔟 ^f10^^d^^C6^%s^f2^",  "%F %T", "0", 1  },
++	{ ram_perc,  "^C0^^B2^   ^f10^^d^^C2^%s%%",   NULL,    "1", 1  },
++	{ cpu_perc,  "^C0^^B5^   ^f10^^d^^C5^%s%%",   NULL,    "2", 1  },
++	{ disk_free, "^C0^^B4^ 󱛟 ^f10^^d^^C4^%s free", "/",     "3", 60 },
++	{ run_exec,  "^C0^^B1^ %s ", "~/slstatus-sus/scripts/funcs/volume", "4", 1 },
++	{ keymap,    " ^C0^^B3^  ^f10^^d^^C3^%s",	   NULL, 	  "5", 1 },
+ };
