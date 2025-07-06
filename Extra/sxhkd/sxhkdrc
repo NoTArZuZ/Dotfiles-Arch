@@ -17,6 +17,12 @@ super + Escape
 # bspwm hotkeys
 #
 
+# root menu
+~button3
+	bspc query -D -d 'focused.!occupied' && \{ \
+		root-xmenu; \
+	\}
+
 # quit/restart bspwm
 super + alt + {q,r}
 	bspc {quit,wm -r}

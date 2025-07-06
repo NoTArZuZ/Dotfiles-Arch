@@ -2,9 +2,9 @@
 
 pgrep -x sxhkd > /dev/null || sxhkd &
 pgrep -x picom > /dev/null || picom --vsync -b &
+pgrep bspswallow || ~/.config/bspwm/bspswallow &
 
 polybar-toggle
-
 xrdb -merge ~/.Xresources &
 xsetroot -cursor_name left_ptr &
 
@@ -22,3 +22,5 @@ bspc config focus_follows_pointer  true
 bspc config borderless_monocle     true
 bspc config gapless_monocle        true
 bspc config single_monocle         true
+
+bspc rule -a Nsxiv state='floating'
