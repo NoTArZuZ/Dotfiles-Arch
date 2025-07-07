@@ -679,16 +679,25 @@ client.connect_signal("mouse::enter", function(c)
     c:emit_signal("request::activate", "mouse_enter", {raise = false})
 end)
 
-function border_adjust(c)
-    if #c.screen.clients == 1 then
-        c.border_width = 0
-        awful.titlebar.hide(c, "top")
-    elseif #c.screen.clients > 1 then
-        awful.titlebar.show(c, "top")
-        c.border_width = beautiful.border_width
+-- Smart borders for single, floating, maximized window and for max, floating layouts
+screen.connect_signal("arrange", function (s)
+    local only_one = #s.tiled_clients == 1
+    local layout = awful.layout.getname(awful.layout.get(s))
+    for _, c in pairs(s.clients) do
+        if only_one and layout == "floating" then
+            c.border_width = beautiful.border_width -- your border width
+            awful.titlebar.show(c, "top")
+        elseif (only_one or layout == "max") and not c.floating or c.maximized then
+            c.border_width = 0
+            awful.titlebar.hide(c, "top")
+        else
+            c.border_width = beautiful.border_width -- your border width
+            awful.titlebar.show(c, "top")
+        end
     end
-end
+end)
 
+-- Window swallowing implementation
 table_is_swallowed = { "St", }
 table_minimize_parent = { "mpv", "Nsxiv", "Cromite" }
 table_cannot_swallow = { "Dragon" }
@@ -772,10 +781,8 @@ client.connect_signal("manage", function(c)
         end
     end)
 end)
+-- End of window swallowing implementation
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
-client.connect_signal("focus", border_adjust)
-client.connect_signal("unfocus", border_adjust)
-
 -- }}}
