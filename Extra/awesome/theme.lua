@@ -37,6 +37,8 @@ theme.tasklist_bg_focus = theme.bg_normal
 
 theme.taglist_spacing = 6
 
+theme.systray_icon_spacing = 4
+
 theme.menu_font = "Ubuntu Nerd Font 12"
 theme.menu_fg_focus = "#000000"
 theme.menu_border_width = 2

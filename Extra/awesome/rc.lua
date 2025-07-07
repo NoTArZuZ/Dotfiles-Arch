@@ -218,6 +218,17 @@ local volumewidget = {
     widget = wibox.container.background(),
     bg = xcolors.color1,
     fg = xcolors.color0,
+    buttons = gears.table.join(
+        awful.button({ }, 1, function ()
+            awful.spawn("bash -c 'pactl set-sink-mute @DEFAULT_SINK@ toggle'")
+        end),
+        awful.button({ }, 4, function ()
+            awful.spawn("bash -c 'pactl set-sink-volume @DEFAULT_SINK@ +2%'")
+        end),
+        awful.button({ }, 5, function ()
+            awful.spawn("bash -c 'pactl set-sink-volume @DEFAULT_SINK@ -2%'")
+        end)
+    )
 }
 
 awful.screen.connect_for_each_screen(function(s)
@@ -244,8 +255,8 @@ awful.screen.connect_for_each_screen(function(s)
     local fancy_taglist = require("fancytags")
         s.taglist = fancy_taglist.new({
             screen = s,
-            taglist = { buttons = mytagbuttons },
-            tasklist = { buttons = mytasklistbuttons }
+            taglist = { buttons = taglist_buttons },
+            tasklist = { buttons = tasklist_buttons }
     })
 
     separatorA = wibox.widget.textbox()
@@ -258,29 +269,37 @@ awful.screen.connect_for_each_screen(function(s)
 
     memicon = wibox.widget.textbox() -- RAM Icon
     memicon.markup = markup.color(xcolors.color0, xcolors.color2, "   " )
+    memicon:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/mem'") end)) -- RAM click function
 
     memwidget = wibox.widget.textbox() -- RAM Widget
     vicious.cache(vicious.widgets.mem)
     vicious.register(memwidget, vicious.widgets.mem, markup.fg.color(xcolors.color2, " $1%"), 1)
+    memwidget:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/mem'") end)) -- RAM click function
 
     cpuicon = wibox.widget.textbox() -- CPU Icon
     cpuicon.markup = markup.color(xcolors.color0, xcolors.color5, "   " )
+    cpuicon:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/cpu'") end)) -- CPU click function
 
     cpuwidget = wibox.widget.textbox() -- CPU Widget
     vicious.cache(vicious.widgets.cpu)
     vicious.register(cpuwidget, vicious.widgets.cpu, markup.fg.color(xcolors.color5, " $1%"), 1)
+    cpuwidget:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/cpu'") end)) -- CPU click function
 
     diskicon = wibox.widget.textbox() -- Disk Icon
     diskicon.markup = markup.color(xcolors.color0, xcolors.color4, " 󱛟 " )
+    diskicon:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/diskfree'") end)) -- Disk click function
 
     diskwidget = wibox.widget.textbox() -- Disk Widget
     vicious.register(diskwidget, vicious.widgets.fs, markup.fg.color(xcolors.color4, " ${/ avail_gb} GiB free"), 60)
+    diskwidget:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/diskfree'") end)) -- Disk click function
 
     dateicon = wibox.widget.textbox() -- Date Icon
     dateicon.markup = markup.color(xcolors.color0, xcolors.color6, " 󰔟 ")
+    dateicon:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/date'") end)) -- Date click function
     
     datewidget = wibox.widget.textbox() -- Date Widget
     vicious.register(datewidget, vicious.widgets.date, markup.fg.color(xcolors.color6, " %F %T "), 1)
+    datewidget:buttons(awful.button({ }, 1, function () awful.spawn("bash -c '~/slstatus-sus/scripts/onclick/date'") end)) -- Date click function
 
     kblayouticon = wibox.widget.textbox() -- Keyboard Layout Icon
     kblayouticon.markup = markup.color(xcolors.color0, xcolors.color3, "  ")
@@ -570,6 +589,7 @@ awful.rules.rules = {
           "MessageWin",  -- kalarm.
           "Nsxiv",
           "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
+          "steam",
           "Wpa_gui",
           "veromix",
           "xtightvncviewer"},
