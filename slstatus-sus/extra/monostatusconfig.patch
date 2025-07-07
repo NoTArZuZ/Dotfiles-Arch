@@ -1,9 +1,9 @@
 --- ~/Dotfiles/slstatus-sus/config.h	2025-07-02 01:37:49.096741638 +0500
 +++ ~/slstatus-sus/config.h	2025-07-04 19:09:12.460838922 +0500
-@@ -81,10 +81,10 @@
-  */
+@@ -82,10 +82,11 @@
  static const struct arg args[] = {
  	/* function format          argument      status_no     update_interval */
+ 	// { username,  			"^C0^^B7^   ^d^ ",               NULL,    "7", 60 },
 -	{ datetime,  "^C0^^B6^ 󰔟 ^f10^^d^^C6^%s^f2^",  "%F %T", "0", 1  },
 -	{ ram_perc,  "^C0^^B2^   ^f10^^d^^C2^%s%%",   NULL,    "1", 1  },
 -	{ cpu_perc,  "^C0^^B5^   ^f10^^d^^C5^%s%%",   NULL,    "2", 1  },
