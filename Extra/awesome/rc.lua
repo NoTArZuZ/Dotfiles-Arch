@@ -428,6 +428,8 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
+    awful.key({ modkey            }, "c",      function () awful.spawn("conky-toggle") end,
+              {description = "toggle conky", group = "launcher"}),
     awful.key({ modkey            }, "d",      function () awful.spawn(dmenu) end,
               {description = "dmenu_run", group = "launcher"}),
     awful.key({ modkey, "Shift"   }, "d",      function () awful.spawn("hub-script") end,
