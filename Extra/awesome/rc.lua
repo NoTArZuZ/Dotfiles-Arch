@@ -324,8 +324,8 @@ awful.screen.connect_for_each_screen(function(s)
     s.wibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
-            -- wmicon,
-            -- separatorC, --separator
+            wmicon,
+            separatorC, --separator
             layout = wibox.layout.fixed.horizontal,
             s.taglist,
             separatorB, --separator

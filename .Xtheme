@@ -80,7 +80,7 @@ dusk.titlenorm.fg.color: #ffffff
 dusk.titlenorm.bg.color: #282c34
 dusk.titlenorm.border.color: #1c1f24
 dusk.titlesel.fg.color: #ffffff
-dusk.titlesel.bg.color: #51afef
+dusk.titlesel.bg.color: #282c34
 dusk.titlesel.border.color: #51afef
 dusk.scratchnorm.fg.color: #ffffff
 dusk.scratchnorm.bg.color: #282c34

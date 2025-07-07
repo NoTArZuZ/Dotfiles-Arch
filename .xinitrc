@@ -5,5 +5,5 @@ xrdb -merge /home/sus/.Xresources &
 xsetroot -cursor_name left_ptr &
 feh --bg-scale ~/.cache/wallcache
 # exec dbus-launch --sh-syntax --exit-with-session dusk
-# exec dbus-launch --exit-with-session bspwm
-exec dbus-launch --exit-with-session awesome
+exec dbus-launch --exit-with-session bspwm
+# exec dbus-launch --exit-with-session awesome
