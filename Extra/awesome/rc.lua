@@ -233,7 +233,7 @@ local volumewidget = {
 
 awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
-    awful.tag({ "󰣇 ", " ", " ", " ", " " }, s, awful.layout.suit.tile)
+    awful.tag({ " 󰣇 ", "  ", "  ", "  ", "  " }, s, awful.layout.suit.tile)
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen
@@ -252,12 +252,19 @@ awful.screen.connect_for_each_screen(function(s)
         widget_template = tasklist_template,
     }
 
-    local fancy_taglist = require("fancytags")
-        s.taglist = fancy_taglist.new({
-            screen = s,
-            taglist = { buttons = taglist_buttons },
-            tasklist = { buttons = tasklist_buttons }
-    })
+    -- Create a taglist widget
+    s.taglist = awful.widget.taglist {
+        screen  = s,
+        filter  = awful.widget.taglist.filter.all,
+        buttons = taglist_buttons,
+    }
+
+    -- local fancy_taglist = require("fancytags")
+    --     s.taglist = fancy_taglist.new({
+    --         screen = s,
+    --         taglist = { buttons = taglist_buttons },
+    --         tasklist = { buttons = tasklist_buttons }
+    -- })
 
     separatorA = wibox.widget.textbox()
     separatorA.text = "  "
