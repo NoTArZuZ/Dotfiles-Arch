@@ -314,6 +314,9 @@ awful.screen.connect_for_each_screen(function(s)
     keyboardLayout = wibox.container.background(awful.widget.keyboardlayout()) -- Keyboard Layout Widget
     keyboardLayout.fg = xcolors.color3
 
+    wmicon = wibox.widget.textbox() -- WM Icon
+    wmicon.markup = markup.color(xcolors.color0, xcolors.color7, "   ")
+
     -- Create the wibox
     s.wibox = awful.wibar({ position = "top", screen = s, height = 20 })
 
@@ -321,6 +324,8 @@ awful.screen.connect_for_each_screen(function(s)
     s.wibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
+            -- wmicon,
+            -- separatorC, --separator
             layout = wibox.layout.fixed.horizontal,
             s.taglist,
             separatorB, --separator
@@ -355,7 +360,8 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mainmenu:toggle() end),
+    awful.button({ }, 1, function () mainmenu:hide() end),
+    awful.button({ }, 3, function () mainmenu:show() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
