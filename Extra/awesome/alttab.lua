@@ -351,12 +351,12 @@ function _M.preview()
 				textWidth = cr:text_extents(text).width
 				textHeight = cr:text_extents(text).height
 
-				local titleboxWidth = 172 + iconboxWidth
+				local titleboxWidth = 180 + iconboxWidth
 				local titleboxHeight = textboxHeight
 
 				-- Draw icons
 				tx = (w - titleboxWidth) / 2
-				ty = h
+				ty = h - 14
 				sx = iconboxWidth / icon.width
 				sy = iconboxHeight  / icon.height
 
@@ -369,7 +369,7 @@ function _M.preview()
 
 				-- Draw titles
 				tx = tx + iconboxWidth
-				ty = h + (textboxHeight + textHeight) / 2
+				ty = h + (textboxHeight + textHeight) / 2 - 14
 
 				cr:set_source_rgba(unpack(_M.settings.preview_box_title_color))
 				cr:move_to(tx, ty)
