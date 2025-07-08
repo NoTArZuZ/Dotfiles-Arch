@@ -1,0 +1,108 @@
+*background: #000000
+*foreground: #ffffff
+
+! Black + DarkGrey
+*color0:  #222222
+*color8:  #e6e6e6
+
+! DarkRed + Red
+*color1:  #ff0000
+*color9:  #ff0000
+
+! DarkGreen + Green
+*color2:  #00ff00
+*color10: #00ff00
+
+! DarkYellow + Yellow
+*color3:  #ffff00
+*color11: #ffff00
+
+! DarkBlue + Blue
+*color4:  #2222ff
+*color12: #2222ff
+
+! DarkMagenta + Magenta
+*color5:  #ff00ff
+*color13: #ff00ff
+
+! DarkCyan + Cyan
+*color6:  #7777ff
+*color14: #7777ff
+
+! LightGrey + White
+*color7:  #e6e6e6
+*color15: #efefef
+
+st.cursorColor: #ffffff
+st.cursorReverse: #222222
+
+dmenu.background: #000000
+dmenu.selbackground: #2222ff
+dmenu.foreground: #ffffff
+dmenu.selforeground: #000000
+dmenu.selhlbackground: #000000
+dmenu.selhlforeground: #00ff00
+dmenu.hlbackground: #000000
+dmenu.hlforeground: #00ff00
+dmenu.midbackground: #222222
+dmenu.midforeground: #d7d7d7
+dmenu.bordercolor: #2222ff
+dmenu.hpbackground: #00ff00
+dmenu.hpforeground: #222222
+dmenu.outbackground: #7777ff
+dmenu.outforeground: #222222
+dmenu.greenbackground: #00ff00
+dmenu.greenforeground: #e6e6e6
+dmenu.yellowbackground: #ffff00
+dmenu.yellowforeground: #e6e6e6
+dmenu.bluebackground: #7777ff
+dmenu.blueforeground: #e6e6e6
+dmenu.purplebackground: #ff00ff
+dmenu.purpleforeground: #e6e6e6
+dmenu.redbackground: #ff0000
+dmenu.redforeground: #e6e6e6
+
+xmenu.width: 150
+xmenu.background: #000000
+xmenu.foreground: #ffffff
+xmenu.selbackground: #2222ff
+xmenu.selforeground: #000000
+xmenu.separatorWidth: 1
+xmenu.separator: #000000
+xmenu.border: #2222ff
+xmenu.borderWidth: 2
+xmenu.alignment: left
+
+dusk.norm.fg.color: #ffffff
+dusk.norm.bg.color: #000000
+dusk.norm.border.color: #000000
+dusk.titlenorm.fg.color: #ffffff
+dusk.titlenorm.bg.color: #000000
+dusk.titlenorm.border.color: #222222
+dusk.titlesel.fg.color: #ffffff
+dusk.titlesel.bg.color: #000000
+dusk.titlesel.border.color: #2222ff
+dusk.scratchnorm.fg.color: #ffffff
+dusk.scratchnorm.bg.color: #000000
+dusk.scratchnorm.border.color: #222222
+dusk.scratchsel.fg.color: #ffffff
+dusk.scratchsel.bg.color: #2222ff
+dusk.scratchsel.border.color: #222222
+dusk.hidnorm.fg.color: #ffffff
+dusk.hidnorm.bg.color: #000000
+dusk.hidsel.fg.color: #ffffff
+dusk.hidsel.bg.color: #2222ff
+dusk.urg.fg.color: #ffffff
+dusk.urg.bg.color: #ff0000
+dusk.urg.border.color: #ff0000
+dusk.marked.fg.color: #222222
+dusk.marked.bg.color: #7777ff
+dusk.marked.border.color: #7777ff
+dusk.wsnorm.fg.color: #ffffff
+dusk.wsnorm.bg.color: #000000
+dusk.wsvis.fg.color: #ffffff
+dusk.wsvis.bg.color: #000000
+dusk.wssel.fg.color: #ffffff
+dusk.wssel.bg.color: #2222ff
+dusk.wsocc.fg.color: #ffffff
+dusk.wsocc.bg.color: #000000

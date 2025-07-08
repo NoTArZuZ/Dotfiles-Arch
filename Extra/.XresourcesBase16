@@ -1,0 +1,26 @@
+! Main X config
+Xft.antialias:	1
+Xft.hinting:	1
+Xft.autohint:	0
+Xft.hintstyle:	hintmedium
+Xft.rgba:	rgb
+Xft.lcdfilter:	lcddefault
+Xcursor.theme: BreezeX-Light
+Xcursor.size: 32
+
+! St visual
+st.borderpx: 0
+st.alpha: 1.0
+
+! Fonts
+dusk.font1: Terminess Nerd Font Mono:size=14:hintstyle=hintlight
+dusk.font2:
+dmenu.font: Terminess Nerd Font Mono:size=16:hintstyle=hintlight
+xmenu.font: Terminess Nerd Font Mono:size=16:hintstyle=hintlight
+st.font: Terminess Nerd Font Mono:size=17:hintstyle=hintlight
+! st.font: Terminus (TTF):style=Bold:pixelsize=20
+! st.font: IosevkaTerm Nerd Font Mono:medium:pixelsize=18:antialias=true:autohint=true
+! st.font: Mononoki Nerd Font Mono:medium:pixelsize=18:antialias=true:autohint=true
+
+! Theme
+#include ".Xtheme"

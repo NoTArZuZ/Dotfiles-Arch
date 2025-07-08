@@ -18,9 +18,9 @@ dusk.font2:
 dmenu.font: Ubuntu Nerd Font:size=12
 xmenu.font: Ubuntu Nerd Font:size=12
 st.font: NotoSansM NF:semibold:size=13:antialias=true:autohint=true
-! st.font: Terminus (TTF):style=Bold:pixelsize=20
-! st.font: IosevkaTerm Nerd Font Mono:medium:pixelsize=18:antialias=true:autohint=true
-! st.font: Mononoki Nerd Font Mono:medium:pixelsize=18:antialias=true:autohint=true
+! st.font: Terminess Nerd Font Mono:size=17:hintstyle=hintlight
+! st.font: IosevkaTerm Nerd Font Mono:medium:size=14:antialias=true:autohint=true
+! st.font: Mononoki Nerd Font Mono:medium:size=14:antialias=true:autohint=true
 
 ! Theme
 #include ".Xtheme"
