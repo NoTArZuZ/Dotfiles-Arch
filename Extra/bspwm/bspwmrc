@@ -24,3 +24,5 @@ bspc config gapless_monocle        true
 bspc config single_monocle         true
 
 bspc rule -a Nsxiv state='floating'
+bspc rule -a steam state='floating'
+bspc rule -a Mumble state='floating'
