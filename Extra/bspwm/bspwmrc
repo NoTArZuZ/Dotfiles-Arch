@@ -26,3 +26,4 @@ bspc config single_monocle         true
 bspc rule -a Nsxiv state='floating'
 bspc rule -a steam state='floating'
 bspc rule -a Mumble state='floating'
+bspc rule -a Mumble sticky=on
