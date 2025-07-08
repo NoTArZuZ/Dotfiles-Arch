@@ -233,8 +233,8 @@ local volumewidget = {
 
 awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
-    awful.tag({ " 󰣇 ", "  ", "  ", "  ", "  " }, s, awful.layout.suit.tile)
-    -- awful.tag({ "󰣇 ", " ", " ", " ", " " }, s, awful.layout.suit.tile)
+    -- awful.tag({ " 󰣇 ", "  ", "  ", "  ", "  " }, s, awful.layout.suit.tile)
+    awful.tag({ "󰣇 ", " ", " ", " ", " " }, s, awful.layout.suit.tile)
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen
@@ -254,18 +254,18 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Create a taglist widget
-    s.taglist = awful.widget.taglist {
-        screen  = s,
-        filter  = awful.widget.taglist.filter.all,
-        buttons = taglist_buttons,
-    }
+    -- s.taglist = awful.widget.taglist {
+    --     screen  = s,
+    --     filter  = awful.widget.taglist.filter.all,
+    --     buttons = taglist_buttons,
+    -- }
 
-    -- local fancy_taglist = require("fancytags")
-    --     s.taglist = fancy_taglist.new({
-    --         screen = s,
-    --         taglist = { buttons = taglist_buttons },
-    --         tasklist = { buttons = tasklist_buttons }
-    -- })
+    local fancy_taglist = require("fancytags")
+        s.taglist = fancy_taglist.new({
+            screen = s,
+            taglist = { buttons = taglist_buttons },
+            tasklist = { buttons = tasklist_buttons }
+    })
 
     separatorA = wibox.widget.textbox()
     separatorA.text = "  "
@@ -389,7 +389,7 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey, "Shift"   }, "w", function () mainmenu:show() end,
+    awful.key({ modkey, "Mod1"   }, "w", function () mainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
@@ -407,9 +407,9 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey, "Control" }, "r", awesome.restart,
+    awful.key({ modkey, "Mod1" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit,
+    awful.key({ modkey, "Mod1"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
@@ -429,7 +429,7 @@ globalkeys = gears.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
 
-    awful.key({ modkey, "Control" }, "n",
+    awful.key({ modkey, "Shift" }, "z",
               function ()
                   local c = awful.client.restore()
                   -- Focus restored client
@@ -478,7 +478,7 @@ clientkeys = gears.table.join(
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               {description = "toggle keep on top", group = "client"}),
-    awful.key({ modkey,           }, "n",
+    awful.key({ modkey,           }, "z",
         function (c)
             -- The client currently has the input focus, so it cannot be
             -- minimized, since minimized clients can't have the focus.
