@@ -31,7 +31,6 @@
 * **Important** Extra WM configs also use my modified suckless software, so make sure you've installed st, dmenu, xmenu and slstatus
 * Move xorg.conf's into /etc/X11/xorg.conf.d/
 * Move Extra/fonts-local.conf into /etc/fonts/local.conf
-* For Variable Refresh Rate properly paste code from drirc-mesa to /usr/share/drirc.d/00-mesa-defaults.conf
 * Add Color and ILoveCandy to pacman (ParallelDownloads = 5 if not set)
 * Do sensors-detect (carefully) for conky temps
 * Install Microsoft fonts
