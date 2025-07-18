@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pgrep -x sxhkd > /dev/null || sxhkd &
-pgrep -x picom > /dev/null || picom --vsync -b &
+pgrep -x picom > /dev/null || picom --vsync --config ~/.config/picom/bspicom.conf -b &
 pgrep bspswallow || ~/.config/bspwm/bspswallow &
 
 polybar-toggle
@@ -13,7 +13,7 @@ bspc monitor -d 1 2 3 4 5
 bspc config normal_border_color  "#282C34"
 bspc config focused_border_color "#51AFEF"
 
-bspc config border_width           1
+bspc config border_width           0
 bspc config window_gap             12
 
 bspc config split_ratio            0.50
@@ -21,7 +21,7 @@ bspc config focus_follows_pointer  true
 
 bspc config borderless_monocle     true
 bspc config gapless_monocle        true
-bspc config single_monocle         true
+bspc config single_monocle         false
 
 bspc rule -a Nsxiv state='floating'
 bspc rule -a steam state='floating'

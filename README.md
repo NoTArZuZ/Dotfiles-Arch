@@ -14,7 +14,7 @@
 6. Move .local/bin/{hub-script,conky-toggle,root-xmenu} to /usr/local/bin directory
 7. Base installation done!
 
-**Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd\
+**Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd picom-ftlabs-git\
 **Optional WMs** - awesome bspwm
 
 ## Updating

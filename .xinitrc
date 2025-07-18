@@ -4,6 +4,8 @@ setterm --blank=0 --powersave off --powerdown=0; xset s 0 0; xset dpms 0 0 0; xs
 xrdb -merge /home/sus/.Xresources &
 xsetroot -cursor_name left_ptr &
 feh --bg-scale ~/.cache/wallcache
+# exec cinnamon-session
+# exec startxfce4 # disable dunst and install xfce4-notifyd
 exec dbus-launch --sh-syntax --exit-with-session dusk
 # exec dbus-launch --exit-with-session bspwm
 # exec dbus-launch --exit-with-session awesome
