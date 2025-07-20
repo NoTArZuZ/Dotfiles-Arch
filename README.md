@@ -14,7 +14,7 @@
 6. Move .local/bin/{hub-script,conky-toggle,root-xmenu} to /usr/local/bin directory
 7. Base installation done!
 
-**Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd picom-ftlabs-git\
+**Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd picom-ftlabs-git neomutt mutt-wizard-git newsboat weechat\
 **Optional WMs** - awesome bspwm
 
 ## Updating
@@ -29,8 +29,8 @@
 *mostly reminders for myself*
 
 * **Important** Extra WM configs also use my modified suckless software, so make sure you've installed st, dmenu, xmenu and slstatus
-* Move xorg.conf's into /etc/X11/xorg.conf.d/
-* Move Extra/fonts-local.conf into /etc/fonts/local.conf
+* Move Extra/xorg.conf.d/*configs* into /etc/X11/xorg.conf.d/
+* Move Extra/fonts/local.conf into /etc/fonts/local.conf
 * Add Color and ILoveCandy to pacman (ParallelDownloads = 5 if not set)
 * Do sensors-detect (carefully) for conky temps
 * Install Microsoft fonts
