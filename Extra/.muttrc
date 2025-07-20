@@ -1,0 +1,13 @@
+color index magenta default '.*'
+color index_author cyan default '.*'
+color index_number cyan default
+color index_subject blue default '.*'
+color index brightmagenta black "~N"
+color index_author brightcyan black "~N"
+color index_subject brightblue black "~N"
+color index black blue "~T"
+color index_author black blue "~T"
+color index_subject black blue "~T"
+color sidebar_highlight cyan default
+color sidebar_flagged cyan black
+color status brightblue black
