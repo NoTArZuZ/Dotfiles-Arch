@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# Dependencies: ffmpeg, pactl
+
+. ~/Scripts/script-vars
+
+# It is very handy to record separate microphone track
+
+# Vars
+scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')
+
+# Functions
+recvidsnd() {
+  ffmpeg -f x11grab -framerate 30 -s "$scrres" -i "$DISPLAY" -r 24 -f pulse -i "$(pactl get-default-sink).monitor" -c:v h264 -c:a flac "${videodir}/$(date '+%y%m%d-%H%M%S-video').mkv" &
+  echo $! > /tmp/recvidpid
+}
+
+recmic() {
+  ffmpeg -f pulse -i "$(pactl get-default-source)" -c:a flac "${videodir}/$(date '+%y%m%d-%H%M%S-mic').flac" &
+  echo $! > /tmp/recmicpid
+}
+
+recsnd() {
+  ffmpeg -f pulse -i "$(pactl get-default-sink).monitor" -c:a flac "${videodir}/$(date '+%y%m%d-%H%M%S-desktop').flac" &
+  echo $! > /tmp/recsndpid
+}
+
+stoprec() {
+  if [ "$reallystop" = "Yes" ]; then
+    kill -15 "$(cat /tmp/recvidpid)"
+    rm -f /tmp/recvidpid
+    kill -15 "$(cat /tmp/recmicpid)"
+    rm -f /tmp/recmicpid
+    kill -15 "$(cat /tmp/recsndpid)"
+    rm -f /tmp/recsndpid
+    notify-send -i info "Recording Tool" "Stopped active recording"
+    exit 0
+  else
+    exit 1
+  fi
+}
+
+startrec() {
+recopts=$(printf ":g  Mic and Desktop\n:y  Desktop" | $menu "Audio method:" -l 2 -1 -R -n | $cutemoji)
+case $mainmethod in
+  Record\ Video)
+    if [ "$recopts" == "Mic and Desktop" ]; then
+      recvidsnd &
+      recmic
+    else
+      recvidsnd
+    fi
+    notify-send -i info "Recording Tool" "Started video recording..."
+  ;;
+  Record\ Audio)
+    if [ "$recopts" == "Mic and Desktop" ]; then
+      recsnd &
+      recmic
+    else
+      recsnd
+    fi
+    notify-send -i info "Recording Tool" "Started audio recording..."
+  ;;
+esac
+}
+
+# Arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -vs) recvidsnd; exit 0 ;;
+    -vm) recvidsnd & recmic; exit 0 ;;
+    -as) recsnd; exit 0 ;;
+    -am) recsnd & recmic; exit 0 ;;
+    -s) reallystop="Yes"; stoprec; exit 0 ;;
+    *)
+      printf "[-v] - video [-a] - audio\n[-m] - mic + desktop [-s] - desktop\nWrite above arguments together!\n[-s] - stop active recording\n"
+      exit 1
+    ;;
+  esac
+done
+
+# Main Choice
+if [ -e /tmp/recvidpid ] || [ -e /tmp/recmicpid ] || [ -e /tmp/recsndpid ]; then
+  reallystop=$(printf ":g  Yes\n:r  No" | $menu "Stop recording?" -l 2 -1 -R -n | $cutemoji)
+  stoprec
+fi
+
+mainmethod=$(printf ":g  Record Video\n:y  Record Audio" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji) && startrec
+    
