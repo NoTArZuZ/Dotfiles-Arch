@@ -4,7 +4,7 @@
 
 case "$1" in
   *://*.png*|*://*.jpg*|*://*.jpeg*|*://*.gif*) nsxiv-url "$1" ;;
-  *://*.mp4*|*://*.mov*|*://*.mp3*|*://*.wav*|*://*.ogg*|*://*.m4a*|*://*.flac*|*://inv*.nadeko.net/watch*) mpv "$1" ;;
+  *://*.mp4*|*://*.mov*|*://*.mp3*|*://*.wav*|*://*.ogg*|*://*.m4a*|*://*.flac*|*://inv*.nadeko.net/watch*|*://v.redd.it/*) mpv "$1" ;;
   *://*.*) cromite "$1" ;;
   *) echo "Don't know what to do with this url"; exit 1 ;;
 esac
