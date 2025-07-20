@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-[ -z "$1" ] && echo "No arguments given" && exit 1
+url="$1"
 
-case "$1" in
-  *://*.png*|*://*.jpg*|*://*.jpeg*|*://*.gif*) nsxiv-url "$1" ;;
-  *://*.mp4*|*://*.mov*|*://*.mp3*|*://*.wav*|*://*.ogg*|*://*.m4a*|*://*.flac*|*://inv*.nadeko.net/watch*|*://v.redd.it/*) mpv "$1" ;;
-  *://*.*) cromite "$1" ;;
+[ -z "$1" ] && url="$(xclip -o)" 
+
+case "$url" in
+  *://*.png*|*://*.jpg*|*://*.jpeg*|*://*.gif*) nsxiv-url "$url" ;;
+  *://*.mp4*|*://*.mov*|*://*.mp3*|*://*.wav*|*://*.ogg*|*://*.m4a*|*://*.flac*|*://v.redd.it/*) mpv "$url" ;;
+  *://*.*) cromite "$url" ;;
   *) echo "Don't know what to do with this url"; exit 1 ;;
 esac
