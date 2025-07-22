@@ -10,13 +10,13 @@ PS0="\[\e[0m\]" # Reset colours after pressing enter
 PROMPT_COMMAND='history -a'
 export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
+export EDITOR=helix
+export visual=helix
 export QT_QPA_PLATFORMTHEME=gtk2
 export HISTFILESIZE=10000
 export HISTSIZE=500
 export HISTTIMEFORMAT="%F %T"
 export HISTCONTROL=erasedups:ignoredups:ignorespace
-export EDITOR=helix
-export visual=helix
 export FZF_DEFAULT_OPTS='
   --color=dark
   --color=fg:-1,bg:-1,hl:4,fg+:15,bg+:0,hl+:6
@@ -25,6 +25,8 @@ export FZF_DEFAULT_OPTS='
 '
 
 # Aliases
+alias "doas"="sudo"
+alias "fucking"="sudo"
 # Pacman
 alias "pacS"='yay -S'
 alias "pacSs"='yay -Ss'
