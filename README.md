@@ -33,3 +33,6 @@
 * Add Color and ILoveCandy to pacman (ParallelDownloads = 5 if not set)
 * Do sensors-detect (carefully) for conky temps
 * Install Microsoft fonts
+* To use libvirt edit /etc/libvirt/network.conf firewall = iptables
+* Use linkhandler in urlview by editing /etc/urlview.conf
+* Symlink yt-dlp to youtube-dl to use mpv over internet
