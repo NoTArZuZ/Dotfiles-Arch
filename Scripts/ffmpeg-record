@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Dependencies: ffmpeg, pactl
 
+set -euo pipefail
+
 . ~/Scripts/script-vars
 
 # It is very handy to record separate microphone track

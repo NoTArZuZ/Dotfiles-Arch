@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Dependencies: translate-shell
 
-. ~/Scripts/script-vars
-
 set -euo pipefail
+
+. ~/Scripts/script-vars
 
 word=$(echo "" | $menu "Enter word to translate:")
 from=$(printf "en\nru\nde\nfr" | $menu "Translate from:" -l 4)

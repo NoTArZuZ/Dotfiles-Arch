@@ -22,9 +22,3 @@ diff -r -q ~/st-sus ~/Dotfiles/st-sus | grep -v "^Only in" || :
 echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}slstatus-sus${NoCol}"
 diff -r -q ~/slstatus-sus ~/Dotfiles/slstatus-sus | grep -v "^Only in" || :
 echo 
-
-echo -e " ${BRed}! PATH scripts${NoCol}"
-echo 
-echo -e "${BPurple}>> ${BCyan}diff${NoCol} of ${BYellow}root-xmenu${NoCol}"
-diff --color /usr/local/bin/root-xmenu ~/Dotfiles/.local/bin/root-xmenu
-echo 

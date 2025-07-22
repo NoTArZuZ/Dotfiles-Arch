@@ -8,6 +8,7 @@ PS0="\[\e[0m\]" # Reset colours after pressing enter
 
 # Variables
 PROMPT_COMMAND='history -a'
+export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
 export QT_QPA_PLATFORMTHEME=gtk2
 export HISTFILESIZE=10000
@@ -60,6 +61,7 @@ alias "ll"='eza --icons --git -al'
 alias "tree"='eza --icons -aT'
 alias "grep"='grep --color=auto'
 alias "diff"='diff --color'
+alias "shx"='SUDO_EDITOR=helix sudoedit'
 
 # Functions
 # Extract various archives

@@ -1,0 +1,6 @@
+if pgrep -x plank > /dev/null; then
+	pkill -x plank
+else
+	sleep 1
+	XDG_SESSION_TYPE=x11 plank &
+fi

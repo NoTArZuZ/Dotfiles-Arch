@@ -11,8 +11,7 @@
 3. Enable services: NetworkManager, ufw, pipewire, pipewire-pulse, wireplumber, vnstat
 4. Move {dusk,dmenu,st,slstatus}-sus and xmenu to user's home and build them
 5. cd ~/Dotfiles and stow .
-6. Move .local/bin/{hub-script,conky-toggle,root-xmenu} to /usr/local/bin directory
-7. Base installation done!
+6. Base installation done!
 
 **Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd picom-ftlabs-git neomutt mutt-wizard-git newsboat weechat\
 **Optional WMs** - awesome bspwm

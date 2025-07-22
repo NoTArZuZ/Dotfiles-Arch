@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Dependencies: 
+
+set -euo pipefail
+
+. ~/Scripts/script-vars
+
+# Functions
+encmsg() {
+  st -e "gpgencryptor"
+}
+encfile() {
+  filetoenc=$(printf "Absolute path to file:" | $menu)
+  [ -f "$filetoenc" ] && st -e "gpgencryptor '$filetoenc'"
+}
+decmsg() {
+  st -e "gpgdecryptor"
+}
+decfile() {
+  filetodec=$(printf "Absolute path to file:" | $menu)
+  [ -f "$filetodec" ] && st -e "gpgdecryptor '$filetodec'"
+}
+
+# Main Method
+mainmethod=$(printf ":g  Encrypt Message\n:y  Decrypt Message\n:b  Encrypt File\n:p  Decrypt File" | $menu "Choose:" -l 4 -1 -R -n | $cutemoji)
+case $mainmethod in
+  Encrypt\ Message) encmsg ;;
+  Decrypt\ Message) decmsg ;;
+  Encrypt\ File) encfile ;;
+  Decrypt\ File) decfile ;;
+  *) exit 1 ;;
+esac
