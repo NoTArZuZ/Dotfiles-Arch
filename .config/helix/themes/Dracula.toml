@@ -91,12 +91,12 @@
 "type.enum.variant"               = { fg = "foreground",         modifiers = ["italic"]                     }
 
 "ui.background"                   = { fg    = "foreground",      bg = "background"                          }
-"ui.cursor"                       = { fg    = "background",      bg = "purple",        modifiers = ["dim"]  }
+"ui.cursor"                       = { fg    = "background",      bg = "foreground",    modifiers = ["dim"]  }
 "ui.cursor.insert"                = { fg    = "background",      bg = "green",         modifiers = ["dim"]  }	
 "ui.cursor.match"                 = { fg    = "foreground",      bg = "grey"                                }
-"ui.cursor.normal"                = { fg    = "background",      bg = "purple",        modifiers = ["dim"]  }	
+"ui.cursor.normal"                = { fg    = "background",      bg = "foreground",    modifiers = ["dim"]  }	
 "ui.cursor.primary.insert"        = { fg    = "background",      bg = "green"                               }	
-"ui.cursor.primary.normal"        = { fg    = "background",      bg = "purple"                              }	
+"ui.cursor.primary.normal"        = { fg    = "background",      bg = "foreground"                          }	
 "ui.cursor.primary.select"        = { fg    = "background",      bg = "cyan"                                }
 "ui.cursor.select"                = { fg    = "background",      bg = "cyan",          modifiers = ["dim"]  }
 "ui.cursorline.primary"           = {                            bg = "cursorline"                          }
