@@ -1,0 +1,108 @@
+*background: #282a36
+*foreground: #f8f8f2
+
+! Black + DarkGrey
+*color0:  #000000
+*color8:  #4d4d4d
+
+! DarkRed + Red
+*color1:  #ff5555
+*color9:  #ff6e67
+
+! DarkGreen + Green
+*color2:  #50fa7b
+*color10: #5af78e
+
+! DarkYellow + Yellow
+*color3:  #f1fa8c
+*color11: #f4f99d
+
+! DarkBlue + Blue
+*color4:  #bd93f9
+*color12: #caa9fa
+
+! DarkMagenta + Magenta
+*color5:  #ff79c6
+*color13: #ff92d0
+
+! DarkCyan + Cyan
+*color6:  #8be9fd
+*color14: #9aedfe
+
+! LightGrey + White
+*color7:  #e6e6e6
+*color15: #e6e6e6
+
+st.cursorColor: #f8f8f2
+st.cursorReverse: #282a36
+
+dmenu.background: #282a36
+dmenu.selbackground: #bd93f9
+dmenu.foreground: #f8f8f2
+dmenu.selforeground: #000000
+dmenu.selhlbackground: #000000
+dmenu.selhlforeground: #50fa7b
+dmenu.hlbackground: #000000
+dmenu.hlforeground: #50fa7b
+dmenu.midbackground: #000000
+dmenu.midforeground: #ffffff
+dmenu.bordercolor: #bd93f9
+dmenu.hpbackground: #50fa7b
+dmenu.hpforeground: #000000
+dmenu.outbackground: #8be9fd
+dmenu.outforeground: #000000
+dmenu.greenbackground: #50fa7b
+dmenu.greenforeground: #ffffff
+dmenu.yellowbackground: #f1fa8c
+dmenu.yellowforeground: #ffffff
+dmenu.bluebackground: #8be9fd
+dmenu.blueforeground: #ffffff
+dmenu.purplebackground: #bd93f9
+dmenu.purpleforeground: #ffffff
+dmenu.redbackground: #ff5555
+dmenu.redforeground: #ffffff
+
+xmenu.width: 150
+xmenu.background: #282a36
+xmenu.foreground: #f8f8f2
+xmenu.selbackground: #bd93f9
+xmenu.selforeground: #000000
+xmenu.separatorWidth: 1
+xmenu.separator: #282a36
+xmenu.border: #bd93f9
+xmenu.borderWidth: 2
+xmenu.alignment: left
+
+dusk.norm.fg.color: #ffffff
+dusk.norm.bg.color: #282a36
+dusk.norm.border.color: #000000
+dusk.titlenorm.fg.color: #ffffff
+dusk.titlenorm.bg.color: #282a36
+dusk.titlenorm.border.color: #000000
+dusk.titlesel.fg.color: #ffffff
+dusk.titlesel.bg.color: #282a36
+dusk.titlesel.border.color: #bd93f9
+dusk.scratchnorm.fg.color: #ffffff
+dusk.scratchnorm.bg.color: #282a36
+dusk.scratchnorm.border.color: #000000
+dusk.scratchsel.fg.color: #ffffff
+dusk.scratchsel.bg.color: #bd93f9
+dusk.scratchsel.border.color: #000000
+dusk.hidnorm.fg.color: #ffffff
+dusk.hidnorm.bg.color: #282a36
+dusk.hidsel.fg.color: #ffffff
+dusk.hidsel.bg.color: #bd93f9
+dusk.urg.fg.color: #ffffff
+dusk.urg.bg.color: #ff5555
+dusk.urg.border.color: #ff5555
+dusk.marked.fg.color: #000000
+dusk.marked.bg.color: #8be9fd
+dusk.marked.border.color: #9aedfe
+dusk.wsnorm.fg.color: #ffffff
+dusk.wsnorm.bg.color: #282a36
+dusk.wsvis.fg.color: #ffffff
+dusk.wsvis.bg.color: #282a36
+dusk.wssel.fg.color: #ffffff
+dusk.wssel.bg.color: #bd93f9
+dusk.wsocc.fg.color: #ffffff
+dusk.wsocc.bg.color: #282a36

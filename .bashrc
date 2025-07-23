@@ -129,12 +129,6 @@ zzhx() {
 shopt -s checkwinsize
 shopt -s histappend
 ufetch
-if [ -f /usr/bin/starship ]; then
-	eval "$(starship init bash)"
-fi
-if [ -f /usr/bin/fzf ]; then
-	FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
-fi
-if [ -f /usr/bin/zoxide ]; then
-	eval "$(zoxide init bash)"
-fi
+[ -f /usr/bin/starship ] && eval "$(starship init bash)"
+[ -f /usr/bin/fzf ] && FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
+[ -f /usr/bin/zoxide ] && eval "$(zoxide init bash)"
