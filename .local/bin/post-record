@@ -40,11 +40,11 @@ singleflag=0
 POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
 	case $1 in
-	  -s|--scale) scaler=true
+	  -m|--merge) merger=true
   		((singleflag += 1))
       shift
 	    ;;
-	  -m|--merge) merger=true
+	  -s|--scale) scaler=true
   		((singleflag += 1))
       shift
 	    ;;
@@ -54,9 +54,6 @@ while [[ $# -gt 0 ]]; do
 	    ;;
 	  -f|--fade) fader=true
   		((singleflag += 1))
-	    shift
-	    ;;
-	  -r|--res) newres=true
 	    shift
 	    ;;
 	-* | --*) helpmsg ;;
@@ -74,11 +71,6 @@ stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip f
 
 # Flag Check
 [ $singleflag = 1 ] || helpmsg
-[ $newres ] && {
-  [ "${POSITIONAL_ARGS[1]}" ] && scaleres="${POSITIONAL_ARGS[1]}"
-  [ "${POSITIONAL_ARGS[1]}" ] || read -r -p "New video resolution (1280x720): " scaleres
-  [ -z "$scaleres" ] && scaleres="1280x720"
-}
 
 # Print Debug Info
 echo ">> Debug Info"
@@ -87,12 +79,17 @@ echo ">> arg1: ${POSITIONAL_ARGS[1]}"
 echo ">> arg2: ${POSITIONAL_ARGS[2]}"
 echo ">> strip: $stripname"
 echo ">> res: $scaleres"
-echo ">> newres: $newres scaler: $scaler merger: $merger cut: $cutter fade: $fader"
+echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader"
 echo
 
 # Main Program
-[ $scaler ] && scalevideo
 [ $merger ] && mergeaudio
+[ $scaler ] && {
+  [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "New video resolution (1280x720): " scaleres
+  [ "${POSITIONAL_ARGS[1]}" ] && scaleres="${POSITIONAL_ARGS[1]}"
+  [ -z "$scaleres" ] && exit 1
+  scalevideo 
+}
 [ $cutter ] && {
   [ -z "${POSITIONAL_ARGS[1]}" ] && [ -z "${POSITIONAL_ARGS[2]}" ] && {
     read -r -p "Starting point for cut (hh:mm:ss.mmm): " startframe
