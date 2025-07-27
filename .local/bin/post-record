@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-singleflag=0
-scaleres=1280x720 # Fallback downscaling resolution
-
+# Functions
 scalevideo()
 {
   # Might find a way to make this GPU Accelerated
@@ -19,7 +17,12 @@ mergeaudio()
 
 cutvideo()
 {
-  ffmpeg -ss "${cutstart}" -to "${cutend}" -i "${POSITIONAL_ARGS[0]}" -c copy "${stripname}-cut.mkv"
+  ffmpeg -ss "${startframe}" -to "${endframe}" -i "${POSITIONAL_ARGS[0]}" -c copy "${stripname}-cut.mkv"
+}
+
+fadevideo()
+{
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -vf fade=d=0.5,fade=out:st=${endframe}:d=0.5 -af afade=d=0.5,afade=out:st=${endframe}:d=0.5 "${stripname}-faded.mkv"
 }
 
 helpmsg()
@@ -31,6 +34,7 @@ helpmsg()
 }
 
 # Get Arguments
+singleflag=0
 POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
 	case $1 in
@@ -43,6 +47,10 @@ while [[ $# -gt 0 ]]; do
       shift
 	    ;;
 	  -c|--cut) cutter=true
+  		((singleflag += 1))
+	    shift
+	    ;;
+	  -f|--fade) fader=true
   		((singleflag += 1))
 	    shift
 	    ;;
@@ -59,35 +67,46 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
+# Static Variable
 stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip for 3 letter ext
 
+# Flag Check
 [ $singleflag = 1 ] || helpmsg
-
 [ $newres ] && {
   [ "${POSITIONAL_ARGS[1]}" ] && scaleres="${POSITIONAL_ARGS[1]}"
   [ "${POSITIONAL_ARGS[1]}" ] || read -r -p "New video resolution (1280x720): " scaleres
   [ -z "$scaleres" ] && scaleres="1280x720"
 }
 
+# Print Debug Info
 echo ">> Debug Info"
 echo ">> arg0: ${POSITIONAL_ARGS[0]}"
 echo ">> arg1: ${POSITIONAL_ARGS[1]}"
 echo ">> arg2: ${POSITIONAL_ARGS[2]}"
 echo ">> strip: $stripname"
 echo ">> res: $scaleres"
-echo ">> newres: $newres scaler: $scaler merger: $merger cut: $cutter"
+echo ">> newres: $newres scaler: $scaler merger: $merger cut: $cutter fade: $fader"
 echo
 
+# Main Program
 [ $scaler ] && scalevideo
 [ $merger ] && mergeaudio
 [ $cutter ] && {
   [ -z "${POSITIONAL_ARGS[1]}" ] && [ -z "${POSITIONAL_ARGS[2]}" ] && {
-    read -r -p "Starting point for cut (hh:mm:ss.mmm): " cutstart
-    read -r -p "Ending point for cut (hh:mm:ss.mmm): " cutend
+    read -r -p "Starting point for cut (hh:mm:ss.mmm): " startframe
+    read -r -p "Ending point for cut (hh:mm:ss.mmm): " endframe
   }
-  [ "${POSITIONAL_ARGS[1]}" ] && cutstart="${POSITIONAL_ARGS[1]}"
-  [ "${POSITIONAL_ARGS[2]}" ] && cutend="${POSITIONAL_ARGS[2]}"
-  [ -z "$cutstart" ] && exit 1
-  [ -z "$cutend" ] && exit 1
+  [ "${POSITIONAL_ARGS[1]}" ] && startframe="${POSITIONAL_ARGS[1]}"
+  [ "${POSITIONAL_ARGS[2]}" ] && endframe="${POSITIONAL_ARGS[2]}"
+  [ -z "$startframe" ] && exit 1
+  [ -z "$endframe" ] && exit 1
   cutvideo
+}
+[ $fader ] && {
+  [ -z "${POSITIONAL_ARGS[1]}" ] && {
+    read -r -p "Video length (seconds): " endframe
+  }
+  [ "${POSITIONAL_ARGS[1]}" ] && endframe="${POSITIONAL_ARGS[1]}"
+  [ -z "$endframe" ] && exit 1
+  fadevideo
 }
