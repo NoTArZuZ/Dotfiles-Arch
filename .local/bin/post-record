@@ -18,11 +18,13 @@ mergeaudio()
 cutvideo()
 {
   ffmpeg -i "${POSITIONAL_ARGS[0]}" -ss "${startframe}" -to "${endframe}" -c copy "${stripname}-cut.mkv"
+  exit 0
 }
 
 fadevideo()
 {
   ffmpeg -i "${POSITIONAL_ARGS[0]}" -vf fade=d=0.5,fade=out:st=${endframe}:d=0.5 -af afade=d=0.5,afade=out:st=${endframe}:d=0.5 "${stripname}-faded.mkv"
+  exit 0
 }
 
 helpmsg()
