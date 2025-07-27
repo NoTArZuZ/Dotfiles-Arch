@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+singleflag=0
+scaleres=1280x720 # Default downscaling resolution
+
+scalevideo()
+{
+  # Might find a way to make this GPU Accelerated
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -vf scale=${scaleres}:flags=lanczos -c:v h264 -preset slow -crf 20 "${stripname}-scaled.mkv"
+  exit 0
+}
+
+mergeaudio()
+{
+  # Might find a way to make this less complicated
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a aac -ac 2 ${stripname}-merged.mp4
+  exit 0
+}
+
+helpmsg()
+{
+  echo -e "[-s] - scale video \
+    \n[-m] - merge video and audio"
+	exit 1
+}
+
+# Get Arguments
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+	case $1 in
+	  -s|--scale) scaler=true
+  		((singleflag += 1))
+      shift
+	    ;;
+	  -m|--merge) merger=true
+  		((singleflag += 1))
+      shift
+	    ;;
+	  -r|--res) newres=true
+	    shift
+	    ;;
+	-* | --*) helpmsg ;;
+	*)
+		POSITIONAL_ARGS+=("$1")
+		shift
+		;;
+	esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+
+stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip for 3 letter ext
+
+[ $singleflag = 1 ] || helpmsg
+
+[ $newres ] && {
+  [ "${POSITIONAL_ARGS[1]}" ] && scaleres="${POSITIONAL_ARGS[1]}"
+  [ "${POSITIONAL_ARGS[1]}" ] || read -r -p "New video resolution (1280x720): " scaleres
+  [ -z "$scaleres" ] && scaleres="1280x720"
+}
+
+echo ">> Debug Info"
+echo ">> arg0: ${POSITIONAL_ARGS[0]}"
+echo ">> arg1: ${POSITIONAL_ARGS[1]}"
+echo ">> strip: $stripname"
+echo ">> res: $scaleres"
+echo ">> newres: $newres scaler: $scaler merger: $merger"
+echo
+
+[ $scaler ] && scalevideo
+[ $merger ] && mergeaudio
