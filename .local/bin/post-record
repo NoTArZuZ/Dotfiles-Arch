@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 singleflag=0
-scaleres=1280x720 # Default downscaling resolution
+scaleres=1280x720 # Fallback downscaling resolution
 
 scalevideo()
 {
@@ -13,14 +13,20 @@ scalevideo()
 mergeaudio()
 {
   # Might find a way to make this less complicated
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a aac -ac 2 ${stripname}-merged.mp4
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a aac -ac 2 "${stripname}-merged.mkv"
   exit 0
+}
+
+cutvideo()
+{
+  ffmpeg -ss "${cutstart}" -to "${cutend}" -i "${POSITIONAL_ARGS[0]}" -c copy "${stripname}-cut.mkv"
 }
 
 helpmsg()
 {
   echo -e "[-s] - scale video \
-    \n[-m] - merge video and audio"
+    \n[-m] - merge video and audio \
+    \n[-c] - cut video"
 	exit 1
 }
 
@@ -35,6 +41,10 @@ while [[ $# -gt 0 ]]; do
 	  -m|--merge) merger=true
   		((singleflag += 1))
       shift
+	    ;;
+	  -c|--cut) cutter=true
+  		((singleflag += 1))
+	    shift
 	    ;;
 	  -r|--res) newres=true
 	    shift
@@ -62,10 +72,22 @@ stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip f
 echo ">> Debug Info"
 echo ">> arg0: ${POSITIONAL_ARGS[0]}"
 echo ">> arg1: ${POSITIONAL_ARGS[1]}"
+echo ">> arg2: ${POSITIONAL_ARGS[2]}"
 echo ">> strip: $stripname"
 echo ">> res: $scaleres"
-echo ">> newres: $newres scaler: $scaler merger: $merger"
+echo ">> newres: $newres scaler: $scaler merger: $merger cut: $cutter"
 echo
 
 [ $scaler ] && scalevideo
 [ $merger ] && mergeaudio
+[ $cutter ] && {
+  [ -z "${POSITIONAL_ARGS[1]}" ] && [ -z "${POSITIONAL_ARGS[2]}" ] && {
+    read -r -p "Starting point for cut (hh:mm:ss.mmm): " cutstart
+    read -r -p "Ending point for cut (hh:mm:ss.mmm): " cutend
+  }
+  [ "${POSITIONAL_ARGS[1]}" ] && cutstart="${POSITIONAL_ARGS[1]}"
+  [ "${POSITIONAL_ARGS[2]}" ] && cutend="${POSITIONAL_ARGS[2]}"
+  [ -z "$cutstart" ] && exit 1
+  [ -z "$cutend" ] && exit 1
+  cutvideo
+}
