@@ -28,12 +28,12 @@ recsnd() {
 
 stoprec() {
   if [ "$reallystop" = "Yes" ]; then
-    kill -15 "$(cat /tmp/recvidpid)"
-    rm -f /tmp/recvidpid
-    kill -15 "$(cat /tmp/recmicpid)"
-    rm -f /tmp/recmicpid
-    kill -15 "$(cat /tmp/recsndpid)"
-    rm -f /tmp/recsndpid
+    kill -15 "$(cat /tmp/recvidpid)" || :
+    rm -f /tmp/recvidpid || :
+    kill -15 "$(cat /tmp/recmicpid)" || :
+    rm -f /tmp/recmicpid || :
+    kill -15 "$(cat /tmp/recsndpid)" || :
+    rm -f /tmp/recsndpid || :
     notify-send -i info "Recording Tool" "Stopped active recording"
     exit 0
   else
