@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Dependencies: ffmpeg with vaapi hevc and h264, bc
 
 # Functions
 scalevideo()
@@ -109,7 +110,7 @@ set -- "${POSITIONAL_ARGS[@]}"
 argslen=$(expr ${#POSITIONAL_ARGS[@]} - 1)
 stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip for 3 letter ext
 videolen=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${POSITIONAL_ARGS[0]}" | cut -b -4)
-fadeoutlen=$(echo "scale=2; ${videolen} - 0.5" | bc)
+fadeoutlen=$(echo "scale=2; ${videolen} - 0.8" | bc)
 
 # Print Debug Info
 echo ">> Debug Info"
