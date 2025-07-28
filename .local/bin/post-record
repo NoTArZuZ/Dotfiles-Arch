@@ -25,6 +25,15 @@ fadevideo()
   exit 0
 }
 
+joinvideo()
+{
+  concatfile="concat-$(date '+%N').txt"
+  for i in $(seq 0 $argslen); do echo "file '${POSITIONAL_ARGS[$i]}'" >> "$concatfile"; done
+  ffmpeg -f concat -i $concatfile -c copy "$(date '+%N')-joined-video.mkv"
+  rm -f "$concatfile"
+  exit 0
+}
+
 helpmsg()
 {
   echo -e "[-s] - scale video \
@@ -55,6 +64,10 @@ while [[ $# -gt 0 ]]; do
   		((singleflag += 1))
 	    shift
 	    ;;
+	  -j|--join) joiner=true
+  		((singleflag += 1))
+	    shift
+	    ;;
 	-* | --*) helpmsg ;;
 	*)
 		POSITIONAL_ARGS+=("$1")
@@ -65,29 +78,31 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
-# Static Variable
+# Flag Check
+[ $singleflag = 1 ] || helpmsg
+[ -z $POSITIONAL_ARGS ] && helpmsg
+
+# Static Variables
+argslen=$(expr ${#POSITIONAL_ARGS[@]} - 1)
 stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip for 3 letter ext
 videolen=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${POSITIONAL_ARGS[0]}" | cut -b -4)
 fadeoutlen=$(echo "scale=2; ${videolen} - 0.5" | bc)
 
-# Flag Check
-[ $singleflag = 1 ] || helpmsg
-
 # Print Debug Info
 echo ">> Debug Info"
-echo ">> arg0: ${POSITIONAL_ARGS[0]}"
-echo ">> arg1: ${POSITIONAL_ARGS[1]}"
-echo ">> arg2: ${POSITIONAL_ARGS[2]}"
 echo ">> strip: $stripname"
-echo ">> res: $scaleres"
+echo ">> argslen: $argslen"
 echo ">> videolen: $videolen"
 echo ">> fadeoutlen: $fadeoutlen"
-echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader"
+echo ">> scalew: $scalew"
+echo ">> scaleh: $scaleh"
+echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader joiner: $joiner"
 echo
 
 # Main Program
 [ $merger ] && mergeaudio
 [ $fader ] && fadevideo
+[ $joiner ] && joinvideo
 [ $scaler ] && {
   scalew="${POSITIONAL_ARGS[1]}"
   scaleh="${POSITIONAL_ARGS[2]}"
