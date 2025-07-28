@@ -12,7 +12,7 @@ scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')
 
 # Functions
 recvidsnd() {
-  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -f x11grab -framerate 60 -s "$scrres" -i "$DISPLAY" -r 60 -f pulse -i "$(pactl get-default-sink).monitor" -c:a flac -vcodec h264_vaapi -vf format='nv12|vaapi,hwupload' "${videodir}/$(date '+%y%m%d-%H%M%S-video').mkv" &
+  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -f x11grab -framerate 60 -s "$scrres" -i "$DISPLAY" -r 60 -f pulse -i "$(pactl get-default-sink).monitor" -c:a flac -vcodec h264_vaapi -vf 'hwupload,scale_vaapi=format=nv12' -qp 24 "${videodir}/$(date '+%y%m%d-%H%M%S-video').mkv" &
   echo $! > /tmp/recvidpid
 }
 
