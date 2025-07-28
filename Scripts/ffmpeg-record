@@ -7,7 +7,7 @@ set -euo pipefail
 . ~/Scripts/script-vars
 
 # USER DEFINED VARIABLES
-shutup=true # Suppress notifications
+shutup=true # Suppress startup notifications
 
 # Vars
 scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')
@@ -36,7 +36,7 @@ stoprec() {
     rm -f /tmp/recmicpid || :
     kill -15 "$(cat /tmp/recsndpid)" || :
     rm -f /tmp/recsndpid || :
-    [ $shutup = false ] && notify-send -i info "Recording Tool" "Stopped active recording"
+    notify-send -i info "Recording Tool" "Stopped active recording"
     exit 0
   else
     exit 1
