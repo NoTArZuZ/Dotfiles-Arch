@@ -3,15 +3,13 @@
 # Functions
 scalevideo()
 {
-  # Might find a way to make this GPU Accelerated
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -vf scale=${scaleres}:flags=lanczos -c:v h264 -preset slow -crf 20 "${stripname}-scaled.mkv"
+  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf 'hwupload,scale_vaapi=w=1280:h=720:format=nv12' -c:v hevc_vaapi -qp 34 "${stripname}-scaled.mkv"
   exit 0
 }
 
 mergeaudio()
 {
-  # Might find a way to make this less complicated
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a aac -ac 2 "${stripname}-merged.mkv"
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a flac -ac 2 "${stripname}-merged.mkv"
   exit 0
 }
 
@@ -23,7 +21,7 @@ cutvideo()
 
 fadevideo()
 {
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -vf fade=d=0.5,fade=out:st=${endframe}:d=0.5 -af afade=d=0.5,afade=out:st=${endframe}:d=0.5 "${stripname}-faded.mkv"
+  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "fade=t=in:st=0:d=0.5,fade=t=out:st=${fadeoutlen}:d=0.5,format=nv12,hwupload" -c:v hevc_vaapi -c:a copy "${stripname}-faded.mkv"
   exit 0
 }
 
@@ -31,7 +29,8 @@ helpmsg()
 {
   echo -e "[-s] - scale video \
     \n[-m] - merge video and audio \
-    \n[-c] - cut video"
+    \n[-c] - cut video \
+    \n[-f] - fade in and out video"
 	exit 1
 }
 
@@ -68,6 +67,8 @@ set -- "${POSITIONAL_ARGS[@]}"
 
 # Static Variable
 stripname=$(echo "${POSITIONAL_ARGS[0]}" | rev | cut -b 5- | rev) # Hard strip for 3 letter ext
+videolen=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${POSITIONAL_ARGS[0]}" | cut -b -4)
+fadeoutlen=$(echo "scale=2; ${videolen} - 0.5" | bc)
 
 # Flag Check
 [ $singleflag = 1 ] || helpmsg
@@ -79,33 +80,33 @@ echo ">> arg1: ${POSITIONAL_ARGS[1]}"
 echo ">> arg2: ${POSITIONAL_ARGS[2]}"
 echo ">> strip: $stripname"
 echo ">> res: $scaleres"
+echo ">> videolen: $videolen"
+echo ">> fadeoutlen: $fadeoutlen"
 echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader"
 echo
 
 # Main Program
 [ $merger ] && mergeaudio
+[ $fader ] && fadevideo
 [ $scaler ] && {
-  [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "New video resolution (1280x720): " scaleres
-  [ "${POSITIONAL_ARGS[1]}" ] && scaleres="${POSITIONAL_ARGS[1]}"
-  [ -z "$scaleres" ] && exit 1
+  scalew="${POSITIONAL_ARGS[1]}"
+  scaleh="${POSITIONAL_ARGS[2]}"
+  [ -z "${POSITIONAL_ARGS[1]}" ] && {
+    read -r -p "New video width (1280): " scalew
+    read -r -p "New video height (720): " scaleh
+  }
+  [ -z "$scalew" ] && scalew=1280
+  [ -z "$scaleh" ] && scaleh=720
   scalevideo 
 }
 [ $cutter ] && {
+  startframe="${POSITIONAL_ARGS[1]}"
+  endframe="${POSITIONAL_ARGS[2]}"
   [ -z "${POSITIONAL_ARGS[1]}" ] && [ -z "${POSITIONAL_ARGS[2]}" ] && {
-    read -r -p "Starting point for cut (hh:mm:ss.mmm): " startframe
-    read -r -p "Ending point for cut (hh:mm:ss.mmm): " endframe
+    read -r -p "Starting point for cut [hh:mm:ss.mmm] (0): " startframe
+    read -r -p "Ending point for cut [hh:mm:ss.mmm] (length): " endframe
   }
-  [ "${POSITIONAL_ARGS[1]}" ] && startframe="${POSITIONAL_ARGS[1]}"
-  [ "${POSITIONAL_ARGS[2]}" ] && endframe="${POSITIONAL_ARGS[2]}"
-  [ -z "$startframe" ] && exit 1
-  [ -z "$endframe" ] && exit 1
+  [ -z "$startframe" ] && startframe=0
+  [ -z "$endframe" ] && endframe="${videolen}"
   cutvideo
-}
-[ $fader ] && {
-  [ -z "${POSITIONAL_ARGS[1]}" ] && {
-    read -r -p "Video length (seconds): " endframe
-  }
-  [ "${POSITIONAL_ARGS[1]}" ] && endframe="${POSITIONAL_ARGS[1]}"
-  [ -z "$endframe" ] && exit 1
-  fadevideo
 }
