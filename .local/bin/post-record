@@ -3,7 +3,13 @@
 # Functions
 scalevideo()
 {
-  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "hwupload,scale_vaapi=w=${scalew}:h=${scaleh}:format=nv12" -c:v hevc_vaapi -qp 34 "${stripname}-scaled.mkv"
+  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "hwupload,scale_vaapi=w=${scalew}:h=${scaleh}:format=nv12" -c:v hevc_vaapi -c:a copy "${stripname}-scaled.mkv"
+  exit 0
+}
+
+compressvideo()
+{
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -b:v 3.6M -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
   exit 0
 }
 
@@ -37,14 +43,18 @@ mergeaudio()
 normalizeaudio()
 {
   ffmpeg -i "${POSITIONAL_ARGS[0]}" -af "volume=${normdb}dB" -c:a flac -sample_fmt s16 -c:v copy "${stripname}-norm.mkv"
+  exit 0
 }
 
 helpmsg()
 {
-  echo -e "[-s] - scale video \
-    \n[-m] - merge video and audio \
-    \n[-c] - cut video \
-    \n[-f] - fade in and out video"
+  echo -e "[-m] - merge video and audio \
+    \n[-n] - normalize audio \
+    \n[-s] - scale video \
+    \n[-t] - cut video \
+    \n[-f] - fade in and out video \
+    \n[-j] - join videos \
+    \n[-c] - compress video"
 	exit 1
 }
 
@@ -57,7 +67,11 @@ while [[ $# -gt 0 ]]; do
   		((singleflag += 1))
       shift
 	    ;;
-	  -c|--cut) cutter=true
+	  -c|--compress) compressor=true
+  		((singleflag += 1))
+      shift
+	    ;;
+	  -t|--cut) cutter=true
   		((singleflag += 1))
 	    shift
 	    ;;
@@ -109,15 +123,10 @@ echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader joiner: $join
 echo
 
 # Main Program
+[ $compressor ] && compressvideo
 [ $merger ] && mergeaudio
 [ $fader ] && fadevideo
 [ $joiner ] && joinvideo
-[ $normalizer ] && {
-  normdb="${POSITIONAL_ARGS[1]}"
-  [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "Audio dB to raise (18): " normdb
-  [ -z "$normdb" ] && normdb=18
-  normalizeaudio
-}
 [ $scaler ] && {
   scalew="${POSITIONAL_ARGS[1]}"
   scaleh="${POSITIONAL_ARGS[2]}"
@@ -139,4 +148,10 @@ echo
   [ -z "$startframe" ] && startframe=0
   [ -z "$endframe" ] && endframe="${videolen}"
   cutvideo
+}
+[ $normalizer ] && {
+  normdb="${POSITIONAL_ARGS[1]}"
+  [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "Audio dB to raise (18): " normdb
+  [ -z "$normdb" ] && normdb=18
+  normalizeaudio
 }
