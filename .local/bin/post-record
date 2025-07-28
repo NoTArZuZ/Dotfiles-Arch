@@ -15,7 +15,7 @@ mergeaudio()
 
 cutvideo()
 {
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -ss "${startframe}" -to "${endframe}" -c copy "${stripname}-cut.mkv"
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -ss "${startframe}" -to "${endframe}" -c copy "$(date '+%N')-cut-video.mkv"
   exit 0
 }
 
