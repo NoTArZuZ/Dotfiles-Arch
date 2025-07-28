@@ -7,12 +7,6 @@ scalevideo()
   exit 0
 }
 
-mergeaudio()
-{
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a flac -ac 2 "${stripname}-merged.mkv"
-  exit 0
-}
-
 cutvideo()
 {
   ffmpeg -i "${POSITIONAL_ARGS[0]}" -ss "${startframe}" -to "${endframe}" -c copy "$(date '+%N')-cut-video.mkv"
@@ -34,6 +28,17 @@ joinvideo()
   exit 0
 }
 
+mergeaudio()
+{
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a flac -ac 2 "${stripname}-merged.mkv"
+  exit 0
+}
+
+normalizeaudio()
+{
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -af "volume=${normdb}dB" -c:a flac -sample_fmt s16 -c:v copy "${stripname}-norm.mkv"
+}
+
 helpmsg()
 {
   echo -e "[-s] - scale video \
@@ -48,10 +53,6 @@ singleflag=0
 POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
 	case $1 in
-	  -m|--merge) merger=true
-  		((singleflag += 1))
-      shift
-	    ;;
 	  -s|--scale) scaler=true
   		((singleflag += 1))
       shift
@@ -65,6 +66,14 @@ while [[ $# -gt 0 ]]; do
 	    shift
 	    ;;
 	  -j|--join) joiner=true
+  		((singleflag += 1))
+	    shift
+	    ;;
+	  -m|--merge) merger=true
+  		((singleflag += 1))
+      shift
+	    ;;
+	  -n|--normalize) normalizer=true
   		((singleflag += 1))
 	    shift
 	    ;;
@@ -96,13 +105,19 @@ echo ">> videolen: $videolen"
 echo ">> fadeoutlen: $fadeoutlen"
 echo ">> scalew: $scalew"
 echo ">> scaleh: $scaleh"
-echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader joiner: $joiner"
+echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader joiner: $joiner normalizer: $normalizer"
 echo
 
 # Main Program
 [ $merger ] && mergeaudio
 [ $fader ] && fadevideo
 [ $joiner ] && joinvideo
+[ $normalizer ] && {
+  normdb="${POSITIONAL_ARGS[1]}"
+  [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "Audio dB to raise (18): " normdb
+  [ -z "$normdb" ] && normdb=18
+  normalizeaudio
+}
 [ $scaler ] && {
   scalew="${POSITIONAL_ARGS[1]}"
   scaleh="${POSITIONAL_ARGS[2]}"
