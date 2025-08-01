@@ -10,7 +10,7 @@ scalevideo()
 
 compressvideo()
 {
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -b:v 3.6M -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
+  ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
   exit 0
 }
 
