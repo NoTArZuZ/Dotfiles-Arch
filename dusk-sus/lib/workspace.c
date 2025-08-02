@@ -126,16 +126,17 @@ createworkspace(int num, const WorkspaceRule *r)
 	int num_layouts = LENGTH(layouts) - 1;
 
 	ws = ecalloc(1, sizeof(Workspace));
+	ws->ltsymbol = NULL;
 	ws->num = num;
 	ws->pinned = 0;
 	ws->wfact = 1.0;
 	ws->rule_pinned = r->pinned;
 	ws->rule_monitor = r->monitor;
-
-	strlcpy(ws->name, r->name, sizeof ws->name);
+	ws->name = r->name;
 
 	ws->layout = (r->layout == -1 ? &layouts[0] : &layouts[MIN(r->layout, num_layouts)]);
-	strlcpy(ws->ltsymbol, ws->layout->symbol, sizeof ws->ltsymbol);
+	freestrdup(&ws->ltsymbol, ws->layout->symbol);
+
 	ws->prevlayout = &layouts[1 % num_layouts];
 	ws->mfact = (r->mfact == -1 ? mfact : r->mfact);
 	ws->nmaster = (r->nmaster == -1 ? nmaster : r->nmaster);
@@ -966,6 +967,7 @@ drawws(Workspace *ws, Monitor *m, uint64_t prevwsmask, int enablews, int arrange
 		if (w->visible)
 			showwsclients(w->stack);
 
+	drawbars();
 	if (arrangeall)
 		arrange(NULL);
 	else
@@ -977,7 +979,6 @@ drawws(Workspace *ws, Monitor *m, uint64_t prevwsmask, int enablews, int arrange
 		if (w->mon == m && (hidewsmask & (1L << w->num)))
 			hidewsclients(w->stack);
 
-	drawbars();
 	updatecurrentdesktop();
 	focus(NULL);
 
