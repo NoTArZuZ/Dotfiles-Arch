@@ -3,6 +3,7 @@ linemode = "size"
 sort_by = "alphabetical"
 sort_dir_first = true
 show_hidden = true
+sort_sensitive = true
 [opener]
 edit = [
 	{ run = 'helix "$@"', block = true },
