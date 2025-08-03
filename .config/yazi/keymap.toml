@@ -1,5 +1,6 @@
 [mgr]
 prepend_keymap = [
 	{ on  = "<C-n>", run = 'shell -- dragon-drop -x -i -T "$1"' },
+	{ on  = "<C-m>", run = [ 'shell -- for path in "$@"; do echo "file://$path"; done | xclip -i -selection clipboard -t text/uri-list' ] },
 ]
 
