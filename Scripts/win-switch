@@ -20,7 +20,7 @@ check_dep xprop   https://gitlab.freedesktop.org/xorg/app/xprop
 
 get_windows_ids() {
     list="$(xprop -root _NET_CLIENT_LIST 2> /dev/null)" || err "Failed to get windows list"
-    echo "$list" | sed 's/^.\+# //; s/, \+/\n/g' | sort | uniq
+    echo "$list" | sed 's/^.\+# //; s/, \+/\n/g' | uniq
 }
 
 get_window_name() {
