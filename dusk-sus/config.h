@@ -446,6 +446,7 @@ static const char *dmenucmd[] = {
 static const char *rootmenu[]  = { "root-xmenu", NULL };
 static const char *conkytoggle[]  = { "conky-toggle", NULL };
 static const char *hubscript[]  = { "hub-script", NULL };
+static const char *winswitch[]  = { "hub-script", "win-switch", NULL };
 static const char *spcmd_w[] = {"w", "st", "-n", "spterm (w)", "-g", "120x34", NULL };
 static const char *spcmd_e[] = {"e", "st", "-n", "spterm (e)", "-g", "120x34", NULL };
 static const char *spcmd_r[] = {"r", "st", "-n", "spfm (r)", "-g", "144x41", "-e", "yazi", NULL };
@@ -459,6 +460,7 @@ static Key keys[] = {
 	{ KeyPress,   MODKEY,                       XK_b,            togglebar,              {0} }, // toggles the display of the bar(s) on the current monitor
 	{ KeyPress,   MODKEY,                       XK_c,            spawn,                  {.v = conkytoggle} }, // toggles the conky
 	{ KeyPress,   MODKEY|Shift,                 XK_d,            spawn,                  {.v = hubscript } }, // spawn dmenu for launching other programs
+	{ KeyPress,   Alt,                          XK_Tab,          spawn,                  {.v = winswitch } }, // spawn window switcher with dmenu
 
 	{ KeyPress,   MODKEY,                       XK_j,            focusstack,             {.i = +1 } }, // focus on the next client in the stack
 	{ KeyPress,   MODKEY,                       XK_k,            focusstack,             {.i = -1 } }, // focus on the previous client in the stack
