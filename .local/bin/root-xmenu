@@ -12,10 +12,10 @@ Launch
 
 Scripts
 	hub-script					hub-script
-	Screenshot 					~/Scripts/maim-scrshot
-	Color Picker				~/Scripts/color-picker
-	Set Wallpaper				~/Scripts/set-bg -s
-	Random Wallpaper		~/Scripts/set-bg -r
+	Screenshot 					hub-script maim-scrshot
+	Color Picker				hub-script color-picker
+	Set Wallpaper				hub-script set-wallpaper -s
+	Random Wallpaper		hub-script set-wallpaper -r
 
 Settings
 	Exit					duskc run_command quit
