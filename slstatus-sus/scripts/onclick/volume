@@ -6,6 +6,7 @@
 volume_step=2
 max_volume=100
 notification_timeout=1000 # in milliseconds
+enable_mpd_support=true
 download_album_art=true
 show_album_art=true
 show_music_in_volume_indicator=true
@@ -35,11 +36,11 @@ function get_volume_icon {
 
 function get_album_art {
     # MPD support via mpc
-    mpd=$(mpc current)
+    [ $enable_mpd_support = true ] && mpd=$(mpc current)
     url=$(playerctl -f "{{mpris:artUrl}}" metadata)
     if [ -n "$mpd" ]; then
-        filename=$(echo "$mpd" | awk '{print $3}')
-        filepath=$(mpc find any "$filename" | head -1)
+        filename=$(mpc -f "%artist% - %album%" current)
+        filepath=$(mpc -f "%file%" current)
         [ -f "/tmp/$filename" ] || mpc readpicture "$filepath" > "/tmp/$filename"
         album_art="/tmp/$filename"
     elif [[ $url == "file://"* ]]; then
@@ -71,7 +72,7 @@ function show_volume_notif {
     get_volume_icon
 
     if [[ $show_music_in_volume_indicator == "true" ]]; then
-        mpd=$(mpc current)
+        [ $enable_mpd_support = true ] && mpd=$(mpc current)
         if [ -n "$mpd" ]; then
             current_song="$mpd"
         else
