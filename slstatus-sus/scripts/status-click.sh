@@ -6,22 +6,23 @@ leftmb() {
 		1) ~/slstatus-sus/scripts/onclick/mem & ;;
 		2) ~/slstatus-sus/scripts/onclick/cpu & ;;
 		3) ~/slstatus-sus/scripts/onclick/diskfree & ;;
-		4) ~/slstatus-sus/scripts/onclick/volume & ;;
+		4) ~/slstatus-sus/scripts/onclick/volume volume_mute & ;;
 		5) ~/slstatus-sus/scripts/onclick/keymap & ;;
+		7) ~/slstatus-sus/scripts/onclick/run & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac
 }
 
 mscrollup() {
 	case $BLOCK_STATUS in
-		4) ~/slstatus-sus/scripts/onclick/plusvolume & ;;
+		4) ~/slstatus-sus/scripts/onclick/volume volume_up & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac
 }
 
 mscrolldown() {
 	case $BLOCK_STATUS in
-		4) ~/slstatus-sus/scripts/onclick/minusvolume & ;;
+		4) ~/slstatus-sus/scripts/onclick/volume volume_down & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac
 }
