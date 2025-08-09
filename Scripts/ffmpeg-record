@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# Dependencies: ffmpeg, pactl
+# Dependencies: ffmpeg, pactl (wpctl)
 # It is very handy to record separate microphone track
 
-set -euo pipefail
+set -eo pipefail
 
 . ~/Scripts/script-vars
 
 # USER DEFINED VARIABLES
-shutup=true # Suppress startup notifications
+shutup=false # Suppress startup notifications
 
 # Vars
 scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')
 
 # Functions
-recvidsnd() {
+recvid() {
   ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -f x11grab -framerate 60 -s "$scrres" -i "$DISPLAY" -r 60 -f pulse -i "$(pactl get-default-sink).monitor" -c:a flac -vcodec h264_vaapi -vf 'hwupload,scale_vaapi=format=nv12' -qp 24 "${videodir}/$(date '+%y%m%d-%H%M%S-video').mkv" &
   echo $! > /tmp/recvidpid
 }
@@ -29,64 +29,50 @@ recsnd() {
 }
 
 stoprec() {
-  if [ "$reallystop" = "Yes" ]; then
+  [ "$reallystop" = "Yes" ] && {
     kill -15 "$(cat /tmp/recvidpid)" || :
     rm -f /tmp/recvidpid || :
     kill -15 "$(cat /tmp/recmicpid)" || :
     rm -f /tmp/recmicpid || :
     kill -15 "$(cat /tmp/recsndpid)" || :
     rm -f /tmp/recsndpid || :
-    notify-send -i info "Recording Tool" "Stopped active recording"
+    sleep 0.5; notify-send -i info "Recording Tool" "Stopped active recording"
     exit 0
-  else
-    exit 1
-  fi
-}
-
-startrec() {
-recopts=$(printf ":g  Mic and Desktop\n:y  Desktop" | $menu "Audio method:" -l 2 -1 -R -n | $cutemoji)
-case $mainmethod in
-  Record\ Video)
-    if [ "$recopts" == "Mic and Desktop" ]; then
-      recvidsnd &
-      recmic
-    else
-      recvidsnd
-    fi
-    [ $shutup = false ] && notify-send -i info "Recording Tool" "Started video recording..."
-  ;;
-  Record\ Audio)
-    if [ "$recopts" == "Mic and Desktop" ]; then
-      recsnd &
-      recmic
-    else
-      recsnd
-    fi
-    [ $shutup = false ] && notify-send -i info "Recording Tool" "Started audio recording..."
-  ;;
-esac
+  }
+  exit 1
 }
 
 # Arguments
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -vs) recvidsnd; exit 0 ;;
-    -vm) recvidsnd & recmic; exit 0 ;;
-    -as) recsnd; exit 0 ;;
-    -am) recsnd & recmic; exit 0 ;;
-    -s) reallystop="Yes"; stoprec; exit 0 ;;
-    *)
-      printf "[-v] - video [-a] - audio\n[-m] - mic + desktop [-s] - desktop\nWrite above arguments together!\n[-s] - stop active recording\n"
-      exit 1
-    ;;
-  esac
-done
+[ $1 ] && {
+  [ "$1" = "video-desktop" ] || [ "$1" = "-vs" ] && mainmethod="Record Video" && recopts="Desktop"
+  [ "$1" = "video-microphone" ] || [ "$1" = "-vm" ] && mainmethod="Record Video" && recopts="Mic and Desktop"
+  [ "$1" = "audio-desktop" ] || [ "$1" = "-as" ] && mainmethod="Record Audio" && recopts="Desktop"
+  [ "$1" = "audio-microphone" ] || [ "$1" = "-am" ] && mainmethod="Record Audio" && recopts="Mic and Desktop"
+  [ "$mainmethod" ] || exit 1
+}
 
-# Main Choice
-if [ -e /tmp/recvidpid ] || [ -e /tmp/recmicpid ] || [ -e /tmp/recsndpid ]; then
+# Handle active recording
+[ -e /tmp/recvidpid ] || [ -e /tmp/recmicpid ] || [ -e /tmp/recsndpid ] && {
   reallystop=$(printf ":g  Yes\n:r  No" | $menu "Stop recording?" -l 2 -1 -R -n | $cutemoji)
   stoprec
-fi
+}
 
-mainmethod=$(printf ":g  Record Video\n:y  Record Audio" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji) && startrec
-    
+# Dmenu Choice
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Record Video\n:y  Record Audio" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji)
+[ "$recopts" ] || recopts=$(printf ":g  Mic and Desktop\n:y  Desktop" | $menu "Audio method:" -l 2 -1 -R -n | $cutemoji)
+
+# Main Program
+[ "$mainmethod" = "Record Video" ] && {
+  [ "$recopts" = "Desktop" ] && recvid
+  [ "$recopts" = "Mic and Desktop" ] && { recvid & recmic; }
+  [ $shutup = false ] && notify-send -i info "Recording Tool" "Started video recording..."
+  exit 0
+}
+[ "$mainmethod" = "Record Audio" ] && {
+  [ "$recopts" = "Desktop" ] && recsnd
+  [ "$recopts" = "Mic and Desktop" ] && { recsnd & recmic; }
+  [ $shutup = false ] && notify-send -i info "Recording Tool" "Started audio recording..."
+  exit 0
+}
+
+exit 1

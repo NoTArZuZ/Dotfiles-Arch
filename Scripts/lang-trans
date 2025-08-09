@@ -8,6 +8,6 @@ set -euo pipefail
 word=$(echo "" | $menu "Enter word to translate:")
 from=$(printf "en\nru\nde\nfr" | $menu "Translate from:" -l 4)
 to=$(printf "en\nru\nde\nfr" | $menu "Translate to:" -l 4)
-trans=$(trans -brief $from:$to $word)
+trans=$(trans -brief $from:$to "$word")
 echo "$trans" | $cp2cb
 notify-send -i info "Translate Tool" "$word from $from is $trans in $to (Copied to clipboard)"

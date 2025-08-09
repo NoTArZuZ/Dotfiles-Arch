@@ -1,47 +1,46 @@
 #!/usr/bin/env bash
-# Dependencies: Image viewer that outputs wanted image path to stdout
+# Dependencies: Image viewer that outputs marked image path to stdout
 
-set -euo pipefail
+set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
-# Better than past Qtile Dotfiles
+# Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Functions
-selectbg() {
-  bgfile=$($imgview "$wallpaperdir" | shuf -n 1)
-  setwallpaper
-}
-
-randombg() {
-  bgfile=$(find "$wallpaperdir" -type f | shuf -n 1)
-  setwallpaper
-}
-
 setwallpaper() {
   ln -sf "$bgfile" $HOME/.cache/wallcache
   $setbg $HOME/.cache/wallcache
   notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
 }
 
-# Arguments
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -s) selectbg; exit 0 ;;
-    -r) randombg; exit 0 ;;
-    *) printf "[-s] - set wallpaper [-r] - random wallpaper\n"; exit 1 ;;
-  esac
-done
+selectbg() {
+  bgfile=$($imgview "$wallpaperdir" | shuf -n 1)
+  setwallpaper
+  exit 0
+}
 
-# Main Choice
-mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -l 2 -1 -R -n | $cutemoji)
-case $mainmethod in
-  Select) selectbg ;;
-  Random)
-    rollmore="No"
-    until [ "$rollmore" = "Yes" ]; do
-      randombg
-      rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -l 2 -1 -R -n | $cutemoji)
-    done
-  ;;
-  *) exit 1 ;;
-esac
+randombg() {
+  rollmore="No"
+  until [ "$rollmore" = "Yes" ]; do
+    bgfile=$(find "$wallpaperdir" -type f | shuf -n 1)
+    setwallpaper
+    rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -l 2 -1 -R -n | $cutemoji)
+  done
+  exit 0
+}
+
+# Arguments
+[ $1 ] && {
+  [ "$1" = "set" ] || [ "$1" = "-s" ] && mainmethod="Select"
+  [ "$1" = "random" ] || [ "$1" = "-r" ] && mainmethod="Random"
+  [ "$mainmethod" ] || exit 1
+}
+
+# Dmenu Choice
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -l 2 -1 -R -n | $cutemoji)
+
+# Main Program
+[ "$mainmethod" = "Select" ] && selectbg
+[ "$mainmethod" = "Random" ] && randombg
+
+exit 1

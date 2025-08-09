@@ -1,55 +1,49 @@
 #!/usr/bin/env bash
 # Dependencies: Color picker that outputs hex to stdout
 
-set -euo pipefail
+set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
-# Better than past Qtile Dotfiles
+# Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Functions
 pickcolor() {
   hex=$($colpick)
   echo "$hex" >>  $HOME/.cache/colorcache
   echo "$hex" | $cp2cb
-  notify-send --icon=info "Color Picker Tool" "The picked color is: $hex and copied to clipboard"
+  notify-send -i info "Color Picker Tool" "The picked color is: $hex (Copied to clipboard)"
+  exit 0
 }
 
 listcache() {
-  if [ -e $HOME/.cache/colorcache ]; then
-    selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -l $(cat $HOME/.cache/colorcache | wc -l) -R)
-    echo "$selecthex" | $cp2cb
-    notify-send --icon=info "Color Picker Tool" "The $selecthex color is copied to clipboard"
-  else
-    notify-send --icon=error "Color Picker Tool" "Color cache is empty"
-    exit 1
-  fi
+  [ ! -e $HOME/.cache/colorcache ] && notify-send -i error "Color Picker Tool" "Color cache is empty" && exit 1
+  selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -R -l $(cat $HOME/.cache/colorcache | wc -l))
+  echo "$selecthex" | $cp2cb
+  notify-send -i info "Color Picker Tool" "The $selecthex color is copied to clipboard"
+  exit 0
 }
 
 clearcache() {
-  if [ -e $HOME/.cache/colorcache ]; then
-    rm $HOME/.cache/colorcache
-    notify-send --icon=info "Color Picker Tool" "Cleared color cache"
-  else
-    notify-send --icon=error "Color Picker Tool" "Color cache is empty, nothing is removed"
-    exit 1
-  fi
+  [ ! -e $HOME/.cache/colorcache ] && notify-send -i error "Color Picker Tool" "Color cache is empty, nothing is removed" && exit 1
+  rm $HOME/.cache/colorcache
+  notify-send -i info "Color Picker Tool" "Cleared color cache"
+  exit 0
 }
 
 # Arguments
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -p) pickcolor; exit 0 ;;
-    -l) listcache; exit 0 ;;
-    -c) clearcache; exit 0 ;;
-    *) printf "[-p] - pick color [-l] - list colors from cache [-c] - clear color cache\n"; exit 1 ;;
-  esac
-done
+[ $1 ] && {
+  [ "$1" = "pick" ] || [ "$1" = "-p" ] && mainmethod="Pick"
+  [ "$1" = "list" ] || [ "$1" = "-l" ] && mainmethod="List"
+  [ "$1" = "clear" ] || [ "$1" = "-c" ] && mainmethod="Clear"
+  [ "$mainmethod" ] || exit 1
+}
 
-# Main Choice
-mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -l 3 -1 -R -n | $cutemoji)
-case $mainmethod in
-  Pick) pickcolor ;;
-  List) listcache ;;
-  Clear) clearcache ;;
-  *) exit 1 ;;
-esac
+# Dmenu Choice
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -l 3 -1 -R -n | $cutemoji)
+
+# Main Program
+[ "$mainmethod" = "Pick" ] && pickcolor
+[ "$mainmethod" = "List" ] && listcache
+[ "$mainmethod" = "Clear" ] && clearcache
+
+exit 1

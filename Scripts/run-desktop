@@ -5,6 +5,6 @@ set -euo pipefail
 
 . $HOME/Scripts/script-vars
 
-# Better than past Qtile Dotfiles
-# Tried to make this one myself but damn awk dont like spaces in paths
+# Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
+# Tried to make this one myself but too dumb for more advanced parsing
 j4-dmenu-desktop --dmenu="$menu 'Launch:' -l 10 -1 -R"

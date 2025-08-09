@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # Dependencies: Screenshot app that outputs image data to stdout
+# Screenshot management is similar to ShareX
 
-set -euo pipefail
+set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
-# Better than past Qtile Dotfiles
-# Better screenshots management (like in ShareX)
+# Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
+# Vars
 dirshotpath="${screenshotdir}/$(date +%Y-%m)"
 shotpath="${dirshotpath}/$(date +%d-%s).png"
 
-if [ ! -d "$dirshotpath" ]; then
-  mkdir -p "$dirshotpath"
-fi
+# Dir Check
+[ ! -d "$dirshotpath" ] && mkdir -p "$dirshotpath"
 
 # Functions
 monitorboth() {
@@ -20,120 +20,109 @@ monitorboth() {
   $shotmon "$shotpath"
   cat "$shotpath" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Monitor screenshot"
+  exit 0
 }
 
 monitorcopy() {
   sleep 1
   $shotmon | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully copied Monitor screenshot"
+  exit 0
 }
 
-monitorfile() {
+monitorsave() {
   sleep 1
   $shotmon "$shotpath"
   notify-send --icon=info "Screenshot Tool" "Succesfully saved Monitor screenshot"
+  exit 0
 }
 
 windowboth() {
   $shotwin $(xdotool selectwindow) "$shotpath"
   cat "$shotpath" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Window screenshot"
+  exit 0
 }
 
 windowcopy() {
   $shotwin $(xdotool selectwindow) | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully copied Window screenshot"
+  exit 0
 }
 
-windowfile() {
+windowsave() {
   $shotwin $(xdotool selectwindow) "$shotpath"
   notify-send --icon=info "Screenshot Tool" "Succesfully saved Window screenshot"
+  exit 0
 }
 
 areaboth() {
   $shotarea "$shotpath"
   cat "$shotpath" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Area screenshot"
+  exit 0
 }
 
 areacopy() {
   $shotarea | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Succesfully copied Area screenshot"
+  exit 0
 }
 
-areafile() {
+areasave() {
   $shotarea "$shotpath"
   notify-send --icon=info "Screenshot Tool" "Succesfully saved Area screenshot"
+  exit 0
 }
 
 browseshots() {
   markedshot=$($imgview ${screenshotdir})
-  if [ -z "$markedshot" ]; then
-    exit 0
-  fi
+  [ "$markedshot" ] || exit 0
   cat "$markedshot" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Successfully copied $markedshot to clipboard"
+  exit 0
 }
 
 makeshot() {
-  shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method:" -l 3 -1 -R -n | $cutemoji)
-  savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method:" -l 3 -1 -R -n | $cutemoji)
-  case $savemethod in
-    Both)
-      if [ "$shotmethod" = "Monitor" ]; then
-        monitorboth
-      elif [ "$shotmethod" = "Area" ]; then
-        areaboth
-      elif [ "$shotmethod" = "Window" ]; then
-        windowboth
-      fi
-    ;;
-    Save)
-      if [ "$shotmethod" = "Monitor" ]; then
-        monitorfile
-      elif [ "$shotmethod" = "Area" ]; then
-        areafile
-      elif [ "$shotmethod" = "Window" ]; then
-        windowfile
-      fi
-    ;;
-    Copy)
-      if [ "$shotmethod" = "Monitor" ]; then
-        monitorcopy
-      elif [ "$shotmethod" = "Area" ]; then
-        areacopy
-      elif [ "$shotmethod" = "Window" ]; then
-        windowcopy
-      fi
-    ;;
-    *) exit 1 ;;
-  esac
+  [ "$shotmethod" ] || shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method:" -l 3 -1 -R -n | $cutemoji)
+  [ "$savemethod" ] || savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method:" -l 3 -1 -R -n | $cutemoji)
+  [ "$savemethod" = "Both" ] && {
+    [ "$shotmethod" = "Monitor" ] && monitorboth
+    [ "$shotmethod" = "Area" ] && areaboth
+    [ "$shotmethod" = "Window" ] && windowboth
+  }
+  [ "$savemethod" = "Save" ] && {
+    [ "$shotmethod" = "Monitor" ] && monitorsave
+    [ "$shotmethod" = "Area" ] && areasave
+    [ "$shotmethod" = "Window" ] && windowsave
+  }
+  [ "$savemethod" = "Copy" ] && {
+    [ "$shotmethod" = "Monitor" ] && monitorcopy
+    [ "$shotmethod" = "Area" ] && areacopy
+    [ "$shotmethod" = "Window" ] && windowcopy
+  }
+  exit 1
 }
 
 # Arguments
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -mb) monitorboth; exit 0 ;;
-    -mc) monitorcopy; exit 0 ;;
-    -mf) monitorfile; exit 0 ;;
-    -wb) windowboth; exit 0 ;;
-    -wc) windowcopy; exit 0 ;;
-    -wf) windowfile; exit 0 ;;
-    -ab) areaboth; exit 0 ;;
-    -ac) areacopy; exit 0 ;;
-    -af) areafile; exit 0 ;;
-    -b) browseshots; exit 0;;
-    *)
-      printf "[-m] - monitor [-w] - window [-a] - area\n[-b] - save and copy [-c] - copy [-f] - save\nWrite above arguments together!\n[-b] - browse screenshots\n"
-      exit 1
-    ;;
-  esac
-done
+[ $1 ] && {
+  [ "$1" = "monitor-save-copy" ] || [ "$1" = "-mb" ] && mainmethod="Screenshot" && shotmethod="Monitor" && savemethod="Both"
+  [ "$1" = "monitor-save" ] || [ "$1" = "-mf" ] && mainmethod="Screenshot" && shotmethod="Monitor" && savemethod="Save"
+  [ "$1" = "monitor-copy" ] || [ "$1" = "-mc" ] && mainmethod="Screenshot" && shotmethod="Monitor" && savemethod="Copy"
+  [ "$1" = "window-save-copy" ] || [ "$1" = "-wb" ] && mainmethod="Screenshot" && shotmethod="Window" && savemethod="Both"
+  [ "$1" = "window-save" ] || [ "$1" = "-wf" ] && mainmethod="Screenshot" && shotmethod="Window" && savemethod="Save"
+  [ "$1" = "window-copy" ] || [ "$1" = "-wc" ] && mainmethod="Screenshot" && shotmethod="Window" && savemethod="Copy"
+  [ "$1" = "area-save-copy" ] || [ "$1" = "-ab" ] && mainmethod="Screenshot" && shotmethod="Area" && savemethod="Both"
+  [ "$1" = "area-save" ] || [ "$1" = "-af" ] && mainmethod="Screenshot" && shotmethod="Area" && savemethod="Save"
+  [ "$1" = "area-copy" ] || [ "$1" = "-ac" ] && mainmethod="Screenshot" && shotmethod="Area" && savemethod="Copy"
+  [ "$mainmethod" ] || exit 1
+}
 
-# Main Choice
-mainmethod=$(printf ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji)
-case $mainmethod in
-  Screenshot) makeshot ;;
-  Browse\ Screenshots) browseshots ;;
-  *) exit 1 ;;
-esac
+# Dmenu Choice
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji)
+
+# Main Program
+[ "$mainmethod" = "Screenshot" ] && makeshot
+[ "$mainmethod" = "Browse Screenshots" ] && browseshots
+
+exit 1
