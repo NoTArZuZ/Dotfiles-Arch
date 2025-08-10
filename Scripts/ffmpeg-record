@@ -16,16 +16,19 @@ scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')
 recvid() {
   ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -f x11grab -framerate 60 -s "$scrres" -i "$DISPLAY" -r 60 -f pulse -i "$(pactl get-default-sink).monitor" -c:a flac -vcodec h264_vaapi -vf 'hwupload,scale_vaapi=format=nv12' -qp 24 "${videodir}/$(date '+%y%m%d-%H%M%S-video').mkv" &
   echo $! > /tmp/recvidpid
+  exit 0
 }
 
 recmic() {
   ffmpeg -f pulse -i "$(pactl get-default-source)" -c:a flac "${videodir}/$(date '+%y%m%d-%H%M%S-mic').flac" &
   echo $! > /tmp/recmicpid
+  exit 0
 }
 
 recsnd() {
   ffmpeg -f pulse -i "$(pactl get-default-sink).monitor" -c:a flac "${videodir}/$(date '+%y%m%d-%H%M%S-desktop').flac" &
   echo $! > /tmp/recsndpid
+  exit 0
 }
 
 stoprec() {
@@ -66,13 +69,11 @@ stoprec() {
   [ "$recopts" = "Desktop" ] && recvid
   [ "$recopts" = "Mic and Desktop" ] && { recvid & recmic; }
   [ $shutup = false ] && notify-send -i info "Recording Tool" "Started video recording..."
-  exit 0
 }
 [ "$mainmethod" = "Record Audio" ] && {
   [ "$recopts" = "Desktop" ] && recsnd
   [ "$recopts" = "Mic and Desktop" ] && { recsnd & recmic; }
   [ $shutup = false ] && notify-send -i info "Recording Tool" "Started audio recording..."
-  exit 0
 }
 
 exit 1

@@ -269,36 +269,36 @@ helpmsg() {
 # Get Arguments
 while [[ $# -gt 0 ]]; do
 	case $1 in
-	-l | --last) getlast=true
+	-l | last) getlast=true
 		shift
 		;;
-	-p | --pipe) topipe=true
+	-p | pipe) topipe=true
 		shift
 		;;
-	-n | --noask) noask=true
+	-n | noask) noask=true
 		shift
 		;;
-	-e | --encrypt) encryptor=true
+	-e | encrypt) encryptor=true
 		((singleflag += 1))
 		shift
 		;;
-	-c | --sign-encrypt) signcryptor=true
+	-c | sign-encrypt) signcryptor=true
 		((singleflag += 1))
 		shift
 		;;
-	-d | --decrypt) decryptor=true
+	-d | decrypt) decryptor=true
 		((singleflag += 1))
 		shift
 		;;
-	-s | --sign) signer=true
+	-s | sign) signer=true
 		((singleflag += 1))
 		shift
 		;;
-	-u | --detach) detacher=true
+	-u | detach) detacher=true
 		((singleflag += 1))
 		shift
 		;;
-	-v | --verify) verifier=true
+	-v | verify) verifier=true
 		((singleflag += 1))
 		shift
 		;;

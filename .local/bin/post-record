@@ -64,31 +64,31 @@ singleflag=0
 POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
 	case $1 in
-	  -s|--scale) scaler=true
+	  -s|scale) scaler=true
   		((singleflag += 1))
       shift
 	    ;;
-	  -c|--compress) compressor=true
+	  -c|compress) compressor=true
   		((singleflag += 1))
       shift
 	    ;;
-	  -t|--cut) cutter=true
+	  -t|cut) cutter=true
   		((singleflag += 1))
 	    shift
 	    ;;
-	  -f|--fade) fader=true
+	  -f|fade) fader=true
   		((singleflag += 1))
 	    shift
 	    ;;
-	  -j|--join) joiner=true
+	  -j|join) joiner=true
   		((singleflag += 1))
 	    shift
 	    ;;
-	  -m|--merge) merger=true
+	  -m|merge) merger=true
   		((singleflag += 1))
       shift
 	    ;;
-	  -n|--normalize) normalizer=true
+	  -n|normalize) normalizer=true
   		((singleflag += 1))
 	    shift
 	    ;;
