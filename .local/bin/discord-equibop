@@ -1,0 +1,3 @@
+sxhkd -c ~/.config/sxhkd/equibop &
+equibop
+pkill -x sxhkd

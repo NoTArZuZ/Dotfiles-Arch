@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+sudo ufw disable && echo ">> Disabled ufw"
+sudo systemctl start avahi-daemon && echo ">> Started avahi-daemon"
+uxplay -avdec -pin 2005 -fps 60
+sudo ufw enable && echo ">> Enabled ufw"
+sudo systemctl stop avahi-daemon && echo ">> Stopped avahi-daemon" 
+sudo systemctl stop avahi-daemon.socket && echo ">> Stopped avahi-daemon.socket"
