@@ -11,7 +11,7 @@ PROMPT_COMMAND='history -a'
 export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
 export EDITOR=helix
-export visual=helix
+export VISUAL=nvim
 export QT_QPA_PLATFORMTHEME=gtk2
 export HISTFILESIZE=10000
 export HISTSIZE=500
@@ -40,10 +40,12 @@ alias "pacRq"="yay -Qq | fzf --multi --preview 'yay -Sii {1}' --preview-window=d
 # Abbreviations
 alias "pwmix"='wiremix'
 alias "hx"='helix'
+alias "nv"='nvim'
 alias "ufetch"='/home/$USER/ufetch-arch'
+alias "minifetch"='echo "" && fastfetch -c examples/8.jsonc --logo-padding-left 2'
 # One-liners
 alias "ezfd"='find / -name $* 2>/dev/null'
-alias "clear"='clear && ufetch'
+alias "clear"='clear && minifetch'
 alias "config"='git -C ~/Dotfiles'
 alias "diffconfig"='~/diffdotfiles'
 alias "getwinclass"='xdotool getwindowclassname "$(xdotool selectwindow)"'
@@ -124,11 +126,15 @@ zzhx() {
 	z "${1}"
 	hx .
 }
+# Edit a file in path with helix
+bhx() {
+	hx $(which "${1}")
+}
 
 # Startup Commands
 shopt -s checkwinsize
 shopt -s histappend
-ufetch
+minifetch
 [ -f /usr/bin/starship ] && eval "$(starship init bash)"
 [ -f /usr/bin/fzf ] && FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
 [ -f /usr/bin/zoxide ] && eval "$(zoxide init bash)"
