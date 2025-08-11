@@ -7,4 +7,4 @@ set -euo pipefail
 
 # Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Tried to make this one myself but too dumb for more advanced parsing
-j4-dmenu-desktop --dmenu="$menu 'Launch:' -1 -R -n"
+j4-dmenu-desktop --dmenu="$menu 'Launch:' -1 -R"

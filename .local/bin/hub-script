@@ -6,6 +6,5 @@ set -euo pipefail
 
 [ -z "$*" ] || exec ${scriptdir}/${*} || exit 1
 
-list=$(find -L $scriptdir -type f -executable | wc -l)
-choose=$(find -L $scriptdir -type f -executable -printf '%f\n' | sort | $menu "Run script:" -R -1 -l $list)
+choose=$(find -L $scriptdir -type f -executable -printf '%f\n' | sort | $menu "Run script:" -1 -R)
 exec "${scriptdir}/${choose}"
