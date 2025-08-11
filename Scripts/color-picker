@@ -17,9 +17,9 @@ pickcolor() {
 
 listcache() {
   [ ! -e $HOME/.cache/colorcache ] && notify-send -i error "Color Picker Tool" "Color cache is empty" && exit 1
-  selecthex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -R -l $(cat $HOME/.cache/colorcache | wc -l))
-  echo "$selecthex" | $cp2cb
-  notify-send -i info "Color Picker Tool" "The $selecthex color is copied to clipboard"
+  hex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -1 -R -n)
+  echo "$hex" | $cp2cb
+  notify-send -i info "Color Picker Tool" "The $hex color is copied to clipboard"
   exit 0
 }
 
@@ -39,7 +39,7 @@ clearcache() {
 }
 
 # Dmenu Choice
-[ "$mainmethod" ] || mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -l 3 -1 -R -n | $cutemoji)
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -1 -R -n | $cutemoji)
 
 # Main Program
 [ "$mainmethod" = "Pick" ] && pickcolor

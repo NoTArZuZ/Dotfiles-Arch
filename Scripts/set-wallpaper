@@ -24,7 +24,7 @@ randombg() {
   until [ "$rollmore" = "Yes" ]; do
     bgfile=$(find "$wallpaperdir" -type f | shuf -n 1)
     setwallpaper
-    rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -l 2 -1 -R -n | $cutemoji)
+    rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -1 -R -n | $cutemoji)
   done
   exit 0
 }
@@ -37,7 +37,7 @@ randombg() {
 }
 
 # Dmenu Choice
-[ "$mainmethod" ] || mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -l 2 -1 -R -n | $cutemoji)
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -1 -R -n | $cutemoji)
 
 # Main Program
 [ "$mainmethod" = "Select" ] && selectbg

@@ -84,8 +84,8 @@ browseshots() {
 }
 
 makeshot() {
-  [ "$shotmethod" ] || shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method:" -l 3 -1 -R -n | $cutemoji)
-  [ "$savemethod" ] || savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method:" -l 3 -1 -R -n | $cutemoji)
+  [ "$shotmethod" ] || shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method:" -1 -R -n | $cutemoji)
+  [ "$savemethod" ] || savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method:" -1 -R -n | $cutemoji)
   [ "$savemethod" = "Both" ] && {
     [ "$shotmethod" = "Monitor" ] && monitorboth
     [ "$shotmethod" = "Area" ] && areaboth
@@ -119,7 +119,7 @@ makeshot() {
 }
 
 # Dmenu Choice
-[ "$mainmethod" ] || mainmethod=$(printf ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji)
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -1 -R -n | $cutemoji)
 
 # Main Program
 [ "$mainmethod" = "Screenshot" ] && makeshot

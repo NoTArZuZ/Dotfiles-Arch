@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. ~/Scripts/script-vars
+
+mainmethod=$(printf "Reload Xresources\nSet Gaps\nIncrease Borders" | $menu "Dusk Command:" -1 -R -n)
+
+[ "$mainmethod" = "Reload Xresources" ] && {
+  duskc run_command xrdb
+  exit 0
+}
+[ "$mainmethod" = "Set Gaps" ] && {
+  menuarg1=$(echo "" | $menu "Enter Gaps Size:" -l 0)
+  [ $menuarg1 -eq $menuarg1 ] || exit 1
+  duskc run_command setgapsex 0
+  duskc run_command incrihgaps $menuarg1; duskc run_command incrivgaps $menuarg1; duskc run_command incrohgaps $menuarg1; duskc run_command incrovgaps $menuarg1
+  exit 0
+}
+[ "$mainmethod" = "Increase Borders" ] && {
+  menuarg1=$(echo "" | $menu "Enter Border Size:" -l 0)
+  [ $menuarg1 -eq $menuarg1 ] || exit 1
+  duskc run_command setborderpx $menuarg1
+  exit 0
+}
+
+exit 1

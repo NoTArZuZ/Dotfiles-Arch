@@ -56,13 +56,13 @@ stoprec() {
 
 # Handle active recording
 [ -e /tmp/recvidpid ] || [ -e /tmp/recmicpid ] || [ -e /tmp/recsndpid ] && {
-  reallystop=$(printf ":g  Yes\n:r  No" | $menu "Stop recording?" -l 2 -1 -R -n | $cutemoji)
+  reallystop=$(printf ":g  Yes\n:r  No" | $menu "Stop recording?" -1 -R -n | $cutemoji)
   stoprec
 }
 
 # Dmenu Choice
-[ "$mainmethod" ] || mainmethod=$(printf ":g  Record Video\n:y  Record Audio" | $menu "Choose:" -l 2 -1 -R -n | $cutemoji)
-[ "$recopts" ] || recopts=$(printf ":g  Mic and Desktop\n:y  Desktop" | $menu "Audio method:" -l 2 -1 -R -n | $cutemoji)
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Record Video\n:y  Record Audio" | $menu "Choose:" -1 -R -n | $cutemoji)
+[ "$recopts" ] || recopts=$(printf ":g  Mic and Desktop\n:y  Desktop" | $menu "Audio method:" -1 -R -n | $cutemoji)
 
 # Main Program
 [ "$mainmethod" = "Record Video" ] && {
