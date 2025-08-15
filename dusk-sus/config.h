@@ -90,7 +90,7 @@ static uint64_t functionality = 0
 //	|BarMasterGroupBorderColor // use border color of master group for the bar, otherwise normal scheme is used
 //	|FlexWinBorders // use the SchemeFlex* color schemes, falls back to SchemeTitle* if disabled
 //	|SpawnCwd // spawn applications in the currently selected client's working directory
-//	|ColorEmoji // enables color emoji support (removes Xft workaround)
+	|ColorEmoji // enables color emoji support (removes Xft workaround)
 //	|Status2DNoAlpha // option to not use alpha when drawing status2d status
 //	|BarBorder // draw a border around the bar
 //	|BarBorderColBg // optionally use the bar background colour for the bar border (rather than border colour)
