@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-notify-send -i info "Date and Time" "$(date +%c)"
+TODAY=$(date '+%-d')
+HEAD=$(cal | head -n1)
+BODY=$(cal -m | tail -n7 | sed -z "s|$TODAY|<u><b>$TODAY</b></u>|1")
+dunstify -h string:x-canonical-private-synchronous:calendar "${HEAD}" "${BODY}" -u CRITICAL

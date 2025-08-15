@@ -19,7 +19,7 @@ separator_color = frame
 idle_threshold = 120
 line_height = 4
 
-font = "Ubuntu Bold 10"
+font = "Ubuntu Mono Bold 12"
 
 format = "<span size='x-large' font_desc='Ubuntu Font 9' weight='bold' foreground='#bbc2cf'>%s</span>\n%b"
 
