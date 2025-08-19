@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+[ "$1" ] || { echo "use option sixel or view"; exit 1; }
+[ "$1" = "view" ] && mode="$1"
+[ "$1" = "sixel" ] && mode="$1"
+
+waitmpd()
+{
+  [ "$1" = "init" ] && {
+    while [ -z "$current" ]; do
+      sleep 1
+      current="$(mpc -f "%artist% - %album%" current)"
+    done
+  }
+  [ "$1" = "loop" ] && {
+    while [ "$current" = "$cached" ]; do
+      sleep 1
+      current="$(mpc -f "%artist% - %album%" current)"
+      [ -z "$current" ] && current="$cached"
+      [ "$mode" = "view" ] && { ps -p $viewpid >/dev/null || exit 0; }
+    done
+  }
+  return 0
+}
+
+# Get current Artist - Album, save cache and then save picture to tmp
+waitmpd init
+cached="$current"
+[ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
+
+[ "$mode" = "sixel" ] && {
+  command clear
+  img2sixel -w 400 -h 400 "/tmp/$current"
+  while true; do
+    waitmpd loop
+    cached="$current"
+    [ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
+    command clear
+    img2sixel -w 400 -h 400 "/tmp/$current"
+  done
+}
+
+[ "$mode" = "view" ] && {
+  nsxiv -b -a -p "/tmp/$current" &
+  viewpid="$!"
+  while true; do
+    waitmpd loop
+    cached="$current"
+    [ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
+    kill $viewpid
+    nsxiv -b -a -p "/tmp/$current" &
+    viewpid="$!"
+  done
+}

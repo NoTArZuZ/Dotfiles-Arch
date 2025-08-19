@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+[ "$1" ] && {
+  [ $1 = "projects" ] && SESH="projects"
+  [ $1 = "player" ] && SESH="player"
+}
+
+[ "$SESH" = "projects" ] && {
+  tmux has-session -t $SESH 2>/dev/null
+  if [ $? != 0 ]; then
+    tmux new-session -d -s $SESH -n "nvim"
+    tmux send-keys -t $SESH:nvim "z projects && nvim ." C-m
+    tmux new-window -t $SESH -n "term"
+    tmux send-keys -t $SESH:term "z projects" C-m
+    tmux select-window -t $SESH:nvim
+  fi
+  tmux attach-session -t $SESH
+}
+
+[ "$SESH" = "player" ] && {
+  tmux has-session -t $SESH 2>/dev/null
+  if [ $? != 0 ]; then
+    tmux new-session -d -s $SESH -x- -y- -n ncmpcpp
+    tmux send-keys -t $SESH "ncmpcpp" C-m
+    tmux split-window -hl 41 -t $SESH
+    tmux send-keys -t $SESH "mpd-cover sixel" C-m
+    tmux selectp -R -t $SESH
+  fi
+  tmux attach-session -t $SESH
+}
