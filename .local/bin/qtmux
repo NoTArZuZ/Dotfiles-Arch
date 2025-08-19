@@ -23,7 +23,10 @@
     tmux new-session -d -s $SESH -x- -y- -n ncmpcpp
     tmux send-keys -t $SESH "ncmpcpp" C-m
     tmux split-window -hl 41 -t $SESH
-    tmux send-keys -t $SESH "mpd-cover sixel" C-m
+    tmux split-window -v -t $SESH
+    tmux send-keys -t $SESH "cava" C-m
+    tmux selectp -U -t $SESH
+    tmux send-keys -t $SESH "command clear && mpd-cover sixel" C-m
     tmux selectp -R -t $SESH
   fi
   tmux attach-session -t $SESH
