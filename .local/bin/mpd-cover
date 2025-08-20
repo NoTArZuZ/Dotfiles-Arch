@@ -13,14 +13,16 @@ waitmpd()
     while [ -z "$current" ]; do
       sleep 1
       current="$(mpc -f "%artist% - %album%" current)"
+      [ "$mode" = "info" ] && current="$(mpc -f "%artist% %album% %title%" current)"
     done
   }
   [ "$1" = "loop" ] && {
     while [ "$current" = "$cached" ]; do
       sleep 1
       current="$(mpc -f "%artist% - %album%" current)"
-      [ -z "$current" ] && current="$cached"
+      [ "$mode" = "info" ] && current="$(mpc -f "%artist% %album% %title%" current)"
       [ "$mode" = "view" ] && { ps -p $viewpid >/dev/null || exit 0; }
+      [ -z "$current" ] && current="$cached"
     done
   }
   return 0
