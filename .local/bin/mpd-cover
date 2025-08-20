@@ -15,6 +15,7 @@ waitmpd()
       current="$(mpc -f "%artist% - %album%" current)"
       [ "$mode" = "info" ] && current="$(mpc -f "%artist% %album% %title%" current)"
     done
+    cached="$current"
   }
   [ "$1" = "loop" ] && {
     while [ "$current" = "$cached" ]; do
@@ -28,12 +29,10 @@ waitmpd()
   return 0
 }
 
-# Get current Artist - Album, save cache and then save picture to tmp
 waitmpd init
-cached="$current"
-[ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
 
 [ "$mode" = "sixel" ] && {
+  [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
   command clear; echo -e "\n"
   img2sixel -w 400 -h 400 "/tmp/$current"
   while true; do
@@ -46,6 +45,7 @@ cached="$current"
 }
 
 [ "$mode" = "view" ] && {
+  [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
   nsxiv -b -a -p "/tmp/$current" &
   viewpid="$!"
   while true; do
