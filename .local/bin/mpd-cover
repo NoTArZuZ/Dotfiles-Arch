@@ -31,13 +31,13 @@ cached="$current"
 [ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
 
 [ "$mode" = "sixel" ] && {
-  command clear
+  command clear; echo -e "\n"
   img2sixel -w 400 -h 400 "/tmp/$current"
   while true; do
     waitmpd loop
     cached="$current"
     [ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
-    command clear
+    command clear; echo -e "\n"
     img2sixel -w 400 -h 400 "/tmp/$current"
   done
 }

@@ -5,6 +5,8 @@
   [ $1 = "player" ] && SESH="player"
 }
 
+[ "$2" = "die" ] && { tmux kill-session -t "$1"; exit 0; }
+
 [ "$SESH" = "projects" ] && {
   tmux has-session -t $SESH 2>/dev/null
   if [ $? != 0 ]; then
