@@ -25,6 +25,7 @@ waitmpd()
       [ "$mode" = "view" ] && { ps -p $viewpid >/dev/null || exit 0; }
       [ -z "$current" ] && current="$cached"
     done
+    cached="$current"
   }
   return 0
 }
@@ -37,7 +38,6 @@ waitmpd init
   img2sixel -w 400 -h 400 "/tmp/$current"
   while true; do
     waitmpd loop
-    cached="$current"
     [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
     command clear; echo -e "\n"
     img2sixel -w 400 -h 400 "/tmp/$current"
@@ -50,7 +50,6 @@ waitmpd init
   viewpid="$!"
   while true; do
     waitmpd loop
-    cached="$current"
     [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
     kill $viewpid
     nsxiv -b -a -p "/tmp/$current" &
@@ -62,7 +61,6 @@ waitmpd init
   command clear && mpc -f "TITLE: %title%\nARTIST: %artist%\nALBUM: %album%\nTIME: %time%\nTRACK: %track%\nDATE: %date%\nGENRE: %genre%\nCOMMENT: %comment%" current
   while true; do
     waitmpd loop
-    cached="$current"
     command clear && mpc -f "TITLE: %title%\nARTIST: %artist%\nALBUM: %album%\nTIME: %time%\nTRACK: %track%\nDATE: %date%\nGENRE: %genre%\nCOMMENT: %comment%" current
   done
 }
