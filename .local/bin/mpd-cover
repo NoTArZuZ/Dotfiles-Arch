@@ -2,9 +2,10 @@
 
 set -eo pipefail
 
-[ "$1" ] || { echo "use option sixel or view"; exit 1; }
+[ "$1" ] || { echo "use option sixel, view or info"; exit 1; }
 [ "$1" = "view" ] && mode="$1"
 [ "$1" = "sixel" ] && mode="$1"
+[ "$1" = "info" ] && mode="$1"
 
 waitmpd()
 {
@@ -28,7 +29,7 @@ waitmpd()
 # Get current Artist - Album, save cache and then save picture to tmp
 waitmpd init
 cached="$current"
-[ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
+[ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
 
 [ "$mode" = "sixel" ] && {
   command clear; echo -e "\n"
@@ -36,7 +37,7 @@ cached="$current"
   while true; do
     waitmpd loop
     cached="$current"
-    [ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
+    [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
     command clear; echo -e "\n"
     img2sixel -w 400 -h 400 "/tmp/$current"
   done
@@ -48,9 +49,18 @@ cached="$current"
   while true; do
     waitmpd loop
     cached="$current"
-    [ -f "/tmp/$current" ] || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"
+    [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
     kill $viewpid
     nsxiv -b -a -p "/tmp/$current" &
     viewpid="$!"
+  done
+}
+
+[ "$mode" = "info" ] && {
+  command clear && mpc -f "TITLE: %title%\nARTIST: %artist%\nALBUM: %album%\nTIME: %time%\nTRACK: %track%\nDATE: %date%\nGENRE: %genre%\nCOMMENT: %comment%" current
+  while true; do
+    waitmpd loop
+    cached="$current"
+    command clear && mpc -f "TITLE: %title%\nARTIST: %artist%\nALBUM: %album%\nTIME: %time%\nTRACK: %track%\nDATE: %date%\nGENRE: %genre%\nCOMMENT: %comment%" current
   done
 }
