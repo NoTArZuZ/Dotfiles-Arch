@@ -33,24 +33,24 @@ waitmpd()
 waitmpd init
 
 [ "$mode" = "sixel" ] && {
-  [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
+  [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
   command clear; echo -e "\n"
   img2sixel -w 400 -h 400 "/tmp/$current"
   while true; do
     waitmpd loop
-    [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
+    [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
     command clear; echo -e "\n"
     img2sixel -w 400 -h 400 "/tmp/$current"
   done
 }
 
 [ "$mode" = "view" ] && {
-  [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
+  [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
   nsxiv -b -a -p "/tmp/$current" &
   viewpid="$!"
   while true; do
     waitmpd loop
-    [ -f "/tmp/$current" ] || mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current"
+    [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
     kill $viewpid
     nsxiv -b -a -p "/tmp/$current" &
     viewpid="$!"
