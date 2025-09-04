@@ -46,12 +46,12 @@
         elapsed_style: (fg: "green"),
         thumb_style: (fg: "green"),
     ),
-    scrollbar: (
-        symbols: ["│", "█", "▲", "▼"],
-        track_style: (),
-        ends_style: (),
-        thumb_style: (fg: "white"),
-    ),
+    scrollbar: None, // (
+    //     symbols: ["│", "█", "▲", "▼"],
+    //     track_style: (),
+    //     ends_style: (),
+    //     thumb_style: (fg: "white"),
+    // ),
     song_table_format: [
         (
             prop: (kind: Property(Track),
