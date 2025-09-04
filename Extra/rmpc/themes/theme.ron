@@ -172,6 +172,14 @@
         ),
         (
             kind: Group([
+                (kind: Text("[")),
+                (kind: Property(Duration)),
+                (kind: Text("]")),
+                (kind: Text(" ")),
+            ])
+        ),
+        (
+            kind: Group([
                 (kind: Property(Artist)),
                 (kind: Text(" - ")),
                 (kind: Property(Title)),
