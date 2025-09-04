@@ -125,17 +125,18 @@
                 ],
                 right: [
                     (kind: Property(Widget(ScanStatus)), style: (fg: "white")),
-                    (kind: Property(Widget(Volume)), style: (fg: "white"))
+                    (kind: Property(Widget(Volume)), style: (fg: "yellow"))
                 ]
             ),
             (
                 left: [
-                    (kind: Property(Status(Elapsed))),
-                    (kind: Text(" / ")),
-                    (kind: Property(Status(Duration))),
-                    (kind: Text(" (")),
-                    (kind: Property(Status(QueueTimeTotal(separator: " ")))),
-                    (kind: Text(" Queue)"))
+                    (
+                        kind: Property(Widget(States(
+                            active_style: (fg: "white", modifiers: "Bold"),
+                            separator_style: (fg: "white")))
+                        ),
+                        style: (fg: "dark_gray")
+                    ),
                 ],
                 center: [
                     (kind: Property(Song(Artist)), style: (fg: "red"),
@@ -152,13 +153,12 @@
                     (kind: Text(")")),
                 ],
                 right: [
-                    (
-                        kind: Property(Widget(States(
-                            active_style: (fg: "white", modifiers: "Bold"),
-                            separator_style: (fg: "white")))
-                        ),
-                        style: (fg: "dark_gray")
-                    ),
+                    (kind: Property(Status(Elapsed))),
+                    (kind: Text(" / ")),
+                    (kind: Property(Status(Duration))),
+                    (kind: Text(" (")),
+                    (kind: Property(Status(QueueTimeTotal(separator: " ")))),
+                    (kind: Text(" Queue)"))
                 ]
             ),
         ],
