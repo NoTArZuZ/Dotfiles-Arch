@@ -42,7 +42,7 @@
     ),
     progress_bar: (
         symbols: ["", "", ""],
-        track_style: (fg: "black"),
+        track_style: (fg: "dark_gray"),
         elapsed_style: (fg: "green"),
         thumb_style: (fg: "green"),
     ),
