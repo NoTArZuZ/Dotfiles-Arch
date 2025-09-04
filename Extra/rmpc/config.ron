@@ -23,7 +23,7 @@
         method: Auto,
         max_size_px: (width: 1200, height: 1200),
         disabled_protocols: [],
-        vertical_align: Center,
+        vertical_align: Top,
         horizontal_align: Center,
     ),
     keybinds: (
@@ -127,8 +127,8 @@
             pane: Split(
                 direction: Horizontal,
                 panes: [
-                    (size: "40%", pane: Pane(AlbumArt), borders: "RIGHT"),
-                    (size: "60%", pane: Pane(Queue)),
+                    (size: "65%", pane: Pane(Queue)),
+                    (size: "35%", pane: Pane(AlbumArt), borders: "LEFT"),
                 ],
             ),
         ),
