@@ -34,11 +34,11 @@
         playlist_style: None,
     ),
     level_styles: (
-        info: (fg: "blue", bg: "black"),
-        warn: (fg: "yellow", bg: "black"),
-        error: (fg: "red", bg: "black"),
-        debug: (fg: "light_green", bg: "black"),
-        trace: (fg: "magenta", bg: "black"),
+        info: (fg: "white"),
+        warn: (fg: "yellow"),
+        error: (fg: "red"),
+        debug: (fg: "light_green"),
+        trace: (fg: "magenta"),
     ),
     progress_bar: (
         symbols: ["", "", ""],
