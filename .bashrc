@@ -42,9 +42,10 @@ alias "pwmix"='wiremix'
 alias "hx"='helix'
 alias "nv"='nvim'
 alias "ufetch"='/home/$USER/ufetch-arch'
-alias "minifetch"='echo "" && fastfetch -c examples/8.jsonc --logo-padding-left 2'
 # One-liners
 alias "ezfd"='find / -name $* 2>/dev/null'
+alias "minifetch"='echo "" && fastfetch -c examples/8.jsonc --logo-padding-left 2'
+alias "dict"='trans -v -d $*'
 alias "clear"='clear && minifetch'
 alias "config"='git -C ~/Dotfiles'
 alias "diffconfig"='~/diffdotfiles'
@@ -66,6 +67,7 @@ alias "tree"='eza --icons -aT'
 alias "grep"='grep --color=auto'
 alias "diff"='diff --color'
 alias "shx"='SUDO_EDITOR=helix sudoedit'
+alias "rmpc-mini"="rmpc -c .config/rmpc/config-mini.ron -t .config/rmpc/themes/theme-mini.ron"
 
 # Functions
 # Extract various archives
