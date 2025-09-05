@@ -94,17 +94,19 @@
                 size: "1",
             ),
             (
-                pane: Pane(Header),
-                size: "4",
+                size: "5",
                 borders: "ALL",
+                pane: Split(
+                    direction: Vertical,
+                    panes: [
+                        (pane: Pane(Header), size: "2"),
+                        (pane: Pane(ProgressBar), size: "1"),
+                    ],
+                ),
             ),
             (
                 pane: Pane(TabContent),
                 size: "100%",
-            ),
-            (
-                pane: Pane(ProgressBar),
-                size: "1",
             ),
         ],
     ),
