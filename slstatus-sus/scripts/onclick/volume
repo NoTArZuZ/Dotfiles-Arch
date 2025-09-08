@@ -52,7 +52,7 @@ function get_album_art {
     [ -n "$mpd" ] && {
         filename=$(mpc -f "%artist% - %album%" current)
         filepath=$(mpc -f "%file%" current)
-        [ -f "/tmp/$filename" ] || mpc albumart "$filepath" > "/tmp/$filename"
+        [ -f "/tmp/$filename" ] || ( mpc albumart "$filepath" > "/tmp/$filename" || mpc readpicture "$filepath" > "/tmp/$filename" )
         album_art="/tmp/$filename"
     }
 }

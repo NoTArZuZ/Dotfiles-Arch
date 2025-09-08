@@ -68,6 +68,7 @@ alias "grep"='grep --color=auto'
 alias "diff"='diff --color'
 alias "shx"='SUDO_EDITOR=helix sudoedit'
 alias "rmpc-mini"="rmpc -c .config/rmpc/config-mini.ron -t .config/rmpc/themes/theme-mini.ron"
+alias "rmpc-alt"="rmpc -c .config/rmpc/config-alt.ron -t .config/rmpc/themes/theme-alt.ron"
 
 # Functions
 # Extract various archives
