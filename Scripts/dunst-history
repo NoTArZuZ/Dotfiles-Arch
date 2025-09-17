@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Dependencies: jq
+
+set -exo pipefail
+
+. ~/Scripts/script-vars
+
+# Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
+# Variables
+count=$(dunstctl count history); count=$(expr $count - 1) || :
+for i in $(seq 0 $count); do
+  id=$(dunstctl history | jq -r ".data.[0].[${i}].id.data")
+  sum=$(dunstctl history | jq -r ".data.[0].[${i}].summary.data")
+  app=$(dunstctl history | jq -r ".data.[0].[${i}].appname.data")
+  [ "$parsed" ] && parsed="${parsed}\n${id} ${sum} [${app}]"
+  [ "$parsed" ] || parsed="${id} ${sum} [${app}]"
+done
+
+# Dmenu choice
+mainchoice=$(printf "$parsed\nClear" | $menu "Choose:" -1 -R -n)
+
+# Main Program
+[ "$mainchoice" = "Clear" ] && dunstctl history-clear && exit 0
+mainchoice=$(printf "$mainchoice" | awk '{print $1}')
+dunstctl history-pop $mainchoice
