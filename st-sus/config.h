@@ -189,7 +189,7 @@ unsigned int highlightbg = 160;
  * 7: Blinking st cursor
  * 8: Steady st cursor
  */
-static unsigned int cursorstyle = 1;
+static unsigned int cursorstyle = 3;
 static Rune stcursor = 0x2603; /* snowman (U+2603) */
 
 /*
@@ -210,7 +210,7 @@ static unsigned int height = 364;
 /*
  * Default shape of the mouse cursor
  */
-static char* mouseshape = "xterm";
+static char* mouseshape = "left_ptr";
 
 /*
  * Color used to display font attributes when fontconfig selected a font which

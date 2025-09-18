@@ -3,11 +3,11 @@
 [[ $- != *i* ]] && return
 
 # Prompt
-PS1=" \[\e[1;37m\]\t\[\e[0m\] \[\e[1;34m\]\w \[\033[1;32m\]\[\e[0;37m\] "
+PS1=" \[\e[1;37m\]\t\[\e[0m\] \[\e[1;34m\]\w \[\033[1;32m\]\[\e[0;37m\]"
 PS0="\[\e[0m\]" # Reset colours after pressing enter
 
 # Variables
-PROMPT_COMMAND='history -a'
+PROMPT_COMMAND='history -a; echo -ne "\e[3 q"'
 export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
 export EDITOR=helix
@@ -41,14 +41,12 @@ alias "pacRq"="yay -Qq | fzf --multi --preview 'yay -Sii {1}' --preview-window=d
 alias "pwmix"='wiremix'
 alias "hx"='helix'
 alias "nv"='nvim'
-alias "ufetch"='/home/$USER/ufetch-arch'
 # One-liners
 alias "ezfd"='find / -name $* 2>/dev/null'
 alias "minifetch"='echo "" && fastfetch -c examples/8.jsonc --logo-padding-left 2'
 alias "dict"='trans -v -d $*'
 alias "clear"='clear && minifetch'
 alias "config"='git -C ~/Dotfiles'
-alias "diffconfig"='~/diffdotfiles'
 alias "getwinclass"='xdotool getwindowclassname "$(xdotool selectwindow)"'
 alias "getwintitle"='xdotool getwindowname "$(xdotool selectwindow)"'
 alias "procf"='ps aux | grep'
