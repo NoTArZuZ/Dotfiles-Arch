@@ -30,7 +30,7 @@ ssh_only = false
 format = '[$hostname](bold purple)'
 
 [time]
-format = "[[󰪠 $time](bold black bg:white) ](bold white)"
+format = "[[󰪠 $time](bold black bg:white) 󰁥](bold white)"
 disabled = false
 
 [cmd_duration]
