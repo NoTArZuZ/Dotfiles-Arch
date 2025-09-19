@@ -1,6 +1,7 @@
 # Arch Dusk Dotfiles
 *with suckless software included!*
 
+![image](./Assets/19-1758301721.png)
 ![image](./Assets/02-1751398650.png)
 
 ## Installation
@@ -21,7 +22,7 @@
 1. cd ~/Dotfiles
 2. git pull
 3. stow .
-4. Check non stow'ed files with diffconfig
+4. Check non stow'ed files with diffdotfiles script
 5. Copy/Replace missing or changed files
 
 ## Extra
