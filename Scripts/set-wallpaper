@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dependencies: Image viewer that outputs marked image path to stdout
+# Dependencies: Image viewer that outputs marked image path to stdout, xwinwrap (optional for gif and mp4)
 
 set -eo pipefail
 
@@ -8,14 +8,24 @@ set -eo pipefail
 # Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Functions
 setwallpaper() {
-  ln -sf "$bgfile" $HOME/.cache/wallcache
-  $setbg $HOME/.cache/wallcache
-  notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
+  case $bgfile in
+  *.mp4|*.gif)
+    pkill -x xwinwrap || :
+    echo "$bgfile" > "$HOME/.cache/wallcache"
+    xwinwrap -g 1920x1080+0+0 -un -fdt -ni -b -nf -ov -- mpv-wallpaper WID $bgfile &
+  ;;
+  *)
+    pkill -x xwinwrap || :
+    echo "$bgfile" > "$HOME/.cache/wallcache"
+    $setbg $bgfile
+  ;;
+  esac
 }
 
 selectbg() {
   bgfile=$($imgview "$wallpaperdir" | shuf -n 1)
   setwallpaper
+  notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
   exit 0
 }
 
@@ -24,6 +34,7 @@ randombg() {
   until [ "$rollmore" = "Yes" ]; do
     bgfile=$(find "$wallpaperdir" -type f | shuf -n 1)
     setwallpaper
+    notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
     rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -1 -R -n | $cutemoji)
   done
   exit 0
@@ -33,6 +44,8 @@ randombg() {
 [ $1 ] && {
   [ "$1" = "set" ] || [ "$1" = "-s" ] && mainmethod="Select"
   [ "$1" = "random" ] || [ "$1" = "-r" ] && mainmethod="Random"
+  [ "$1" = "manual" ] || [ "$1" = "-m" ] && mainmethod="Manual"
+  [ "$1" = "restore" ] || [ "$1" = "-l" ] && mainmethod="Restore"
   [ "$mainmethod" ] || exit 1
 }
 
@@ -42,5 +55,7 @@ randombg() {
 # Main Program
 [ "$mainmethod" = "Select" ] && selectbg
 [ "$mainmethod" = "Random" ] && randombg
+[ "$mainmethod" = "Manual" ] && { bgfile="$2"; setwallpaper; exit 0; }
+[ "$mainmethod" = "Restore" ] && { bgfile=$(cat $HOME/.cache/wallcache); setwallpaper; exit 0; }
 
 exit 1
