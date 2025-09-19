@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Dependencies: Image viewer that outputs marked image path to stdout, xwinwrap (optional for gif and mp4)
 
-set -eo pipefail
+set -exo pipefail
 
 . $HOME/Scripts/script-vars
 
@@ -10,9 +10,10 @@ set -eo pipefail
 setwallpaper() {
   case $bgfile in
   *.mp4|*.gif)
+    scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')
     pkill -x xwinwrap || :
     echo "$bgfile" > "$HOME/.cache/wallcache"
-    xwinwrap -g 1920x1080+0+0 -un -fdt -ni -b -nf -ov -- mpv-wallpaper WID $bgfile &
+    xwinwrap -g ${scrres}+0+0 -un -fdt -ni -b -nf -ov -- mpv-wallpaper WID $bgfile &
   ;;
   *)
     pkill -x xwinwrap || :
