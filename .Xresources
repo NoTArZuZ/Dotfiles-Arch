@@ -5,8 +5,8 @@ Xft.autohint:	0
 Xft.hintstyle:	hintmedium
 Xft.rgba:	rgb
 Xft.lcdfilter:	lcddefault
-Xcursor.theme: BreezeX-Light
-Xcursor.size: 32
+Xcursor.theme: macOS
+Xcursor.size: 28
 
 ! St visual
 st.borderpx: 0

@@ -19,11 +19,20 @@ bind-key D pb-download
 bind-key U show-urls
 bind-key x pb-delete
 
-color listnormal magenta default
+# OneDark
+# color listnormal magenta default
+# color listfocus white black standout bold
+# color listnormal_unread cyan default
+# color listfocus_unread black white bold
+# color info blue black bold
+# color article white default bold
+
+# Gruvbox
+color listnormal green default
 color listfocus white black standout bold
-color listnormal_unread cyan default
+color listnormal_unread yellow default
 color listfocus_unread black white bold
-color info blue black bold
+color info red black bold
 color article white default bold
 
 browser linkhandler

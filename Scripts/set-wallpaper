@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Dependencies: Image viewer that outputs marked image path to stdout, xwinwrap (optional for gif and mp4)
 
-set -exo pipefail
+set -eo pipefail
 
 . $HOME/Scripts/script-vars
 

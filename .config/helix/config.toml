@@ -1,9 +1,9 @@
-theme = "DoomOne"
+theme = "Gruvbox"
 
 [editor]
 shell = ["bash", "-c"]
 bufferline = "multiple"
-cursorline = true
+cursorline = false
 true-color = true
 line-number = "relative"
 color-modes = true
