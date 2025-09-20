@@ -205,7 +205,7 @@ static const Rule clientrules[] = {
 	 *	_NET_WM_WINDOW_TYPE(ATOM) = wintype
 	 */
 	{ .wintype = "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE", .flags = Unmanaged },
-	{ .wintype = WTYPE "DESKTOP", .flags = Unmanaged|Lower },
+	// { .wintype = WTYPE "DESKTOP", .flags = Unmanaged|Lower },
 	{ .wintype = WTYPE "DOCK", .flags = Unmanaged|Raise },
 	{ .wintype = WTYPE "DIALOG", .flags = AlwaysOnTop|Centered|Floating },
 	{ .wintype = WTYPE "UTILITY", .flags = AlwaysOnTop|Centered|Floating },
