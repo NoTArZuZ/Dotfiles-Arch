@@ -17,9 +17,10 @@ for i in $(seq 0 $count); do
 done
 
 # Dmenu choice
-mainchoice=$(printf "$parsed\nClear" | $menu "Choose:" -1 -R -n)
+mainchoice=$(printf "$parsed\nClear\nDont Disturb" | $menu "Choose:" -1 -R -n)
 
 # Main Program
 [ "$mainchoice" = "Clear" ] && dunstctl history-clear && exit 0
+[ "$mainchoice" = "Dont Disturb" ] && dunstctl set-paused toggle && exit 0
 mainchoice=$(printf "$mainchoice" | awk '{print $1}')
 dunstctl history-pop $mainchoice

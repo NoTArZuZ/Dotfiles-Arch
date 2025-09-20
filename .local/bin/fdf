@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+file=$(fd "$*" | fzf)
+case "$file" in
+  *.*)
+    xdg-open "$file"
+  ;;
+  *)
+    [ -d "$file" ] && { yazi "$file"; exit 0; }
+    [ -a "$file" ] && { $EDITOR "$file"; exit 0; }
+  ;;
+esac
