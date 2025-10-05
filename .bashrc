@@ -37,6 +37,10 @@ alias "pacR"='yay -R'
 alias "pacRd"='yay -Rdd'
 alias "pacRc"='yay -Rcuns'
 alias "pacRq"="yay -Qq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% | xargs -ro yay -Rcuns"
+alias "pacQ"="pacman -Qq"
+alias "pacQe"="pacman -Qqe"
+alias "pacQm"="pacman -Qqm"
+alias "paclog"="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort -n"
 # Abbreviations
 alias "pwmix"='wiremix'
 alias "hx"='helix'
