@@ -5,24 +5,26 @@ xmenu="xmenu"
 
 $xmenu <<EOF | sh &
 Launch
-	Run App				dmenu_run -bw 2 -l 10 -c
-	Terminal			st
-	Cromite				cromite
-	Discord				discord-equibop
-	Mumble				mumble
-	Steam					steam
-	Conky					conky-toggle
+	Apps		hub-script run-desktop
+	Dmenu		dmenu_run -bw 2 -l 10 -c
+	Terminal		st
+	Cromite		cromite
+	Discord		discord
+	Steam		steam
 
 Scripts
-	hub-script					hub-script
-	Screenshot 					hub-script maim-scrshot
-	Color Picker				hub-script color-picker
-	Set Wallpaper				hub-script set-wallpaper -s
+	Hub		hub-script
+	Games		hub-script game-launcher
+	Screenshot		hub-script maim-scrshot
+	Color Picker		hub-script color-picker
+	Set Wallpaper		hub-script set-wallpaper -s
 	Random Wallpaper		hub-script set-wallpaper -r
+	Conky		conky-toggle
+	Screenkey		screenkey-toggle
+	Picom		picom-toggle
 
-Settings
-	Exit					duskc run_command quit
-	Shutdown			shutdown now
-	Restart				reboot
+Power
+	Exit		duskc run_command quit
+	Shutdown		shutdown now
+	Restart		reboot
 EOF
-
