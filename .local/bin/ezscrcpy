@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Dependencies: android-tools scrcopy v4l2loopback-dkms polkit
+# Dependencies: android-tools scrcopy v4l2loopback-dkms v4l2loopback-utils polkit
 
 set -eo pipefail
 
@@ -9,8 +9,8 @@ webcam()
   [ "$paired" ] && adb pair "${ip}:${port_pair}"
   adb connect "${ip}:${port_connect}"
   pkexec modprobe v4l2loopback
-  pkexec v4l2loopback-ctl add -n "Webcam" /dev/video1 || :
-  scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=${facing} --v4l2-sink=/dev/video1 --no-playback
+  pkexec v4l2loopback-ctl add -n "Phone Webcam" /dev/video2 || :
+  scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=${facing} --v4l2-sink=/dev/video2 --no-playback
   adb kill-server
   exit 0
 }
