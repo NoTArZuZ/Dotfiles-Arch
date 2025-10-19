@@ -7,10 +7,16 @@ set -eo pipefail
 
 setup_mirror()
 {
-  paired=$(printf "y\nn" | $menu "Have you paired with PC?" -1 -R -n)
-  [ "$paired" = "n" ] && notify-send -i error "Phone Manager" "Please pair your PC with the phone via adb" && exit 1
-  ip=$(echo "" | $menu "Enter IP:")
-  port_connect=$(echo "" | $menu "Enter Port:")
+  ip=$(echo "" | $menu "Enter Device IP:")
+  port_connect=$(echo "" | $menu "Enter Connection Port:")
+  paired=$(printf "Yes\nNo" | $menu "Have you paired with PC?" -1 -R -n)
+  [ "$paired" = "No" ] && {
+    port_pair=$(echo "" | $menu "Enter Pair Port:")
+    code=$(echo "" | $menu "Enter Pair Code:")
+    printf "$code\n" | adb pair $ip:$port_pair || { notify-send -i error "Phone Manager" "Failed to pair the device"; exit 1; }
+    notify-send -i info "Phone Manager" "The device was successfully paired"
+  }
+  return 0
 }
 
 mirror()
@@ -22,6 +28,7 @@ mirror()
   }
   [ "$1" = screen ] && ip="$ip" port_connect="$port_connect" ezscrcpy -r -s
   [ "$1" = audio ] && ip="$ip" port_connect="$port_connect" ezscrcpy -r -a
+  exit 0
 }
 
 mainchoice=$(printf ":y  Fileshare\n:p  Screen Mirror\n:g  Webcam\n:r  Cast Audio" | $menu "Choose:" -1 -R -n | $cutemoji)

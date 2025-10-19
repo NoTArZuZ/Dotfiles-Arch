@@ -6,7 +6,6 @@ set -eo pipefail
 webcam()
 {
   adb start-server
-  [ "$paired" ] && adb pair "${ip}:${port_pair}"
   adb connect "${ip}:${port_connect}"
   pkexec modprobe v4l2loopback
   scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=${facing} --v4l2-sink=/dev/video0 --no-playback
@@ -17,7 +16,6 @@ webcam()
 screen()
 {
   adb start-server
-  [ "$paired" ] && adb pair "${ip}:${port_pair}"
   adb connect "${ip}:${port_connect}"
   scrcpy -m1920 --max-fps=60
   adb kill-server
@@ -27,22 +25,28 @@ screen()
 audio()
 {
   adb start-server
-  [ "$paired" ] && adb pair "${ip}:${port_pair}"
   adb connect "${ip}:${port_connect}"
   scrcpy --no-video --no-control
   adb kill-server
   exit 0
 }
 
-connect()
+pair()
 {
-  [ "$paired" ] || read -r -p "Pair this PC? [y/N] " paired
-  [ "$ip" ] || read -r -p "Enter device IP: " ip
-  [ "$port_connect" ] || read -r -p "Enter connection port: " port_connect
-  [ "$paired" = "N" ] || [ "$paired" = "n" ] && paired=""
-  [ "$paired" = "Y" ] || [ "$paired" = "y" ] && read -r -p "Enter pair port: " port_pair
+  read -r -p "Enter Pair Port: " port_pair
+  adb pair $ip:$port_pair
   return 0
 }
+
+connect()
+{
+  [ "$paired" ] || read -r -p "Have you paired with PC? [Y/n] " paired
+  [ "$ip" ] || read -r -p "Enter Device IP: " ip
+  [ "$port_connect" ] || read -r -p "Enter Connection Port: " port_connect
+  [ "$paired" = "N" ] || [ "$paired" = "n" ] && pair
+  return 0
+}
+
 
 helpmsg()
 {
@@ -57,7 +61,7 @@ POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
     case $1 in
     -r | paired)
-        paired="n"
+        paired="y"
         shift
         ;;
     -b | back)
