@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. ~/Scripts/script-vars
+
+setup_mirror()
+{
+  paired=$(printf "y\nn" | $menu "Have you paired this PC?" -1 -R -n)
+  [ "$paired" = "n" ] && notify-send -i error "Phone Manager" "Please pair your device via adb" && exit 1
+  ip=$(echo "" | $menu "Enter ip:")
+  port_connect=$(echo "" | $menu "Enter connection port:")
+}
+
+mirror()
+{
+  [ "$1" = webcam ] && {
+    facing=$(printf "front\nback" | $menu "Camera facing:" -1 -R -n)
+    [ "$facing" = "front" ] && ip="$ip" port_connect="$port_connect" ezscrcpy -r -w
+    [ "$facing" = "back" ] && ip="$ip" port_connect="$port_connect" ezscrcpy -r -b -w
+  }
+  [ "$1" = screen ] && ip="$ip" port_connect="$port_connect" ezscrcpy -r -s
+  [ "$1" = audio ] && ip="$ip" port_connect="$port_connect" ezscrcpy -r -a
+}
+
+mainchoice=$(printf "Fileshare\nScreen Mirror\nCamera Mirror\nAudio Mirror" | $menu "Choose:" -1 -R -n)
+[ "$mainchoice" = "Fileshare" ] && localsend
+[ "$mainchoice" = "Screen Mirror" ] && { setup_mirror; mirror screen; }
+[ "$mainchoice" = "Camera Mirror" ] && { setup_mirror; mirror webcam; }
+[ "$mainchoice" = "Audio Mirror" ] && { setup_mirror; mirror audio; }

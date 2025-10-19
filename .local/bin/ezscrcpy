@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Dependencies: android-tools scrcopy v4l2loopback-dkms polkit
+
+set -eo pipefail
+
+webcam()
+{
+  adb start-server
+  [ "$paired" ] && adb pair "${ip}:${port_pair}"
+  adb connect "${ip}:${port_connect}"
+  pkexec modprobe v4l2loopback
+  pkexec v4l2loopback-ctl add -n "Webcam" /dev/video1 || :
+  scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=${facing} --v4l2-sink=/dev/video1 --no-playback
+  adb kill-server
+  exit 0
+}
+
+screen()
+{
+  adb start-server
+  [ "$paired" ] && adb pair "${ip}:${port_pair}"
+  adb connect "${ip}:${port_connect}"
+  scrcpy -m1920 --max-fps=60
+  adb kill-server
+  exit 0
+}
+
+audio()
+{
+  adb start-server
+  [ "$paired" ] && adb pair "${ip}:${port_pair}"
+  adb connect "${ip}:${port_connect}"
+  scrcpy --no-video --no-control
+  adb kill-server
+  exit 0
+}
+
+connect()
+{
+  [ "$paired" ] || read -r -p "Pair this PC? [y/N] " paired
+  [ "$ip" ] || read -r -p "Enter device IP: " ip
+  [ "$port_connect" ] || read -r -p "Enter connection port: " port_connect
+  [ "$paired" = "N" ] || [ "$paired" = "n" ] && paired=""
+  [ "$paired" = "Y" ] || [ "$paired" = "y" ] && read -r -p "Enter pair port: " port_pair
+  return 0
+}
+
+helpmsg()
+{
+  echo -e "[-w|webcam] - headless webcam \
+  \n[-s|screen] - control device \
+  \n[-a|audio]  - listen to audio"
+  exit 1
+}
+
+singleflag=0
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    -r | paired)
+        paired="n"
+        shift
+        ;;
+    -b | back)
+        webcam_back=true
+        shift
+        ;;
+    -w | webcam)
+        webcam_var=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -s | screen)
+        screen_var=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -a | audio)
+        audio_var=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -* | --*) helpmsg ;;
+    *)
+        POSITIONAL_ARGS+=("$1")
+        shift
+        ;;
+    esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+
+[ $singleflag = 1 ] || helpmsg
+facing="front"; [ $webcam_back ] && facing="back"
+
+[ "$webcam_var" ] && { connect; webcam; }
+[ "$screen_var" ] && { connect; screen; }
+[ "$audio_var" ] && { connect; audio; }
