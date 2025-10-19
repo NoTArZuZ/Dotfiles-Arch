@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Dependencies: jq
 
-set -exo pipefail
+set -eo pipefail
 
 . ~/Scripts/script-vars
 
@@ -17,7 +17,7 @@ for i in $(seq 0 $count); do
 done
 
 # Dmenu choice
-mainchoice=$(printf "$parsed\nClear\nDont Disturb" | $menu "Choose:" -1 -R -n)
+mainchoice=$(echo -e "${parsed}\nClear\nDont Disturb" | $menu "Choose:" -1 -R -n)
 
 # Main Program
 [ "$mainchoice" = "Clear" ] && dunstctl history-clear && exit 0
