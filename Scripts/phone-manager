@@ -8,7 +8,7 @@ set -eo pipefail
 setup_mirror()
 {
   paired=$(printf "y\nn" | $menu "Have you paired with PC?" -1 -R -n)
-  [ "$paired" = "n" ] && notify-send -i error "Phone Manager" "Please pair your device via adb" && exit 1
+  [ "$paired" = "n" ] && notify-send -i error "Phone Manager" "Please pair your PC with the phone via adb" && exit 1
   ip=$(echo "" | $menu "Enter IP:")
   port_connect=$(echo "" | $menu "Enter Port:")
 }
@@ -27,5 +27,5 @@ mirror()
 mainchoice=$(printf ":y  Fileshare\n:p  Screen Mirror\n:g  Webcam\n:r  Cast Audio" | $menu "Choose:" -1 -R -n | $cutemoji)
 [ "$mainchoice" = "Fileshare" ] && localsend
 [ "$mainchoice" = "Screen Mirror" ] && { setup_mirror; mirror screen; }
-[ "$mainchoice" = "Camera Mirror" ] && { setup_mirror; mirror webcam; }
-[ "$mainchoice" = "Audio Mirror" ] && { setup_mirror; mirror audio; }
+[ "$mainchoice" = "Webcam" ] && { setup_mirror; mirror webcam; }
+[ "$mainchoice" = "Cast Audio" ] && { setup_mirror; mirror audio; }
