@@ -13,7 +13,7 @@ setup_mirror()
   [ "$paired" = "No" ] && {
     port_pair=$(echo "" | $menu "Enter Pair Port:")
     code=$(echo "" | $menu "Enter Pair Code:")
-    printf "$code\n" | adb pair $ip:$port_pair || { notify-send -i error "Phone Manager" "Failed to pair the device"; exit 1; }
+    adb pair $ip:$port_pair $code || { notify-send -i error "Phone Manager" "Failed to pair the device"; exit 1; }
     notify-send -i info "Phone Manager" "The device was successfully paired"
   }
   return 0

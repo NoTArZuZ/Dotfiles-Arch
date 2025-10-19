@@ -5,7 +5,6 @@ set -eo pipefail
 
 webcam()
 {
-  adb start-server
   adb connect "${ip}:${port_connect}"
   pkexec modprobe v4l2loopback
   scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=${facing} --v4l2-sink=/dev/video0 --no-playback
@@ -15,7 +14,6 @@ webcam()
 
 screen()
 {
-  adb start-server
   adb connect "${ip}:${port_connect}"
   scrcpy -m1920 --max-fps=60
   adb kill-server
@@ -24,7 +22,6 @@ screen()
 
 audio()
 {
-  adb start-server
   adb connect "${ip}:${port_connect}"
   scrcpy --no-video --no-control
   adb kill-server
@@ -52,7 +49,9 @@ helpmsg()
 {
   echo -e "[-w|webcam] - headless webcam \
   \n[-s|screen] - control device \
-  \n[-a|audio]  - listen to audio"
+  \n[-a|audio]  - listen to audio \
+  \n[-r|paired] - skip pairing \
+  \n[-b|back] - use back camera"
   exit 1
 }
 
