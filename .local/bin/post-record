@@ -2,109 +2,108 @@
 # Dependencies: ffmpeg with vaapi hevc and h264, bc
 
 # Functions
-scalevideo()
-{
-  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "hwupload,scale_vaapi=w=${scalew}:h=${scaleh}:format=nv12" -c:v hevc_vaapi -c:a copy "${stripname}-scaled.mkv"
-  exit 0
+scalevideo() {
+    ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "hwupload,scale_vaapi=w=${scalew}:h=${scaleh}:format=nv12" -c:v hevc_vaapi -c:a copy "${stripname}-scaled.mkv"
+    exit 0
 }
 
-compressvideo()
-{
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
-  exit 0
+compressvideo() {
+    [ -z "$bitrate" ] || ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -b:v "${bitrate}" -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
+    [ -z "$bitrate" ] && ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
+    exit 0
 }
 
-cutvideo()
-{
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -ss "${startframe}" -to "${endframe}" -c copy "$(date '+%N')-cut-video.mkv"
-  exit 0
+cutvideo() {
+    ffmpeg -i "${POSITIONAL_ARGS[0]}" -ss "${startframe}" -to "${endframe}" -c copy "$(date '+%N')-cut-video.mkv"
+    exit 0
 }
 
-fadevideo()
-{
-  ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "fade=t=in:st=0:d=0.5,fade=t=out:st=${fadeoutlen}:d=0.5,format=nv12,hwupload" -c:v hevc_vaapi -c:a copy "${stripname}-faded.mkv"
-  exit 0
+fadevideo() {
+    ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -i "${POSITIONAL_ARGS[0]}" -vf "fade=t=in:st=0:d=0.5,fade=t=out:st=${fadeoutlen}:d=0.5,format=nv12,hwupload" -c:v hevc_vaapi -c:a copy "${stripname}-faded.mkv"
+    exit 0
 }
 
-joinvideo()
-{
-  concatfile="concat-$(date '+%N').txt"
-  for i in $(seq 0 $argslen); do echo "file '${POSITIONAL_ARGS[$i]}'" >> "$concatfile"; done
-  ffmpeg -f concat -i $concatfile -c copy "$(date '+%N')-joined-video.mkv"
-  rm -f "$concatfile"
-  exit 0
+joinvideo() {
+    concatfile="concat-$(date '+%N').txt"
+    for i in $(seq 0 $argslen); do echo "file '${POSITIONAL_ARGS[$i]}'" >>"$concatfile"; done
+    ffmpeg -f concat -i $concatfile -c copy "$(date '+%N')-joined-video.mkv"
+    rm -f "$concatfile"
+    exit 0
 }
 
-mergeaudio()
-{
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a flac -ac 2 "${stripname}-merged.mkv"
-  exit 0
+mergeaudio() {
+    ffmpeg -i "${POSITIONAL_ARGS[0]}" -i "${POSITIONAL_ARGS[1]}" -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a flac -ac 2 "${stripname}-merged.mkv"
+    exit 0
 }
 
-normalizeaudio()
-{
-  ffmpeg -i "${POSITIONAL_ARGS[0]}" -af "volume=${normdb}dB" -c:a flac -sample_fmt s16 -c:v copy "${stripname}-norm.mkv"
-  exit 0
+normalizeaudio() {
+    ffmpeg -i "${POSITIONAL_ARGS[0]}" -af "volume=${normdb}dB" -c:a flac -sample_fmt s16 -c:v copy "${stripname}-norm.mkv"
+    exit 0
 }
 
-helpmsg()
-{
-  echo -e "[-m] - merge video and audio \
+helpmsg() {
+    echo -e "[-m] - merge video and audio \
     \n[-n] - normalize audio \
     \n[-s] - scale video \
     \n[-t] - cut video \
     \n[-f] - fade in and out video \
     \n[-j] - join videos \
     \n[-c] - compress video"
-	exit 1
+    exit 1
 }
 
 # Get Arguments
 singleflag=0
 POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
-	case $1 in
-	  -s|scale) scaler=true
-  		((singleflag += 1))
-      shift
-	    ;;
-	  -c|compress) compressor=true
-  		((singleflag += 1))
-      shift
-	    ;;
-	  -t|cut) cutter=true
-  		((singleflag += 1))
-	    shift
-	    ;;
-	  -f|fade) fader=true
-  		((singleflag += 1))
-	    shift
-	    ;;
-	  -j|join) joiner=true
-  		((singleflag += 1))
-	    shift
-	    ;;
-	  -m|merge) merger=true
-  		((singleflag += 1))
-      shift
-	    ;;
-	  -n|normalize) normalizer=true
-  		((singleflag += 1))
-	    shift
-	    ;;
-	-* | --*) helpmsg ;;
-	*)
-		POSITIONAL_ARGS+=("$1")
-		shift
-		;;
-	esac
+    case $1 in
+    -s | scale)
+        scaler=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -c | compress)
+        compressor=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -t | cut)
+        cutter=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -f | fade)
+        fader=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -j | join)
+        joiner=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -m | merge)
+        merger=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -n | normalize)
+        normalizer=true
+        ((singleflag += 1))
+        shift
+        ;;
+    -* | --*) helpmsg ;;
+    *)
+        POSITIONAL_ARGS+=("$1")
+        shift
+        ;;
+    esac
 done
 
 set -- "${POSITIONAL_ARGS[@]}"
 
 # Flag Check
 [ $singleflag = 1 ] || helpmsg
-[ -z $POSITIONAL_ARGS ] && helpmsg
 
 # Static Variables
 argslen=$(expr ${#POSITIONAL_ARGS[@]} - 1)
@@ -124,35 +123,41 @@ echo ">> scaler: $scaler merger: $merger cut: $cutter fade: $fader joiner: $join
 echo
 
 # Main Program
-[ $compressor ] && compressvideo
 [ $merger ] && mergeaudio
 [ $fader ] && fadevideo
 [ $joiner ] && joinvideo
+[ $compressor ] && {
+    bitrate="${POSITIONAL_ARGS[1]}"
+    [ -z "${POSITIONAL_ARGS[1]}" ] && {
+        read -r -p "New video bitrate (default): " bitrate
+    }
+    compressvideo
+}
 [ $scaler ] && {
-  scalew="${POSITIONAL_ARGS[1]}"
-  scaleh="${POSITIONAL_ARGS[2]}"
-  [ -z "${POSITIONAL_ARGS[1]}" ] && {
-    read -r -p "New video width (1280): " scalew
-    read -r -p "New video height (720): " scaleh
-  }
-  [ -z "$scalew" ] && scalew=1280
-  [ -z "$scaleh" ] && scaleh=720
-  scalevideo 
+    scalew="${POSITIONAL_ARGS[1]}"
+    scaleh="${POSITIONAL_ARGS[2]}"
+    [ -z "${POSITIONAL_ARGS[1]}" ] && {
+        read -r -p "New video width (1280): " scalew
+        read -r -p "New video height (720): " scaleh
+    }
+    [ -z "$scalew" ] && scalew=1280
+    [ -z "$scaleh" ] && scaleh=720
+    scalevideo
 }
 [ $cutter ] && {
-  startframe="${POSITIONAL_ARGS[1]}"
-  endframe="${POSITIONAL_ARGS[2]}"
-  [ -z "${POSITIONAL_ARGS[1]}" ] && [ -z "${POSITIONAL_ARGS[2]}" ] && {
-    read -r -p "Starting point for cut [hh:mm:ss.mmm] (0): " startframe
-    read -r -p "Ending point for cut [hh:mm:ss.mmm] (length): " endframe
-  }
-  [ -z "$startframe" ] && startframe=0
-  [ -z "$endframe" ] && endframe="${videolen}"
-  cutvideo
+    startframe="${POSITIONAL_ARGS[1]}"
+    endframe="${POSITIONAL_ARGS[2]}"
+    [ -z "${POSITIONAL_ARGS[1]}" ] && [ -z "${POSITIONAL_ARGS[2]}" ] && {
+        read -r -p "Starting point for cut [hh:mm:ss.mmm] (0): " startframe
+        read -r -p "Ending point for cut [hh:mm:ss.mmm] (length): " endframe
+    }
+    [ -z "$startframe" ] && startframe=0
+    [ -z "$endframe" ] && endframe="${videolen}"
+    cutvideo
 }
 [ $normalizer ] && {
-  normdb="${POSITIONAL_ARGS[1]}"
-  [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "Audio dB to raise (18): " normdb
-  [ -z "$normdb" ] && normdb=18
-  normalizeaudio
+    normdb="${POSITIONAL_ARGS[1]}"
+    [ -z "${POSITIONAL_ARGS[1]}" ] && read -r -p "Audio dB to raise (18): " normdb
+    [ -z "$normdb" ] && normdb=18
+    normalizeaudio
 }
