@@ -80,32 +80,37 @@ main()
 		warp-cli disconnect
 		warp-cli connect
 		sleep 1
-		[ "$1" ] || option="7"
+		option="7"
 	}
 	[ "$option" = "2" ] || [ "$option" = "disconnect" ] && {
 		[ "$1" ] || logo
 		warp-cli disconnect
 		sleep 1
-		[ "$1" ] || option="" && menu && main
+		option=""
+		[ "$1" ] || menu && main
 	}
 	[ "$option" = "3" ] || [ "$option" = "register" ] && {
 		[ "$1" ] || logo
 		warp-cli registration delete || :
 		warp-cli registration new
 		sleep 1
-		[ "$1" ] || option="" && menu && main
+		option=""
+		[ "$1" ] || menu && main
 	}
 	[ "$option" = "4" ] || [ "$option" = "mode" ] && {
 		modes
-		[ "$1" ] || option="" && menu && main
+		option=""
+		[ "$1" ] || menu && main
 	}
 	[ "$option" = "5" ] || [ "$option" = "protocol" ] && {
 		protocols
-		[ "$1" ] || option="" && menu && main
+		option=""
+		[ "$1" ] || menu && main
 	}
 	[ "$option" = "6" ] || [ "$option" = "endpoint" ] && {
 		endpoints
-		[ "$1" ] || option="" && menu && main
+		option=""
+		[ "$1" ] || menu && main
 	}
 	[ "$option" = "7" ] || [ "$option" = "status" ] && {
 		while true; do
@@ -114,9 +119,10 @@ main()
 			sleep 1
 		done
 	}
+	return 0
 }
 
 option="$1"; [ "$1" ] || menu
-main
+main "$1"
 
 exit 0
