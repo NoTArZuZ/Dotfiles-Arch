@@ -35,7 +35,7 @@ menu()
 
 modes()
 {
-	logo
+	[ "$1" ] || logo
 	echo '1. warp'
 	echo '2. warp+doh'
 	echo '3. warp+dot'
@@ -51,7 +51,7 @@ modes()
 
 protocols()
 {
-	logo
+	[ "$1" ] || logo
 	echo '1. MASQUE'
 	echo '2. WireGuard'
 	echo ''
@@ -65,7 +65,7 @@ protocols()
 
 endpoints()
 {
-	logo
+	[ "$1" ] || logo
 	read -r -p "IP and Port of the Endpoint: " endpoint
 	[ -z "$endpoint" ] && return 0
 	wire-cli tunnel endpoint set "$endpoint" || :
@@ -76,20 +76,20 @@ endpoints()
 main()
 {
 	[ "$option" = "1" ] || [ "$option" = "connect" ] && {
-		logo
+		[ "$1" ] || logo
 		warp-cli disconnect
 		warp-cli connect
 		sleep 1
-		option="7"
+		[ "$1" ] || option="7"
 	}
 	[ "$option" = "2" ] || [ "$option" = "disconnect" ] && {
-		logo
+		[ "$1" ] || logo
 		warp-cli disconnect
 		sleep 1
 		[ "$1" ] || option="" && menu && main
 	}
 	[ "$option" = "3" ] || [ "$option" = "register" ] && {
-		logo
+		[ "$1" ] || logo
 		warp-cli registration delete || :
 		warp-cli registration new
 		sleep 1
