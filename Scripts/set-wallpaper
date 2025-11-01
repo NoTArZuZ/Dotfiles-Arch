@@ -8,6 +8,7 @@ set -eo pipefail
 # Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Functions
 setwallpaper() {
+  [ -z "$bgfile" ] && exit 0
   case $bgfile in
   *.mp4|*.gif)
     scrres=$(xrandr | grep "current" | awk '{print $8 $9 $10}' | sed 's/.\{1\}$//')

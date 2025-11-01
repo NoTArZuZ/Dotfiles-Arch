@@ -67,8 +67,8 @@ endpoints()
 {
 	[ "$1" ] || logo
 	read -r -p "IP and Port of the Endpoint: " endpoint
-	[ -z "$endpoint" ] && return 0
-	wire-cli tunnel endpoint set "$endpoint" || :
+	[ -z "$endpoint" ] && warp-cli tunnel endpoint reset && return 0
+	warp-cli tunnel endpoint set "$endpoint" || :
 	sleep 1
 	return 0
 }
