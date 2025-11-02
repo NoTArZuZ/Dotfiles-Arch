@@ -2,7 +2,7 @@
 
 leftmb() {
 	case $BLOCK_STATUS in
-		0) ~/slstatus-sus/scripts/onclick/date & ;;
+		0) ~/slstatus-sus/scripts/onclick/date curr & ;;
 		1) ~/slstatus-sus/scripts/onclick/mem & ;;
 		2) ~/slstatus-sus/scripts/onclick/cpu & ;;
 		3) ~/slstatus-sus/scripts/onclick/diskfree & ;;
@@ -15,6 +15,7 @@ leftmb() {
 
 mscrollup() {
 	case $BLOCK_STATUS in
+		0) ~/slstatus-sus/scripts/onclick/date next & ;;
 		4) ~/slstatus-sus/scripts/onclick/volume volume_up & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac
@@ -22,6 +23,7 @@ mscrollup() {
 
 mscrolldown() {
 	case $BLOCK_STATUS in
+		0) ~/slstatus-sus/scripts/onclick/date prev & ;;
 		4) ~/slstatus-sus/scripts/onclick/volume volume_down & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac

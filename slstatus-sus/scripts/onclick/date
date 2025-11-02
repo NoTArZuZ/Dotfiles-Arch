@@ -1,6 +1,28 @@
 #!/usr/bin/env bash
 
+notification()
+{
+  HEAD=$(cal -m $1 $2 | head -n1)
+  BODY=$(cal -m $1 $2 | tail -n7 | sed -z "s|$TODAY|<u><b>$TODAY</b></u>|1")
+  FOOT="\n       - calendar 󰸗 "
+  dunstify -h string:x-canonical-private-synchronous:calendar \
+  	"$HEAD" "$BODY$FOOT" -u CRITICAL
+}
+
 TODAY=$(date '+%-d')
-HEAD=$(cal | head -n1)
-BODY=$(cal -m | tail -n7 | sed -z "s|$TODAY|<u><b>$TODAY</b></u>|1")
-dunstify -h string:x-canonical-private-synchronous:calendar "${HEAD}" "${BODY}" -u CRITICAL
+MONTH=$(date '+%m')
+YEAR=$(date '+%Y')
+
+case $1 in
+  curr)
+    notification
+    ;;
+  next)
+    TODAY="00"
+    notification $((MONTH+1)) $YEAR
+    ;;
+  prev)
+    TODAY="00"
+    notification $((MONTH-1)) $YEAR
+    ;;
+esac
