@@ -14,8 +14,8 @@
 5. cd ~/Dotfiles and stow .
 6. Base installation done!
 
-**Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd picom-ftlabs-git neomutt mutt-wizard-git newsboat weechat\
-**Optional WMs** - awesome bspwm
+**Optional Packages** - starship zoxide fzf jgmenu libva flatpak rtorrent dragon-drop polybar sxhkd picom-ftlabs-git neomutt mutt-wizard-git newsboat weechat dms-shell-bin\
+**Optional WMs** - awesome bspwm hyprland
 
 ## Updating
 
