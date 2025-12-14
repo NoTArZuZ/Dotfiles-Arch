@@ -36,3 +36,4 @@
 * To use libvirt edit /etc/libvirt/network.conf firewall = iptables
 * Use linkhandler in urlview by editing /etc/urlview.conf
 * Symlink yt-dlp to youtube-dl to use mpv over internet
+* To use dynamic themes with dms do this: apply gtk3 theme in dms settings, change qt theme variables to gtk3, change theme in gtk configs to adw-gtk3-dark (except gtk2)
