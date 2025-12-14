@@ -5,11 +5,10 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "monospace:size=10";
 /* Spare fonts */
 static char *font2[] = {
-/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
-/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
+	"monospace:size=10",
 };
 
 static int borderpx = 2;
@@ -99,7 +98,7 @@ int hidecursor = 1;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 0;
+const int boxdraw = 1;
 const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
@@ -132,7 +131,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 0.8;
+float alpha = 1.0;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -190,7 +189,7 @@ unsigned int highlightbg = 160;
  * 7: Blinking st cursor
  * 8: Steady st cursor
  */
-static unsigned int cursorstyle = 1;
+static unsigned int cursorstyle = 3;
 static Rune stcursor = 0x2603; /* snowman (U+2603) */
 
 /*
@@ -211,7 +210,7 @@ static unsigned int height = 364;
 /*
  * Default shape of the mouse cursor
  */
-static char* mouseshape = "xterm";
+static char* mouseshape = "left_ptr";
 
 /*
  * Color used to display font attributes when fontconfig selected a font which
@@ -243,6 +242,7 @@ ResourcePref resources[] = {
 		{ "background",   STRING,  &colorname[258] },
 		{ "foreground",   STRING,  &colorname[259] },
 		{ "cursorColor",  STRING,  &colorname[256] },
+		{ "cursorReverse",STRING,  &colorname[257] },
 		{ "termname",     STRING,  &termname },
 		{ "shell",        STRING,  &shell },
 		{ "minlatency",   INTEGER, &minlatency },
@@ -272,8 +272,8 @@ static uint forcemousemod = ShiftMask;
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release  screen */
 	{ XK_ANY_MOD,           Button2, clippaste,      {.i = 0},      1 },
-	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\033[5;2~"}, 0, S_PRI },
-	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\033[6;2~"}, 0, S_PRI },
+	// { XK_ANY_MOD,           Button4, ttysend,        {.s = "\033[5;2~"}, 0, S_PRI },
+	// { XK_ANY_MOD,           Button5, ttysend,        {.s = "\033[6;2~"}, 0, S_PRI },
 	{ XK_ANY_MOD,           Button4, kscrollup,      {.i = 1},      0, S_PRI },
 	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = 1},      0, S_PRI },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"}, 0, S_ALT },
@@ -316,6 +316,19 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_B,           searchbackward,  { 0 } },
 	{ ControlMask,          XK_Page_Up,     scrolltoprompt,  {.i = -1}, S_PRI },
 	{ ControlMask,          XK_Page_Down,   scrolltoprompt,  {.i =  1}, S_PRI },
+	// Lazy rebind
+	{ MODKEY,               XK_Page_Up,     kscrollup,       {.i = -1} },
+	{ MODKEY,               XK_Page_Down,   kscrolldown,     {.i = -1} },
+	{ MODKEY,               XK_k,           kscrollup,       {.i =  1} },
+	{ MODKEY,               XK_j,           kscrolldown,     {.i =  1} },
+	{ MODKEY,               XK_Up,          kscrollup,       {.i =  1} },
+	{ MODKEY,               XK_Down,        kscrolldown,     {.i =  1} },
+	{ TERMMOD,              XK_Up,          zoom,            {.f = +1} },
+	{ TERMMOD,              XK_Down,        zoom,            {.f = -1} },
+	{ TERMMOD,              XK_K,           zoom,            {.f = +1} },
+	{ TERMMOD,              XK_J,           zoom,            {.f = -1} },
+	{ MODKEY,               XK_c,           clipcopy,        {.i =  0} },
+	{ MODKEY,               XK_v,           clippaste,       {.i =  0} },
 };
 
 /*

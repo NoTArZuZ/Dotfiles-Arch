@@ -169,6 +169,7 @@ static const char *const autostart[] = {
 //	"st", NULL,
 	"slstatus", NULL,
 	"picom", "--vsync", "-b", NULL,
+	"tint2", NULL,
 	NULL /* terminate */
 };
 
@@ -217,6 +218,7 @@ static const Rule clientrules[] = {
 	{ .class = "Steam", .flags = Floating|Centered },
 	{ .class = "steam_app_", .flags = SteamGame|Floating|Centered },
 	{ .class = "Nsxiv", .flags = Floating|Centered },
+	{ .class = "yabridge-host.exe.so", .flags = AlwaysOnTop|Raise },
 	{ .role = "pop-up", .flags = AlwaysOnTop|Floating|Centered },
 	{ .class = "Gnome-terminal", .role = "gnome-terminal-preferences", .flags = Centered },
 	{ .class = "Alacritty", .flags = Terminal },

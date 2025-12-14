@@ -8,6 +8,7 @@ leftmb() {
 		3) ~/slstatus-sus/scripts/onclick/diskfree & ;;
 		4) ~/slstatus-sus/scripts/onclick/volume volume_mute & ;;
 		5) ~/slstatus-sus/scripts/onclick/keymap & ;;
+		6) ~/slstatus-sus/scripts/onclick/weather & ;;
 		7) ~/slstatus-sus/scripts/onclick/run & ;;
 		*) notify-send -i error "Dusk" "Invalid status ${BLOCK_STATUS} for button ${BLOCK_BUTTON}" & ;;
 	esac

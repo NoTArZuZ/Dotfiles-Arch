@@ -2,13 +2,13 @@
 /* Default settings; can be overriden by command line. */
 
 static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom */
-static int opacity = 1;                     /* -o  option; if 0, then alpha is disabled */
+static int opacity = 0;                     /* -o  option; if 0, then alpha is disabled */
 static int fuzzy = 1;                       /* -F  option; if 0, dmenu doesn't use fuzzy matching */
 static int instant = 0;                     /* -n  option; if 1, selects matching item without the need to press enter */
 static int center = 0;                      /* -c  option; if 0, dmenu won't be centered on the screen */
 static int min_width = 500;                 /* minimum width when centered */
-static const int vertpad = 10;              /* vertical padding of bar */
-static const int sidepad = 10;              /* horizontal padding of bar */
+static const int vertpad = 0;              /* vertical padding of bar */
+static const int sidepad = 0;              /* horizontal padding of bar */
 static int restrict_return = 0;             /* -1 option; if 1, disables shift-return and ctrl-return */
 /* -fn option overrides fonts[0]; default X11 font or font set */
 static char *fonts[] =
@@ -42,20 +42,20 @@ static const unsigned int alphas[][3]      = {
 static
 char *colors[][2] = {
 	/*               fg         bg       */
-	[SchemeNorm] = { "#bbbbbb", "#222222" },
-	[SchemeSel]  = { "#eeeeee", "#005577" },
-	[SchemeOut]  = { "#000000", "#00ffff" },
-	[SchemeBorder] = { "#000000", "#005577" },
-	[SchemeMid]  = { "#eeeeee", "#770000" },
-	[SchemeSelHighlight]  = { "#ffc978", "#005577" },
-	[SchemeNormHighlight] = { "#ffc978", "#222222" },
-	[SchemeHp]   = { "#bbbbbb", "#333333" },
-	[SchemeHover]  = { "#ffffff", "#353D4B" },
-	[SchemeGreen]  = { "#ffffff", "#52E067" },
-	[SchemeRed]    = { "#ffffff", "#e05252" },
-	[SchemeYellow] = { "#ffffff", "#e0c452" },
-	[SchemeBlue]   = { "#ffffff", "#5280e0" },
-	[SchemePurple] = { "#ffffff", "#9952e0" },
+	[SchemeNorm] =          { "#bbc2cf", "#282c34" },
+	[SchemeSel]  =          { "#1c1f24", "#51afef" },
+	[SchemeOut]  =          { "#1c1f24", "#46d9ff" },
+	[SchemeBorder] =        { "#000000", "#51afef" },
+	[SchemeMid]  =          { "#d7d7d7", "#1c1f24" },
+	[SchemeSelHighlight]  = { "#98be65", "#000000" },
+	[SchemeNormHighlight] = { "#98be65", "#000000" },
+	[SchemeHp]   =          { "#1c1f24", "#98be65" },
+	[SchemeHover]  =        { "#1c1f24", "#51afef" },
+	[SchemeGreen]  =        { "#e6e6e6", "#98be65" },
+	[SchemeRed]    =        { "#e6e6e6", "#ff6c6b" },
+	[SchemeYellow] =        { "#e6e6e6", "#da8548" },
+	[SchemeBlue]   =        { "#e6e6e6", "#51afef" },
+	[SchemePurple] =        { "#e6e6e6", "#c678dd" },
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
@@ -76,4 +76,4 @@ static unsigned int border_width = 0;
 /*
  * Use prefix matching by default; can be inverted with the -x flag.
  */
-static int use_prefix = 1;
+static int use_prefix = 0;

@@ -14,6 +14,13 @@
 --   end,
 -- })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "txt" },
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
+
 vim.api.nvim_create_autocmd("BufDelete", {
   group = vim.api.nvim_create_augroup("bufdelpost_autocmd", {}),
   desc = "BufDeletePost User autocmd",

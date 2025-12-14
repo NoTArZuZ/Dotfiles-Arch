@@ -10,7 +10,7 @@ PS0="\[\e[0m\]" # Reset colours after pressing enter
 PROMPT_COMMAND='history -a; echo -ne "\e[3 q"'
 export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
-export EDITOR=helix
+export EDITOR=nvim
 export VISUAL=nvim
 export QT_QPA_PLATFORMTHEME=gtk2
 export HISTFILESIZE=10000
@@ -41,6 +41,7 @@ alias "pacQ"="pacman -Qq"
 alias "pacQe"="pacman -Qqe"
 alias "pacQm"="pacman -Qqm"
 alias "paclog"="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort -n"
+alias "pacelog"="expac --timefmt='%Y-%m-%d %T' '%l\t%n %w' | grep explicit | sort -n"
 # Abbreviations
 alias "pwmix"='wiremix'
 alias "hx"='helix'
@@ -135,11 +136,19 @@ zzhx() {
 bhx() {
 	hx $(which "${1}")
 }
+bashmux() {
+	tmux has-session -t main 2>/dev/null
+	if [ $? != 0 ]; then
+		tmux new-session -d -s main
+	fi
+	[ -z "$TMUX" ] && tmux attach -t main
+}
 
 # Startup Commands
 shopt -s checkwinsize
 shopt -s histappend
 minifetch
+[ "$TERM" = "linux" ] || bashmux
 [ -f /usr/bin/starship ] && eval "$(starship init bash)"
 [ -f /usr/bin/fzf ] && FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
 [ -f /usr/bin/zoxide ] && eval "$(zoxide init bash)"

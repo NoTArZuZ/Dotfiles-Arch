@@ -1,4 +1,4 @@
-theme = "Gruvbox"
+theme = "GruberDarker"
 
 [editor]
 shell = ["bash", "-c"]

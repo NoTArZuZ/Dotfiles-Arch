@@ -1,6 +1,15 @@
 return {
   -- Plugins
   { "vyfor/cord.nvim", enabled = false },
+  {
+    "nativerv/cyrillic.nvim",
+    event = { "VeryLazy" },
+    config = function()
+      require("cyrillic").setup({
+        no_cyrillic_abbrev = false, -- default
+      })
+    end,
+  },
 
   -- Themes
   { "vague2k/vague.nvim" },
