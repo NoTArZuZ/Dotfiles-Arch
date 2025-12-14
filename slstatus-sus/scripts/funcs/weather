@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+temp=$(curl -s --connect-timeout 60 wttr.in/London?format="%t\n" || echo "?")
+echo " $temp"
