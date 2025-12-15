@@ -119,10 +119,11 @@ makeshot() {
 }
 
 # Dmenu Choice
-[ "$mainmethod" ] || mainmethod=$(printf ":g  Screenshot\n:y  Browse Screenshots" | $menu "Choose:" -1 -R -n | $cutemoji)
+[ "$mainmethod" ] || mainmethod=$(printf ":g  Screenshot\n:r  Flameshot\n:y  Browse Screenshots" | $menu "Choose:" -1 -R -n | $cutemoji)
 
 # Main Program
 [ "$mainmethod" = "Screenshot" ] && makeshot
+[ "$mainmethod" = "Flameshot" ] && flameshot gui
 [ "$mainmethod" = "Browse Screenshots" ] && browseshots
 
 exit 1
