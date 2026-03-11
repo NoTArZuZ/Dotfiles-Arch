@@ -7,6 +7,11 @@ set -eo pipefail
 
 # Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Variables
+if (("$(dunstctl get-pause-level)" > 0)); then
+  dndicon=""
+else
+  dndicon=""
+fi
 count=$(dunstctl count history); count=$(expr $count - 1) || :
 for i in $(seq 0 $count); do
   id=$(dunstctl history | jq -r ".data.[0].[${i}].id.data")
@@ -17,10 +22,10 @@ for i in $(seq 0 $count); do
 done
 
 # Dmenu choice
-mainchoice=$(echo -e "${parsed}\nClear\nDont Disturb" | $menu "Choose:" -1 -R -n)
+mainchoice=$(echo -e "${parsed}\nClear\nDont Disturb ${dndicon}" | $menu "Choose:" -1 -R -n)
 
 # Main Program
 [ "$mainchoice" = "Clear" ] && dunstctl history-clear && exit 0
-[ "$mainchoice" = "Dont Disturb" ] && dunstctl set-paused toggle && exit 0
+[ "$mainchoice" = "Dont Disturb ${dndicon}" ] && dunstctl set-paused toggle && exit 0
 mainchoice=$(printf "$mainchoice" | awk '{print $1}')
 dunstctl history-pop $mainchoice
