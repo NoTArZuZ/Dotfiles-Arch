@@ -1,6 +1,6 @@
 #!/bin/sh
 export _JAVA_AWT_WM_NONREPARENTING=1
-dmenu_path | dmenu "$@" | ${SHELL:-"/bin/sh"} &
+dmenu_path | dmenu -hp "steam,discord,cromite,firefox,AmneziaVPN,reaper,an-anime-game-launcher,Telegram,qbittorrent,davinci-resolve,atlauncher,etterna" "$@" | ${SHELL:-"/bin/sh"} &
 
 # Uncomment for the NAVHISTORY patch (and remove the exec above)
 #dmenu_path | dmenu -H "${XDG_CACHE_HOME:-$HOME/.cache/}/dmenu_run.hist" "$@" | ${SHELL:-"/bin/sh"} &

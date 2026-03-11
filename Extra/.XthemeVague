@@ -47,7 +47,7 @@ dmenu.hlforeground: #7fa563
 dmenu.midbackground: #252530
 dmenu.midforeground: #d7d7d7
 dmenu.bordercolor: #d7d7d7
-dmenu.hpbackground: #7fa563
+dmenu.hpbackground: #f3be7c
 dmenu.hpforeground: #252530
 dmenu.outbackground: #aeaed1
 dmenu.outforeground: #252530
