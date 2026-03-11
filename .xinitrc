@@ -6,6 +6,6 @@ xsetroot -cursor_name left_ptr
 hub-script set-wallpaper restore
 # exec cinnamon-session
 # exec startxfce4
-exec dusk; kill -n 9 $(pidof slstatus)
+exec dusk
 # exec dbus-launch --exit-with-session bspwm
 # exec dbus-launch --exit-with-session awesome

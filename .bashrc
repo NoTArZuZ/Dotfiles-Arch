@@ -60,6 +60,7 @@ alias "mkxz"='tar cvJf'
 alias "mkgz"='tar cvzf'
 alias "llblk"='df -hT'
 alias "qdiff"='diff -r -q'
+alias "duskx"='startx; pkill -x slstatus'
 # Argument config
 alias "mv"='mv -i'
 alias "cp"='cp -i'
