@@ -8,7 +8,7 @@ scalevideo() {
 }
 
 compressvideo() {
-    [ -z "$bitrate" ] || ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -b:v "${bitrate}" -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
+    [ -z "$bitrate" ] || ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -b:v "${bitrate}" -c:a mp2 -b:a 192k "${stripname}-compressed.mp4"
     [ -z "$bitrate" ] && ffmpeg -i "${POSITIONAL_ARGS[0]}" -c:v h264 -c:a mp2 -b:a 128k "${stripname}-compressed.mp4"
     exit 0
 }

@@ -26,7 +26,7 @@
     tmux send-keys -t $SESH "ncmpcpp" C-m
     tmux split-window -hl 41 -t $SESH
     tmux split-window -v -t $SESH
-    tmux send-keys -t $SESH "cava" C-m
+    tmux send-keys -t $SESH "command clear && mpd-cover info" C-m
     tmux selectp -U -t $SESH
     tmux send-keys -t $SESH "command clear && mpd-cover sixel" C-m
     tmux selectp -R -t $SESH
