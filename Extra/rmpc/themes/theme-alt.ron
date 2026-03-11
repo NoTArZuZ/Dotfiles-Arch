@@ -3,7 +3,7 @@
 #![enable(unwrap_variant_newtypes)]
 (
     default_album_art_path: None,
-    show_song_table_header: false,
+    show_song_table_header: true,
     draw_borders: false,
     format_tag_separator: " | ",
     browser_column_widths: [20, 38, 42],
@@ -90,23 +90,21 @@
         direction: Vertical,
         panes: [
             (
-                pane: Pane(Tabs),
-                size: "1",
+                pane: Pane(Header),
+                size: "2",
             ),
             (
-                size: "5",
-                borders: "ALL",
-                pane: Split(
-                    direction: Vertical,
-                    panes: [
-                        (pane: Pane(Header), size: "2"),
-                        (pane: Pane(ProgressBar), size: "1"),
-                    ],
-                ),
+                pane: Pane(ProgressBar),
+                size: "1",
             ),
             (
                 pane: Pane(TabContent),
                 size: "100%",
+                borders: "TOP | BOTTOM",
+            ),
+            (
+                pane: Pane(Tabs),
+                size: "1",
             ),
         ],
     ),

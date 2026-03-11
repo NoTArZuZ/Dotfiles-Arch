@@ -128,7 +128,7 @@
                 direction: Horizontal,
                 panes: [
                     (size: "65%", pane: Pane(Queue)),
-                    (size: "35%", pane: Pane(AlbumArt), borders: "LEFT"),
+                    (size: "35%", pane: Pane(AlbumArt)),
                 ],
             ),
         ),
