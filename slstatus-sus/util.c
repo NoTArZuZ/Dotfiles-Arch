@@ -140,6 +140,23 @@ pscanf(const char *path, const char *fmt, ...)
 	return (n == EOF) ? -1 : n;
 }
 
+int
+lscanf(FILE *fp, const char *key, const char *fmt, void *res)
+{
+	int n;
+	char line[256];
+
+	n = -1;
+	while (fgets(line, sizeof(line), fp))
+		if (strncmp(line, key, strlen(key)) == 0) {
+			n = sscanf(line + strlen(key), fmt, res);
+			break;
+		}
+
+	rewind(fp);
+	return (n == 1) ? 1 : -1;
+}
+
 /*
  * Copy string src to buffer dst of size dsize.  At most dsize-1
  * chars will be copied.  Always NUL terminates (unless dsize == 0).
@@ -206,4 +223,59 @@ strlcat(char *dst, const char *src, size_t siz)
 	*d = '\0';
 
 	return(dlen + (s - src));   /* count does not include NUL */
+}
+
+int startswith(const char *needle, const char *haystack)
+{
+	return !strncmp(haystack, needle, strlen(needle));
+}
+
+/* Like sprintf but allocates memory as needed */
+char *
+xasprintf(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	int n = vsnprintf(NULL, 0, fmt, ap);
+	va_end(ap);
+
+	if (n < 0)
+		return NULL;
+
+	char *buf = malloc(n + 1);
+	if (!buf)
+		return NULL;
+
+	va_start(ap, fmt);
+	vsnprintf(buf, n + 1, fmt, ap);
+	va_end(ap);
+
+	return buf;
+}
+
+char *
+path_dirname(const char *path)
+{
+	if (!path || !*path)
+		return strdup(".");
+
+	const char *slash = strrchr(path, '/');
+
+	if (!slash)
+		return strdup(".");
+
+	/* handle root */
+	if (slash == path)
+		return strdup("/");
+
+	size_t len = slash - path;
+
+	char *out = malloc(len + 1);
+	if (!out)
+		return NULL;
+
+	memcpy(out, path, len);
+	out[len] = '\0';
+
+	return out;
 }

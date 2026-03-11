@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+st -c Nsxiv -g 125x38 -e "$SHELL" -c 'curl -s v2.wttr.in/London && curl -s wttr.in/London | head -n 37; read line'

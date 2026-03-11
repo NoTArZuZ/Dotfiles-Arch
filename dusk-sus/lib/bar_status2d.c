@@ -68,7 +68,7 @@ drw_2dtext(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int 
 	}
 
 	dx += lpad;
-	drw_setscheme(drw, scheme[LENGTH(colors)]);
+	drw_setscheme(drw, scheme[SchemeLast]);
 	drw->scheme[ColFg] = scheme[defscheme][ColFg];
 	drw->scheme[ColBg] = scheme[defscheme][ColBg];
 
@@ -280,8 +280,8 @@ setstatus(int status_no, char const *statustext)
 
 	strlcpy(rawstatustext[status_no], statustext, sizeof rawstatustext[status_no]);
 
-	for (int r = 0; r < LENGTH(barrules); r++) {
-		br = &barrules[r];
+	for (int r = 0; r < num_barrules; r++) {
+		br = &_cfg_barrules[r];
 		if (br->value == status_no && br->drawfunc == draw_status)
 			drawbarmodule(br, r);
 	}
@@ -364,7 +364,8 @@ abort:
 void
 statusclick(const Arg *arg)
 {
-	spawncmd(&((Arg) { .v = statusclickcmd }), arg->i, 1);
+	void *command = cfg_get_command("statusclickcmd");
+	spawncmd(&((Arg) { .v = (command ? command : statusclickcmd) }), arg->i, 1);
 }
 
 Image *
@@ -413,7 +414,7 @@ loadimage(char *path, int use_cache)
 		imagebuffer[least].atime = 0;
 	}
 
-	if (loadimagefromfile(image, fullpath)) {
+	if (load_image_from_file(image, fullpath)) {
 		imagebuffer[least].atime = time(NULL);
 	} else {
 		image = NULL;
@@ -422,45 +423,6 @@ loadimage(char *path, int use_cache)
 bail:
 	free(fullpath);
 	return image;
-}
-
-int
-loadimagefromfile(Image *image, char *path)
-{
-	Imlib_Image im;
-	int w, h, s, ich, icw;
-
-	struct stat stbuf;
-	s = stat(path, &stbuf);
-	if (s == -1 || S_ISDIR(s) || strlen(path) <= 2) {
-		return 0; /* no readable file */
-	}
-
-	freestrdup(&image->iconpath, path);
-	im = imlib_load_image_immediately_without_cache(path);
-	if (!im) {
-		return 0; /* corrupt or otherwise not loadable file */
-	}
-
-	imlib_context_set_image(im);
-	imlib_image_set_has_alpha(1);
-	icw = w = imlib_image_get_width();
-	ich = h = imlib_image_get_height();
-
-	if (h >= bh) {
-		icw = w * ((float)(bh) / (float)h);
-		ich = bh;
-	}
-
-	image->icon = drw_picture_create_resized_image(drw, im, w, h, icw, ich);
-
-	imlib_context_set_image(im);
-	imlib_free_image_and_decache();
-
-	image->icw = icw;
-	image->ich = ich;
-
-	return image->icon;
 }
 
 void

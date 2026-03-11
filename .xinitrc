@@ -6,6 +6,6 @@ xsetroot -cursor_name left_ptr
 ~/Scripts/set-wallpaper restore
 # exec cinnamon-session
 # exec startxfce4 # disable dunst and install xfce4-notifyd
-exec dbus-launch --sh-syntax --exit-with-session dusk
+exec dusk; pkill slstatus
 # exec dbus-launch --exit-with-session bspwm
 # exec dbus-launch --exit-with-session awesome

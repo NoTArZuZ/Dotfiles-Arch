@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+size=$(df -lh | awk '{if ($6 == "/") { print $2 }}' | head -1)
+used=$(df -lh | awk '{if ($6 == "/") { print $3 }}' | head -1)
+free=$(df -lh | awk '{if ($6 == "/") { print $4 }}' | head -1)
+perc=$(df -lh | awk '{if ($6 == "/") { print $5 }}' | head -1)
+
+notify-send -i info "Root Disk Utilization" "Size: $size Used: $used Free: $free Percent: $perc"

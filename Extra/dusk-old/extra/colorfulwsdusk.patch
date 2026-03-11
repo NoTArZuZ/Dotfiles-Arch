@@ -1,0 +1,36 @@
+--- ~/Dotfiles/dusk-sus/dusk.c	2025-06-28 15:25:06.852893990 +0500
++++ ~/dusk-sus/dusk.c	2025-07-04 18:50:55.493798016 +0500
+@@ -156,6 +156,16 @@
+ 	SchemeFlexSelTTMI,
+ 	SchemeFlexSelTTMIC,
+ 	SchemeFlexSelFloat,
++	SchemeWsSel1,
++	SchemeWsOcc1,
++	SchemeWsSel2,
++	SchemeWsOcc2,
++	SchemeWsSel3,
++	SchemeWsOcc3,
++	SchemeWsSel4,
++	SchemeWsOcc4,
++	SchemeWsSel5,
++	SchemeWsOcc5,
+ 	SchemeLast,
+ }; /* color schemes */
+ 
+@@ -223,6 +233,16 @@
+ 	[SchemeFlexSelTTMI]  = "sel.TTMI",
+ 	[SchemeFlexSelTTMIC] = "sel.TTMIC",
+ 	[SchemeFlexSelFloat] = "sel.float",
++	[SchemeWsSel1]			 = "wssel1"
++	[SchemeWsOcc1]			 = "wsocc1"
++	[SchemeWsSel2]			 = "wssel2"
++	[SchemeWsOcc2]			 = "wsocc2"
++	[SchemeWsSel3]			 = "wssel3"
++	[SchemeWsOcc3]			 = "wsocc3"
++	[SchemeWsSel4]			 = "wssel4"
++	[SchemeWsOcc4]			 = "wsocc4"
++	[SchemeWsSel5]			 = "wssel5"
++	[SchemeWsOcc5]			 = "wsocc5"
+ };
+ 
+ enum {

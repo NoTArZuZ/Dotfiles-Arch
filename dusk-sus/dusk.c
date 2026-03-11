@@ -42,12 +42,12 @@
 #endif /* XINERAMA */
 #include <X11/Xft/Xft.h>
 #include <inttypes.h>
+#include <libconfig.h>
 
 #include "drw.h"
 #include "util.h"
 
 #include <assert.h>
-#include <libgen.h>
 #include <sys/stat.h>
 #define SPAWN_CWD_DELIM " []{}()<>\"':"
 
@@ -56,7 +56,6 @@
 #define Button7                 7
 #define Button8                 8
 #define Button9                 9
-#define BARRULES                50
 #define NUM_STATUSES            10
 #define STATUS_BUFFER           512
 #define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
@@ -76,6 +75,7 @@
 #define CLIENT                  (arg && arg->v ? (Client*)arg->v : selws->sel)
 #define WORKSPACE               (arg && arg->v ? (Workspace*)arg->v : selws);
 #define NAME(X)                 ((X) ? (X)->name : "NULL")
+#define CFG(X)                  _cfg_##X
 
 /* enums */
 enum {
@@ -258,18 +258,28 @@ typedef union {
 } Arg;
 
 typedef struct Monitor Monitor;
+typedef struct Workspace Workspace;
+typedef struct Client Client;
+typedef struct Image Image;
 typedef struct Bar Bar;
+typedef void (*WsFunc)(Workspace *);
+typedef void (*ArgFunc)(const Arg *);
+typedef void (*SymbolFunc)(Workspace *, int);
 
 typedef struct {
 	unsigned int click;
 	unsigned int mask;
 	unsigned int button;
 	void (*func)(const Arg *arg);
-	const Arg arg;
+	Arg arg;
 } Button;
 
-typedef struct Workspace Workspace;
-typedef struct Client Client;
+typedef struct {
+	char *name;  /* string key */
+	int argc;
+	char **argv; /* pointer to execv argument list */
+} Command;
+
 struct Client {
 	char *name;
 	char *alttitle;
@@ -306,6 +316,13 @@ struct Client {
 	uint64_t prevflags;
 };
 
+struct Image {
+	Picture icon;
+	unsigned int icw;
+	unsigned int ich;
+	char *iconpath;
+};
+
 typedef struct {
 	int type;
 	unsigned int mod;
@@ -315,7 +332,7 @@ typedef struct {
 	KeySym keysym;
 	#endif // USE_KEYCODES
 	void (*func)(const Arg *);
-	const Arg arg;
+	Arg arg;
 } Key;
 
 typedef struct {
@@ -335,10 +352,10 @@ typedef struct {
 } LayoutPreset;
 
 typedef struct {
-	const char *symbol;
+	char *symbol;
 	void (*arrange)(Workspace *);
 	LayoutPreset preset;
-	const char *name;
+	char *name;
 } Layout;
 
 typedef struct Preview Preview;
@@ -364,22 +381,22 @@ struct Monitor {
 };
 
 typedef struct {
-	const char *class;
-	const char *role;
-	const char *instance;
-	const char *title;
-	const char *wintype;
-	const int transient;
-	const double opacity;
-	const uint64_t flags;
-	const char *floatpos;
-	const char scratchkey;
-	const char *workspace;
-	const char *label;
-	const char swallowedby;
-	const char swallowkey;
-	const char *iconpath;
-	const char *alttitle;
+	char *class;
+	char *role;
+	char *instance;
+	char *title;
+	char *wintype;
+	int transient;
+	double opacity;
+	uint64_t flags;
+	char *floatpos;
+	char scratchkey;
+	char *workspace;
+	char *label;
+	char swallowedby;
+	char swallowkey;
+	char *iconpath;
+	char *alttitle;
 	int resume;
 } Rule;
 
@@ -518,7 +535,7 @@ static void skipfocusevents(void);
 static void spawn(const Arg *arg);
 static pid_t spawncmd(const Arg *arg, int buttonclick, int orphan);
 static void structurenotify(XEvent *e);
-static char *subst_home_directory(char *str);
+static char *subst_home_directory(const char *str);
 static unsigned int textw_clamp(const char *str, unsigned int n);
 static void togglefloating(const Arg *arg);
 static void unfocus(Client *c, int setfocus, Client *nextfocus);
@@ -539,7 +556,7 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 
-/* bar functions */
+/* misc functions */
 #include "lib/include.h"
 
 /* variables */
@@ -608,7 +625,6 @@ static Window root, wmcheckwin;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
-
 #include "lib/include.c"
 
 /* function implementations */
@@ -619,7 +635,7 @@ applyrules(Client *c)
 	const char *class, *instance;
 	Atom game_id = None, da = None, *win_types = NULL;
 	char *role = NULL;
-	int di;
+	int i, format;
 	unsigned long dl, nitems;
 	unsigned char *p = NULL;
 	unsigned int transient;
@@ -627,8 +643,9 @@ applyrules(Client *c)
 	XClassHint ch = { NULL, NULL };
 
 	if (XGetWindowProperty(dpy, c->win, netatom[NetWMWindowType], 0L, sizeof(Atom), False, XA_ATOM,
-			&da, &di, &nitems, &dl, &p) == Success && p) {
-		win_types = (Atom *) p;
+			&da, &format, &nitems, &dl, &p) == Success && p) {
+		if (nitems > 0 && format == 32)
+			win_types = (Atom *)p;
 	}
 
 	/* rule matching */
@@ -648,7 +665,8 @@ applyrules(Client *c)
 	if (enabled(Debug))
 		fprintf(stderr, "applyrules: new client %s (%ld), class = '%s', instance = '%s', role = '%s', wintype = '%ld'\n", c->name, c->win, class, instance, role, nitems ? win_types[0] : 0);
 
-	for (r = clientrules; r < END(clientrules); r++) {
+	for (i = 0; i < num_client_rules; i++) {
+		r = &_cfg_clientrules[i];
 		if ((!r->title || strstr(c->name, r->title))
 		&& (!r->class || strstr(class, r->class))
 		&& (!r->role || strstr(role, r->role))
@@ -680,7 +698,7 @@ applyrules(Client *c)
 				saveclientclass(c);
 
 			if (r->iconpath)
-				load_icon_from_png_image(c, r->iconpath);
+				load_icon_from_file(c, r->iconpath);
 
 			if (r->alttitle)
 				freestrdup(&c->alttitle, r->alttitle);
@@ -696,6 +714,7 @@ applyrules(Client *c)
 					"    flags:     %" PRIu64 "\n"
 					"    floatpos:  %s\n"
 					"    workspace: %s\n"
+					"    iconpath:  %s\n"
 					"    label:     %s\n",
 					NVL(r->class, "NULL"),
 					NVL(r->role, "NULL"),
@@ -705,6 +724,7 @@ applyrules(Client *c)
 					r->flags,
 					NVL(r->floatpos, "NULL"),
 					NVL(r->workspace, "NULL"),
+					NVL(r->iconpath, "NULL"),
 					NVL(r->label, "NULL")
 				);
 			}
@@ -987,6 +1007,7 @@ buttonpress(XEvent *e)
 	Monitor *m;
 	Workspace *ws;
 	XButtonPressedEvent *ev = &e->xbutton;
+	Button *btn;
 	click = ClkRootWin;
 
 	allow_focus = (disabled(FocusOnClick) || (ev->button != Button4 && ev->button != Button5));
@@ -1028,10 +1049,11 @@ buttonpress(XEvent *e)
 		barpress(ev, m, &arg, &click);
 	}
 
-	for (i = 0; i < LENGTH(buttons); i++) {
-		if (click == buttons[i].click && buttons[i].func && buttons[i].button == ev->button
-				&& CLEANMASK(buttons[i].mask) == CLEANMASK(ev->state)) {
-			buttons[i].func((click == ClkWorkspaceBar || click == ClkWinTitle) && buttons[i].arg.i == 0 ? &arg : &buttons[i].arg);
+	for (i = 0; i < num_button_bindings; i++) {
+		btn = &_cfg_buttons[i];
+		if (click == btn->click && btn->func && btn->button == ev->button
+				&& CLEANMASK(btn->mask) == CLEANMASK(ev->state)) {
+			btn->func((click == ClkWorkspaceBar || click == ClkWinTitle) && btn->arg.i == 0 ? &arg : &btn->arg);
 		}
 	}
 
@@ -1073,6 +1095,7 @@ cleanup(void)
 	} else {
 		autostart_killpids();
 	}
+	autostart_cleanup();
 
 	for (ws = workspaces; ws; ws = ws->next) {
 		ws->layout = &foo;
@@ -1080,9 +1103,11 @@ cleanup(void)
 			unmanage(ws->stack, 0);
 	}
 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+
 	while (mons)
 		cleanupmon(mons);
 	free(dummymon);
+
 	if (systray) {
 		while (systray->icons)
 			removesystrayicon(systray->icons);
@@ -1103,10 +1128,11 @@ cleanup(void)
 
 	for (i = 0; i < CurLast; i++)
 		drw_cur_free(drw, cursor[i]);
-	for (i = 0; i < LENGTH(colors) + 1; i++)
+	for (i = 0; i < SchemeLast + 1; i++)
 		free(scheme[i]);
 
 	cleanup2dimagebuffer();
+	cleanup_config();
 
 	free(scheme);
 	XDestroyWindow(dpy, wmcheckwin);
@@ -2011,7 +2037,7 @@ focusstack(const Arg *arg)
 				continue;
 			for (c = (firstws ? selws->sel : ws->clients); c && (c == selws->sel || ISINVISIBLE(c) || (arg->i == 1 && HIDDEN(c))); c = c->next);
 			firstws = 0;
-			if (n++ > LENGTH(wsrules))
+			if (n++ > num_wsrules)
 				break;
 		}
 	} else {
@@ -2028,7 +2054,7 @@ focusstack(const Arg *arg)
 					if (ws && w->next == prevws)
 						break;
 				}
-				if (n++ > LENGTH(wsrules))
+				if (n++ > num_wsrules)
 					break;
 			}
 		} while (!c && ws);
@@ -2049,16 +2075,18 @@ focusstack(const Arg *arg)
 Atom
 getatomprop(Client *c, Atom prop, Atom req)
 {
-	int di;
-	unsigned long dl, dm;
+	int format;
+	unsigned long nitems, after;
 	unsigned char *p = NULL;
 	Atom da, atom = None;
 
 	if (XGetWindowProperty(dpy, c->win, prop, 0L, sizeof atom, False, req,
-		&da, &di, &dl, &dm, &p) == Success && p) {
-		atom = *(Atom *)p;
-		if (da == xatom[XembedInfo] && dl == 2)
-			atom = ((Atom *)p)[1];
+		&da, &format, &nitems, &after, &p) == Success && p) {
+		if (nitems > 0 && format == 32) {
+			atom = *(long *)p;
+			if (da == xatom[XembedInfo] && nitems == 2)
+				atom = ((long *)p)[1];
+		}
 		XFree(p);
 	}
 	return atom;
@@ -2100,15 +2128,16 @@ getstate(Window w)
 	int format;
 	long result = -1;
 	unsigned char *p = NULL;
-	unsigned long n, extra;
+	unsigned long nitems, after;
 	Atom real;
 
 	if (XGetWindowProperty(dpy, w, wmatom[WMState], 0L, 2L, False, wmatom[WMState],
-		&real, &format, &n, &extra, (unsigned char **)&p) != Success)
-		return -1;
-	if (n != 0)
-		result = *p;
-	XFree(p);
+			&real, &format, &nitems, &after, &p) == Success && p) {
+		if (nitems > 0 && format == 32)
+			result = *(long *)p;
+		XFree(p);
+	}
+
 	return result;
 }
 
@@ -2142,20 +2171,24 @@ grabbuttons(Client *c, int focused)
 	updatenumlockmask();
 	unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
 	XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
+	Button *btn;
+
 	if (!focused) {
 		XGrabButton(dpy, AnyButton, AnyModifier, c->win, False,
 			BUTTONMASK, GrabModeSync, GrabModeSync, None, None);
 	}
-	for (i = 0; i < LENGTH(buttons); i++) {
-		if (buttons[i].click != ClkClientWin)
+
+	for (i = 0; i < num_button_bindings; i++) {
+		btn = &_cfg_buttons[i];
+		if (btn->click != ClkClientWin)
 			continue;
 
-		if ((disabled(AllowNoModifierButtons) || ONLYMODBUTTONS(c)) && buttons[i].mask == 0)
+		if ((disabled(AllowNoModifierButtons) || ONLYMODBUTTONS(c)) && btn->mask == 0)
 			continue;
 
 		for (j = 0; j < LENGTH(modifiers); j++) {
-			XGrabButton(dpy, buttons[i].button,
-				buttons[i].mask | modifiers[j],
+			XGrabButton(dpy, btn->button,
+				btn->mask | modifiers[j],
 				c->win, False, BUTTONMASK,
 				GrabModeAsync, GrabModeSync, None, None);
 		}
@@ -2170,10 +2203,12 @@ grabkeys(void)
 	updatenumlockmask();
 	unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+	Key *key;
 
-	for (i = 0; i < LENGTH(keys); i++)
+	for (i = 0; i < num_key_bindings; i++)
+		key = &_cfg_keys[i];
 		for (j = 0; j < LENGTH(modifiers); j++)
-			XGrabKey(dpy, keys[i].keycode, keys[i].mod | modifiers[j], root,
+			XGrabKey(dpy, key->keycode, key->mod | modifiers[j], root,
 					True, GrabModeAsync, GrabModeAsync);
 }
 #else // keysyms
@@ -2185,6 +2220,7 @@ grabkeys(void)
 	updatenumlockmask();
 	unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+	Key *key;
 
 	KeySym *syms;
 
@@ -2193,12 +2229,13 @@ grabkeys(void)
 	if (!syms)
 		return;
 	for (k = start; k <= end; k++) {
-		for (i = 0; i < LENGTH(keys); i++) {
+		for (i = 0; i < num_key_bindings; i++) {
+			key = &_cfg_keys[i];
 			/* skip modifier codes, we do that ourselves */
-			if (keys[i].keysym != syms[(k - start) * skip])
+			if (key->keysym != syms[(k - start) * skip])
 				continue;
 			for (j = 0; j < LENGTH(modifiers); j++) {
-				XGrabKey(dpy, k, keys[i].mod | modifiers[j], root, True,
+				XGrabKey(dpy, k, key->mod | modifiers[j], root, True,
 					GrabModeAsync, GrabModeAsync);
 			}
 		}
@@ -2267,6 +2304,7 @@ keypress(XEvent *e)
 	KeySym* keysym;
 	#endif
 	XKeyEvent *ev = &e->xkey;
+	Key *key;
 
 	prev_ptr_x = ev->x_root;
 	prev_ptr_y = ev->y_root;
@@ -2275,18 +2313,19 @@ keypress(XEvent *e)
 	#if !USE_KEYCODES
 	keysym = XGetKeyboardMapping(dpy, (KeyCode)ev->keycode, 1, &keysyms_return);
 	#endif
-	for (i = 0; i < LENGTH(keys); i++) {
+	for (i = 0; i < num_key_bindings; i++) {
+		key = &_cfg_keys[i];
 		if (
 			#if USE_KEYCODES
-			ev->keycode == keys[i].keycode
+			ev->keycode == key->keycode
 			#else
-			*keysym == keys[i].keysym
+			*keysym == key->keysym
 			#endif // USE_KEYCODES
-			&& ev->type == keys[i].type
-			&& CLEANMASK(keys[i].mod) == CLEANMASK(ev->state)
-			&& keys[i].func
+			&& ev->type == key->type
+			&& CLEANMASK(key->mod) == CLEANMASK(ev->state)
+			&& key->func
 		) {
-			keys[i].func(&(keys[i].arg));
+			key->func(&(key->arg));
 		}
 	}
 	#if !USE_KEYCODES
@@ -2377,12 +2416,14 @@ manage(Window w, XWindowAttributes *wa)
 	updatesizehints(c);
 	if (enabled(Debug))
 		fprintf(stderr, "manage --> client %s\n", NAME(c));
-	getclientflags(c);
-	getclientfields(c);
-	getclientopacity(c);
-	getclientlabel(c);
-	getclientalttitle(c);
-	getclienticonpath(c);
+	if (persist_client_states_across_restarts) {
+		getclientflags(c);
+		getclientfields(c);
+		getclientopacity(c);
+		getclientlabel(c);
+		getclientalttitle(c);
+		getclienticonpath(c);
+	}
 
 	updateicon(c);
 
@@ -2610,7 +2651,7 @@ maprequest(XEvent *e)
 
 	Client *i;
 	if (systray && (i = wintosystrayicon(ev->window))) {
-		sendevent(i->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_WINDOW_ACTIVATE, 0, systray->win, XEMBED_EMBEDDED_VERSION);
+		sendevent(i->win, xatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_WINDOW_ACTIVATE, 0, systray->win, XEMBED_EMBEDDED_VERSION);
 		drawbarwin(systray->bar);
 	}
 
@@ -2675,6 +2716,7 @@ motionnotify(XEvent *e)
 	if (!ISSTICKY(selws->sel) && (ws = recttows(ev->x_root, ev->y_root, 1, 1)) && ws != selws) {
 		if (selmon != ws->mon) {
 			entermon(ws->mon, NULL);
+			focus(NULL);
 			return;
 		}
 
@@ -3195,7 +3237,6 @@ scan(void)
 	XWindowAttributes wa;
 
 	scanning = 1;
-
 	if (XQueryTree(dpy, root, &d1, &d2, &wins, &num)) {
 		for (i = 0; i < num; i++) {
 			if (!XGetWindowAttributes(dpy, wins[i], &wa)
@@ -3230,6 +3271,7 @@ setbackground(void)
 	/* Do not set a background if a wallpaper has been set. */
 	if (XGetWindowProperty(dpy, root, XInternAtom(dpy, "_XROOTPMAP_ID", False), 0L, sizeof atom,
 			False, AnyPropertyType, &da, &di, &dl, &dl, &p) == Success && p) {
+		XFree(p);
 		return;
 	}
 
@@ -3277,12 +3319,10 @@ sendevent(Window w, Atom proto, int mask, long d0, long d1, long d2, long d3, lo
 void
 setfocus(Client *c)
 {
-	if (!NEVERFOCUS(c)) {
+	if (!NEVERFOCUS(c))
 		XSetInputFocus(dpy, c->win, RevertToPointerRoot, CurrentTime);
-		XChangeProperty(dpy, root, netatom[NetActiveWindow],
-			XA_WINDOW, 32, PropModeReplace,
-			(unsigned char *) &(c->win), 1);
-	}
+	XChangeProperty(dpy, root, netatom[NetActiveWindow], XA_WINDOW, 32,
+		PropModeReplace, (unsigned char *) &(c->win), 1);
 	selws->sel = c;
 	if (selws != c->ws)
 		c->ws->sel = c;
@@ -3375,7 +3415,7 @@ setlayout(const Arg *arg)
 	Workspace *ws = selws;
 	const Layout *tmplayout;
 
-	if (!ws || !arg || (arg->i > 0 && arg->i > LENGTH(layouts))) {
+	if (!ws || !arg || (arg->i > 0 && arg->i > num_layouts)) {
 		return;
 	}
 
@@ -3383,9 +3423,9 @@ setlayout(const Arg *arg)
 		tmplayout = ws->layout;
 		ws->layout = ws->prevlayout;
 		ws->prevlayout = tmplayout;
-	} else if (&layouts[arg->i] != ws->layout) {
+	} else if (&_cfg_layouts[arg->i] != ws->layout) {
 		ws->prevlayout = ws->layout;
-		ws->layout = &layouts[arg->i];
+		ws->layout = &_cfg_layouts[arg->i];
 	}
 
 	if (ws->layout->preset.nmaster != -1)
@@ -3462,8 +3502,6 @@ setup(void)
 
 	putenv("_JAVA_AWT_WM_NONREPARENTING=1");
 
-	enablefunc(functionality);
-
 	/* init screen */
 	screen = DefaultScreen(dpy);
 	sw = DisplayWidth(dpy, screen);
@@ -3472,31 +3510,36 @@ setup(void)
 	xinitvisual();
 	drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
 
-	/* init appearance */
-	scheme = ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
-	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], default_alphas, 3); // ad-hoc color scheme used by status2d
+	enablefunc(functionality);
+	load_config();
 
-	for (i = 0; i < LENGTH(colors); i++) {
+	/* init appearance */
+	scheme = ecalloc(SchemeLast + 1, sizeof(Clr *));
+	scheme[SchemeLast] = drw_scm_create(drw, _cfg_colors[0], default_alphas, 3); // ad-hoc color scheme used by status2d
+
+	for (i = 0; i < SchemeLast; i++) {
 		colorscheme = i;
 		/* Fall back to SchemeTitleNorm / Sel for SchemeFlex colors if not defined. */
 		if (!colors[i][0]) {
 			colorscheme = (i >= SchemeFlexSelTTB ? SchemeTitleSel : SchemeTitleNorm);
 		}
-		scheme[i] = drw_scm_create(drw, colors[colorscheme], default_alphas, 3);
+		scheme[i] = drw_scm_create(drw, _cfg_colors[colorscheme], default_alphas, 3);
 	}
 
 	if (enabled(Xresources))
 		loadxrdb();
 
-	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
-		die("no fonts could be loaded.");
+	if (!drw->fonts) {
+		if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
+			die("no fonts could be loaded.");
+	}
 
 	lrpad = drw->fonts->h + horizpadbar;
 	bh = bar_height ? bar_height : drw->fonts->h + vertpadbar;
 
 	/* One off calculating workspace label widths, used by WorkspaceLabels functionality */
-	occupied_workspace_label_format_length = TEXT2DW(occupied_workspace_label_format) - TEXTW(workspace_label_placeholder) * 2;
-	vacant_workspace_label_format_length = TEXT2DW(vacant_workspace_label_format) - TEXTW(workspace_label_placeholder);
+	occupied_workspace_label_format_length = TEXT2DW(_cfg_occupied_workspace_label_format) - TEXTW(workspace_label_placeholder) * 2;
+	vacant_workspace_label_format_length = TEXT2DW(_cfg_vacant_workspace_label_format) - TEXTW(workspace_label_placeholder);
 
 	updategeom(sw, sh);
 	dummymon = createmon(7);
@@ -3524,7 +3567,8 @@ setup(void)
 	cursor[CurSwallow] = drw_cur_create(drw, XC_target);
 
 	createworkspaces();
-	restoreworkspacestates();
+	if (persist_workstate_states_across_restarts)
+		restoreworkspacestates();
 	distributeworkspaces();
 	reorientworkspaces();
 	reviewworkspaces(1);
@@ -3635,7 +3679,7 @@ spawncmd(const Arg *arg, int buttonclick, int orphan)
 
 			cwd = strtok(selws->sel->name, SPAWN_CWD_DELIM);
 
-			if (strncmp(cwd, "~/", 2) == 0) {
+			if (cwd && strncmp(cwd, "~/", 2) == 0) {
 				/* Replace ~/ with HOME environment variable */
 				pathbuf = subst_home_directory(cwd);
 				cwd = pathbuf;
@@ -3645,12 +3689,25 @@ spawncmd(const Arg *arg, int buttonclick, int orphan)
 			 * but that does not matter because we are going to
 			 * exec() below anyway; nothing else will use it */
 			while (cwd) {
-				if (strchr(cwd, '/') && !stat(cwd, &statbuf)) {
-					if (!S_ISDIR(statbuf.st_mode))
-						cwd = dirname(cwd);
+				if (strchr(cwd, '/') && stat(cwd, &statbuf) == 0) {
 
-					if (strlen(cwd) > 1 && !chdir(cwd))
+					char *dir = NULL;
+
+					if (!S_ISDIR(statbuf.st_mode)) {
+						dir = path_dirname(cwd);
+					} else {
+						dir = strdup(cwd);
+					}
+
+					if (!dir)
+						break; /* OOM */
+
+					if (strlen(dir) > 1 && chdir(dir) == 0) {
+						free(dir);
 						break;
+					}
+
+					free(dir);
 				}
 
 				cwd = strtok(NULL, SPAWN_CWD_DELIM);
@@ -3695,7 +3752,7 @@ spawncmd(const Arg *arg, int buttonclick, int orphan)
 
 /* Allocates memory for a char array that need to be freed by the caller */
 char *
-subst_home_directory(char *str)
+subst_home_directory(const char *str)
 {
 	int buffer_length = env_homelen + strlen(str);
 	char *buffer = ecalloc(1, buffer_length);
@@ -3761,8 +3818,11 @@ togglefloating(const Arg *arg)
 	Workspace *ws = NULL;
 
 	for (c = nextmarked(NULL, c); c; c = nextmarked(c->next, NULL)) {
-		if (ISTRUEFULLSCREEN(c)) /* no support for fullscreen windows */
+		if (ISTRUEFULLSCREEN(c)) {
+			/* Exit true fullscreen, but do not toggle floating state */
+			setfullscreen(c, 0, 0);
 			continue;
+		}
 		if (ISFIXED(c))
 			continue;
 		if (ISSTICKY(c))
@@ -3774,7 +3834,7 @@ togglefloating(const Arg *arg)
 		toggleflag(c, Floating);
 		if (!MOVERESIZE(c) && ISFLOATING(c)) {
 			if (c->sfx == -9999)
-				floatpos(&((Arg) { .v = toggle_float_pos }));
+				floatpos(&((Arg) { .v = CFG(toggle_float_pos) }));
 			else
 				restorefloats(c);
 			restackwin(c->win, Above, wmcheckwin);
@@ -4296,8 +4356,10 @@ main(int argc, char *argv[])
 {
 	if (argc == 2 && !strcmp("-v", argv[1]))
 		die("dusk-"VERSION);
+	else if (argc == 3 && (!strcmp("-c", argv[1]) || !strcmp("--cfg", argv[1])))
+		cfg_filename = argv[2];
 	else if (argc != 1)
-		die("usage: dusk [-v]");
+		die("usage: dusk [-v] [-c dusk.cfg]");
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))

@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* interval between updates (in ms) */
-const unsigned int interval = 1000;
+unsigned int interval = 1000;
 
 /* text to show if no value can be retrieved */
 static const char unknown_str[] = "n/a";
@@ -72,6 +72,7 @@ static const char unknown_str[] = "n/a";
  *                                                     thermal zone on FreeBSD
  *                                                     (tz0, tz1, etc.)
  * uid                 UID of current user             NULL
+ * up                  interface is running            interface name (eth0)
  * uptime              system uptime                   NULL
  * username            username of current user        NULL
  * vol_perc            OSS/ALSA volume in percent      mixer file (/dev/mixer)
@@ -81,12 +82,5 @@ static const char unknown_str[] = "n/a";
  */
 static const struct arg args[] = {
 	/* function format          argument      status_no     update_interval */
- 	{ username,  			"^C0^^B7^   ^d^ ",               NULL,    "7", 60 },
-	{ datetime,  			"^C0^^B0^^C6^ 󰔟 %s ^d^^C0^", 	 	"%F %T", "0", 1  },
-	{ ram_perc,  			"^C2^  %s%%",   							 	 	NULL,    "1", 1  },
-	{ cpu_perc,  			"^C0^^B0^^C5^   %s%% ^d^^C0^", NULL,    "2", 1  },
-	{ disk_free, 			"^C4^󱛟 %s free", 								 	"/",     "3", 60 },
-	{ run_exec,       "^C0^^B0^^C1^ %s ^d^^C0^",      "~/slstatus-sus/scripts/funcs/volume",  "4", 1 },
-	{ keymap,         "^C3^ %s",	   									  NULL, 	 "5", 1  },
-	{ run_exec, 			" ^C0^^B0^^C6^ %s ^d^^C0^", 		"~/slstatus-sus/scripts/funcs/weather", "6", 600 },
+	{ datetime, "%s",           "%F %T",      "1",          1 },
 };

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+temp=$(curl -s --retry 3 https://wttr.in/London?format="%t\n" || echo "?")
+echo " $temp"

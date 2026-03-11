@@ -12,7 +12,8 @@ export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
 export EDITOR=nvim
 export VISUAL=nvim
-export QT_QPA_PLATFORMTHEME=gtk2
+export QT_QPA_PLATFORMTHEME=gtk3
+export QT_QPA_PLATFORMTHEME_QT6=gtk3
 export HISTFILESIZE=10000
 export HISTSIZE=500
 export HISTTIMEFORMAT="%F %T"
@@ -148,7 +149,7 @@ bashmux() {
 shopt -s checkwinsize
 shopt -s histappend
 minifetch
-[ "$TERM" = "linux" ] || bashmux
+# [ "$TERM" = "linux" ] || bashmux
 [ -f /usr/bin/starship ] && eval "$(starship init bash)"
 [ -f /usr/bin/fzf ] && FZF_ALT_C_COMMAND= eval "$(fzf --bash)"
 [ -f /usr/bin/zoxide ] && eval "$(zoxide init bash)"
