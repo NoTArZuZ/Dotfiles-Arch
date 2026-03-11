@@ -174,7 +174,7 @@ static const char *const autostart[] = {
 /* List of programs to start automatically during a restart only. These should usually be short
  * scripts that perform specific operations, e.g. changing a wallpaper. */
 static const char *const autorestart[] = {
-	"xrdb", "-merge", "/home/sus/.Xresources", NULL,
+	"xrdb", "-merge", "~/.Xresources", NULL,
 	NULL /* terminate */
 };
 
