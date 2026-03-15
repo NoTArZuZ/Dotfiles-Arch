@@ -7,12 +7,12 @@ set -eo pipefail
 [ -z "$mainchoice" ] && mainchoice=$(printf ":b  Sync\n:r  Remove\n:p  Update" | $menu "Choose:" -R -1 -n | $cutemoji)
 
 [ "$mainchoice" = "Sync" ] && {
-  package=$(yay -Slq | $menu "Sync:" -g 3 -R | tr '\n' ' ')
+  package=$(yay -Slq | $menu "Sync:" -l 15 -g 3 -R | tr '\n' ' ')
   st -c Nsxiv -g 125x38 -e yay -S $package
 }
 
 [ "$mainchoice" = "Remove" ] && {
-  package=$(yay -Qq | $menu "Remove:" -g 3 -R | tr '\n' ' ')
+  package=$(yay -Qq | $menu "Remove:" -l 15 -g 3 -R | tr '\n' ' ')
   st -c Nsxiv -g 125x38 -e yay -Runs $package
 }
 
