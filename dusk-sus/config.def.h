@@ -441,13 +441,14 @@ static const char *dmenucmd[] = {
 };
 
 // static const char *rootmenu[]  = { "jgmenu", "--at-pointer", NULL };
-static const char *rootmenu[]  = { "root-xmenu", NULL };
-static const char *conkytoggle[]  = { "conky-toggle", NULL };
-static const char *hubscript[]  = { "hub-script", NULL };
-static const char *winswitch[]  = { "hub-script", "win-switch", NULL };
-static const char *spcmd_w[] = {"w", "st", "-n", "spterm (w)", "-g", "120x34", NULL };
-static const char *spcmd_e[] = {"e", "st", "-n", "spterm (e)", "-g", "120x34", NULL };
-static const char *spcmd_r[] = {"r", "st", "-n", "spfm (r)", "-g", "144x41", "-e", "yazi", NULL };
+static const char *rootmenu[]       = { "root-xmenu", NULL };
+static const char *conkytoggle[]    = { "conky-toggle", NULL };
+static const char *hubscript[]      = { "hub-script", NULL };
+static const char *winswitch[]      = { "hub-script", "win-switch", NULL };
+static const char *quitscr[]        = { "dusk-quit", NULL };
+static const char *spcmd_w[]        = {"w", "st", "-n", "spterm (w)", "-g", "120x34", NULL };
+static const char *spcmd_e[]        = {"e", "st", "-n", "spterm (e)", "-g", "120x34", NULL };
+static const char *spcmd_r[]        = {"r", "st", "-n", "spfm (r)", "-g", "144x41", "-e", "yazi", NULL };
 static const char *statusclickcmd[] = { "~/.config/slstatus/scripts/status-click.sh", NULL };
 
 static Key keys[] = {
@@ -456,7 +457,7 @@ static Key keys[] = {
 	{ KeyPress,   MODKEY,                       XK_Return,       spawn,                  {.v = termcmd } }, // spawn a terminal
 	{ KeyPress,   MODKEY|Shift,                 XK_Return,       riospawn,               {.v = termcmd } }, // draw/spawn a terminal
 	{ KeyPress,   MODKEY,                       XK_b,            togglebar,              {0} }, // toggles the display of the bar(s) on the current monitor
-	{ KeyPress,   MODKEY,                       XK_c,            spawn,                  {.v = conkytoggle} }, // toggles the conky
+	{ KeyPress,   MODKEY,                       XK_c,            spawn,                  {.v = conkytoggle } }, // toggles the conky
 	{ KeyPress,   MODKEY|Shift,                 XK_d,            spawn,                  {.v = hubscript } }, // spawn dmenu for launching other programs
 	{ KeyPress,   Alt,                          XK_Tab,          spawn,                  {.v = winswitch } }, // spawn window switcher with dmenu
 
@@ -489,7 +490,8 @@ static Key keys[] = {
 	{ KeyPress,   MODKEY,                       XK_z,            showhideclient,         {0} }, // hide the currently selected client (or show if hidden)
 	{ KeyPress,   MODKEY,                       XK_q,            killclient,             {0} }, // close the currently focused window
 	{ KeyPress,   MODKEY|Shift,                 XK_q,            restart,                {0} }, // restart dusk
-	{ KeyPress,   MODKEY|Ctrl|Alt,              XK_q,            quit,                   {0} }, // exit dusk
+	{ KeyPress,   MODKEY|Ctrl|Alt,              XK_q,            spawn,                  {.v = quitscr } }, // run quit script
+	{ KeyPress,   MODKEY|Ctrl|Alt,              XK_w,            quit,                   {0} }, // force exit dusk
 
 	{ KeyPress,   MODKEY,                       XK_v,            group,                  {0} }, // groups floating clients together
 	{ KeyPress,   MODKEY|Shift,                 XK_v,            ungroup,                {0} }, // ungroups floating clients
