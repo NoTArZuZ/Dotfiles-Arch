@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+dmenu-emoji | $menu "Pick emoji:" -1 -R -n | awk '{print $1}' | tr -d '\n' | xclip -selection clipboard
