@@ -24,7 +24,7 @@ Scripts
 	Picom		picom-toggle
 
 Power
-	Exit		duskc run_command quit
+	Exit		confirm=Yes dusk-quit
 	Shutdown		shutdown now
 	Restart		reboot
 EOF
