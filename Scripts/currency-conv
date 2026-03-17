@@ -5,13 +5,17 @@ set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
-[ ! -f "$HOME/.cache/currencycache" ] && touch $HOME/.cache/currencycache
+histfile="$HOME/.cache/currencycache"
 
-amount=$(cat ~/.cache/currencycache | $menu "Amount:")
-[ "$amount" = "$(grep -x -F "$amount" ~/.cache/currencycache)" ] && echo "$amount" | awk '{print $4 " " $5}' | xclip -r -selection clipboard && exit 0
+[ ! -f "$histfile" ] && touch "$histfile"
+
+hist=$(cat $histfile)
+amount=$(printf "$hist\nClear" | $menu "Amount:")
+[ "$amount" = "Clear" ] && { rm "$histfile"; notify-send -i info "Currency Tool" "Successfully cleared history"; exit 0; }
+[ "$amount" = "$(grep -x -F "$amount" $histfile)" ] && echo "$amount" | awk '{print $4 " " $5}' | xclip -r -selection clipboard && exit 0
 from=$(printf "USD\nRUB\nEUR" | $menu "From:")
 to=$(printf "RUB\nUSD\nEUR" | $menu "To:")
 result=$(units "$amount $from" $to -1t)
 echo "$result $to" | xclip -r -selection clipboard
-[ "$amount $from = $result $to" = "$(grep -x -F "$amount $from = $result $to" ~/.cache/currencycache)" ] || echo "$amount $from = $result $to" >> $HOME/.cache/currencycache
+[ "$amount $from = $result $to" = "$(grep -x -F "$amount $from = $result $to" $histfile)" ] || echo "$amount $from = $result $to" >> $HOME/.cache/currencycache
 notify-send -i info "Currency Tool" "$amount $from is $result ${to}. Copied to clipboard!"

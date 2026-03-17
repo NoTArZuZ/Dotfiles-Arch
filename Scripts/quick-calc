@@ -7,11 +7,6 @@ set -eo pipefail
 
 history_file="$HOME/.cache/calculatorcache"
 
-get_history() {
-    [[ ! -f $history_file ]] && mkdir -p $(dirname $history_file) && touch $history_file
-    [[ ! -s $history_file ]] && echo "No history found" || tac $history_file
-}
-
 is_in_history() { grep -q -x -F "$1" $history_file; }
 
 add_to_history() { echo "$1" >> $history_file; }
@@ -22,13 +17,16 @@ result_from_equation() { printf "$1" | sed 's/^.*\(=\|≈\) //'; }
 
 main() {
     while
-        input=$(get_history | ${menu} "Calculator:" "$@")
+        [[ ! -f $history_file ]] && mkdir -p $(dirname $history_file) && touch $history_file
+        [[ ! -s $history_file ]] && hist="No history found" || hist=$(tac $history_file)
+        input=$(printf "$hist\nClear" | ${menu} "Calculator:" "$@")
         [[ -n $input ]] # quit == no input
     do
-        equation=$( is_in_history "$input" && echo "$input" || echo "$(qalc $input)" )
-
-        is_in_history "$equation" || add_to_history "$equation"
-        copy_to_clipboard $(result_from_equation "$equation")
+        [ "$input" = "Clear" ] && rm "$history_file" || {
+            equation=$( is_in_history "$input" && echo "$input" || echo "$(qalc $input)" )
+            is_in_history "$equation" || add_to_history "$equation"
+            copy_to_clipboard $(result_from_equation "$equation")
+        }
     done
 }
 
