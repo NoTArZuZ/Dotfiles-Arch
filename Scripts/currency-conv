@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Dependencies: units
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+[ ! -f "$HOME/.cache/currencycache" ] && touch $HOME/.cache/currencycache
+
+amount=$(cat ~/.cache/currencycache | $menu "Amount:")
+[ "$amount" = "$(grep -x -F "$amount" ~/.cache/currencycache)" ] && echo "$amount" | awk '{print $4 " " $5}' | xclip -r -selection clipboard && exit 0
+from=$(printf "USD\nRUB\nEUR" | $menu "From:")
+to=$(printf "RUB\nUSD\nEUR" | $menu "To:")
+result=$(units "$amount $from" $to -1t)
+echo "$result $to" | xclip -r -selection clipboard
+[ "$amount $from = $result $to" = "$(grep -x -F "$amount $from = $result $to" ~/.cache/currencycache)" ] || echo "$amount $from = $result $to" >> $HOME/.cache/currencycache
+notify-send -i info "Currency Tool" "$amount $from is $result ${to}. Copied to clipboard!"

@@ -10,7 +10,7 @@
 2. Install required packages (including AUR):\
 ```base base-devel linux linux-firmware grub efibootmgr git networkmanager sudo vim htop fastfetch ufw polkit-gnome pipewire pipewire-pulse wireplumber rtkit xorg xorg-xinit xdotool xclip libnotify dunst feh maim yazi picom nsxiv mpv cromite-bin qt5-styleplugins qt6gtk2 yay ttf-jetbrains-mono-nerd ttf-ubuntu-font-family ttf-apple-emoji ttf-noto-nerd helix eza conky vnstat stow apple_cursor j4-dmenu-desktop mint-themes mint-y-icons xkblayout-state-git wiremix```
 3. Enable services: NetworkManager, ufw, pipewire, pipewire-pulse, wireplumber, vnstat
-4. Move {dusk,dmenu,st,slstatus}-sus and xmenu to user's home and build them
+4. Move {dusk,dmenu,st,slstatus}-sus, dmenu-extended and xmenu to user's home and build them
 5. cd ~/Dotfiles and stow .
 6. Base installation done!
 

@@ -441,6 +441,7 @@ static const char *dmenucmd[] = {
 };
 
 // static const char *rootmenu[]  = { "jgmenu", "--at-pointer", NULL };
+static const char *dmenuext[]       = { "dmenu_extended_run", NULL };
 static const char *rootmenu[]       = { "root-xmenu", NULL };
 static const char *conkytoggle[]    = { "conky-toggle", NULL };
 static const char *hubscript[]      = { "hub-script", NULL };
@@ -453,11 +454,12 @@ static const char *statusclickcmd[] = { "~/.config/slstatus/scripts/status-click
 
 static Key keys[] = {
 	/* type       modifier                      key              function                argument */
-	{ KeyPress,   MODKEY,                       XK_d,            spawn,                  {.v = dmenucmd } }, // spawn dmenu for launching other programs
+	{ KeyPress,   MODKEY,                       XK_d,            spawn,                  {.v = dmenuext } }, // spawn dmenu for launching other programs
 	{ KeyPress,   MODKEY,                       XK_Return,       spawn,                  {.v = termcmd } }, // spawn a terminal
 	{ KeyPress,   MODKEY|Shift,                 XK_Return,       riospawn,               {.v = termcmd } }, // draw/spawn a terminal
 	{ KeyPress,   MODKEY,                       XK_b,            togglebar,              {0} }, // toggles the display of the bar(s) on the current monitor
 	{ KeyPress,   MODKEY,                       XK_c,            spawn,                  {.v = conkytoggle } }, // toggles the conky
+	{ KeyPress,   MODKEY|Ctrl,                  XK_d,            spawn,                  {.v = dmenucmd } }, // spawn dmenu for launching other programs
 	{ KeyPress,   MODKEY|Shift,                 XK_d,            spawn,                  {.v = hubscript } }, // spawn dmenu for launching other programs
 	{ KeyPress,   Alt,                          XK_Tab,          spawn,                  {.v = winswitch } }, // spawn window switcher with dmenu
 

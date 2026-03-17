@@ -12,6 +12,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export INPUTRC="/home/$USER/.inputrc"
 export EDITOR=nvim
 export VISUAL=nvim
+export PAGER=nvim
 export QT_QPA_PLATFORMTHEME=gtk3
 export QT_QPA_PLATFORMTHEME_QT6=gtk3
 export HISTFILESIZE=10000
