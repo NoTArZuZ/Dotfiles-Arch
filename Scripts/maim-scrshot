@@ -15,63 +15,58 @@ shotpath="${dirshotpath}/$(date +%d-%s).png"
 [ ! -d "$dirshotpath" ] && mkdir -p "$dirshotpath"
 
 # Functions
-monitorboth() {
+monitor()
+{
   sleep 1
-  $shotmon "$shotpath"
-  cat "$shotpath" | $cp2cbimg
-  notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Monitor screenshot"
+  [ "$1" = "both" ] && {
+    $shotmon "$shotpath"
+    cat "$shotpath" | $cp2cbimg
+    notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Monitor screenshot"
+  }
+  [ "$1" = "copy" ] && {
+    $shotmon | $cp2cbimg
+    notify-send --icon=info "Screenshot Tool" "Succesfully copied Monitor screenshot"
+  }
+  [ "$1" = "save" ] && {
+    $shotmon "$shotpath"
+    notify-send --icon=info "Screenshot Tool" "Succesfully saved Monitor screenshot"
+  }
   exit 0
 }
 
-monitorcopy() {
-  sleep 1
-  $shotmon | $cp2cbimg
-  notify-send --icon=info "Screenshot Tool" "Succesfully copied Monitor screenshot"
+window()
+{
+  [ "$1" = "both" ] && {
+    $shotwin $(xdotool selectwindow) "$shotpath"
+    cat "$shotpath" | $cp2cbimg
+    notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Window screenshot"
+  }
+  [ "$1" = "copy" ] && {
+    $shotwin $(xdotool selectwindow) | $cp2cbimg
+    notify-send --icon=info "Screenshot Tool" "Succesfully copied Window screenshot"
+  }
+  [ "$1" = "save" ] && {
+    $shotwin $(xdotool selectwindow) "$shotpath"
+    notify-send --icon=info "Screenshot Tool" "Succesfully saved Window screenshot"
+  }
   exit 0
 }
 
-monitorsave() {
-  sleep 1
-  $shotmon "$shotpath"
-  notify-send --icon=info "Screenshot Tool" "Succesfully saved Monitor screenshot"
-  exit 0
-}
-
-windowboth() {
-  $shotwin $(xdotool selectwindow) "$shotpath"
-  cat "$shotpath" | $cp2cbimg
-  notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Window screenshot"
-  exit 0
-}
-
-windowcopy() {
-  $shotwin $(xdotool selectwindow) | $cp2cbimg
-  notify-send --icon=info "Screenshot Tool" "Succesfully copied Window screenshot"
-  exit 0
-}
-
-windowsave() {
-  $shotwin $(xdotool selectwindow) "$shotpath"
-  notify-send --icon=info "Screenshot Tool" "Succesfully saved Window screenshot"
-  exit 0
-}
-
-areaboth() {
-  $shotarea "$shotpath"
-  cat "$shotpath" | $cp2cbimg
-  notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Area screenshot"
-  exit 0
-}
-
-areacopy() {
-  $shotarea | $cp2cbimg
-  notify-send --icon=info "Screenshot Tool" "Succesfully copied Area screenshot"
-  exit 0
-}
-
-areasave() {
-  $shotarea "$shotpath"
-  notify-send --icon=info "Screenshot Tool" "Succesfully saved Area screenshot"
+area()
+{
+  [ "$1" = "both" ] && {
+    $shotarea "$shotpath"
+    cat "$shotpath" | $cp2cbimg
+    notify-send --icon=info "Screenshot Tool" "Succesfully saved and copied Area screenshot"
+  }
+  [ "$1" = "copy" ] && {
+    $shotarea | $cp2cbimg
+    notify-send --icon=info "Screenshot Tool" "Succesfully copied Area screenshot"
+  }
+  [ "$1" = "save" ] && {
+    $shotarea "$shotpath"
+    notify-send --icon=info "Screenshot Tool" "Succesfully saved Area screenshot"
+  }
   exit 0
 }
 
@@ -87,19 +82,19 @@ makeshot() {
   [ "$shotmethod" ] || shotmethod=$(printf ":r  Monitor\n:r  Area\n:r  Window" | $menu "Screenshot Method:" -1 -R -n | $cutemoji)
   [ "$savemethod" ] || savemethod=$(printf ":p  Both\n:p  Save\n:p  Copy" | $menu "Save Method:" -1 -R -n | $cutemoji)
   [ "$savemethod" = "Both" ] && {
-    [ "$shotmethod" = "Monitor" ] && monitorboth
-    [ "$shotmethod" = "Area" ] && areaboth
-    [ "$shotmethod" = "Window" ] && windowboth
+    [ "$shotmethod" = "Monitor" ] && monitor both
+    [ "$shotmethod" = "Area" ] && area both
+    [ "$shotmethod" = "Window" ] && window both
   }
   [ "$savemethod" = "Save" ] && {
-    [ "$shotmethod" = "Monitor" ] && monitorsave
-    [ "$shotmethod" = "Area" ] && areasave
-    [ "$shotmethod" = "Window" ] && windowsave
+    [ "$shotmethod" = "Monitor" ] && monitor save
+    [ "$shotmethod" = "Area" ] && area save
+    [ "$shotmethod" = "Window" ] && window save
   }
   [ "$savemethod" = "Copy" ] && {
-    [ "$shotmethod" = "Monitor" ] && monitorcopy
-    [ "$shotmethod" = "Area" ] && areacopy
-    [ "$shotmethod" = "Window" ] && windowcopy
+    [ "$shotmethod" = "Monitor" ] && monitor copy
+    [ "$shotmethod" = "Area" ] && area copy
+    [ "$shotmethod" = "Window" ] && window copy
   }
   exit 1
 }

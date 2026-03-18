@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+[ ! -d "$soundsdir" ] && notify-send -i error "Ambience Tool" "Sounds directory doesn't exist" && exit 1
+pidfile="/tmp/ambientpid"
+
+startsound()
+{
+  [ -z "$1" ] && exit 1
+  [ "$1" = "select" ] && file=$(find "${soundsdir}" \( -iname "*.mp3" -o -iname "*.m4a" -o -iname "*.ogg" \) -printf '%P\n' | sort | $menu "Select:" -1 -R -n)
+  [ "$1" = "random" ] && file=$(find "${soundsdir}" \( -iname "*.mp3" -o -iname "*.m4a" -o -iname "*.ogg" \) -printf '%P\n' | shuf -n 1)
+  kill "$(cat $pidfile)" || :
+  mpv --no-video --force-window=no --loop "${soundsdir}/${file}" >/dev/null 2>&1 &
+  pid=$!
+  echo "$pid" > "$pidfile"
+  notify-send -i info "Ambience Tool" "Now playing: $file :3"
+}
+
+stopsound()
+{
+  kill "$(cat $pidfile)" && notify-send -i info "Ambience Tool" "Stopped active sound :3" || notify-send -i error "Ambience Tool" "No sound is playing right now :("
+  rm "$pidfile"
+}
+
+[ -z "$mainchoice" ] && mainchoice=$(printf ":g  Select sound\n:p  Random sound\n:r  Stop" | $menu "Choose:" -R -n -1 | $cutemoji)
+[ "$mainchoice" = "Select sound" ] && startsound select
+[ "$mainchoice" = "Random sound" ] && startsound random
+[ "$mainchoice" = "Stop" ] && stopsound
+
+exit 0

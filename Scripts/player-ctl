@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+
+. $HOME/Scripts/script-vars
+
+current=$(playerctl -f "{{title}} - {{artist}}" metadata)
+
+getart()
+{
+  # MPD support via mpc
+  mpd=$(mpc current)
+  url=$(playerctl -f "{{mpris:artUrl}}" metadata)
+  album_art=""
+  [[ $url == "file://"* ]] && album_art="${url/file:\/\//}"
+  [[ $url == "http://"* ]] && {
+      # Identify filename from URL
+      filename="$(echo $url | sed "s/.*\///")"
+      # Download file to /tmp if it doesn't exist
+      [ -f "/tmp/$filename" ] || wget -O "/tmp/$filename" "$url"
+      album_art="/tmp/$filename"
+  }
+  [[ $url == "https://"* ]] && {
+      # Identify filename from URL
+      filename="$(echo $url | sed "s/.*\///")"
+      # Download file to /tmp if it doesn't exist
+      [ -f "/tmp/$filename" ] || wget -O "/tmp/$filename" "$url"
+      album_art="/tmp/$filename"
+  }
+  [ -n "$mpd" ] && {
+      filename=$(mpc -f "%artist% - %album%" current)
+      filepath=$(mpc -f "%file%" current)
+      [ -f "/tmp/$filename" ] || ( mpc albumart "$filepath" > "/tmp/$filename" || mpc readpicture "$filepath" > "/tmp/$filename" )
+      album_art="/tmp/$filename"
+  }
+}
+
+playpause()
+{
+  playerctl play-pause
+  getart
+  notify-send -i "$album_art" "Playerctl Tool" "Toggled pause: $current"
+}
+
+current()
+{
+  getart
+  notify-send -i "$album_art" "Playerctl Tool" "Now playing: $current"
+}
+
+previous()
+{
+  playerctl previous
+  sleep 3
+  current=$(playerctl -f "{{title}} - {{artist}}" metadata)
+  getart
+  notify-send -i "$album_art" "Playerctl Tool" "Now playing: $current"
+}
+
+next()
+{
+  playerctl next
+  sleep 3
+  current=$(playerctl -f "{{title}} - {{artist}}" metadata)
+  getart
+  notify-send -i "$album_art" "Playerctl Tool" "Now playing: $current"
+}
+
+volume()
+{
+  vol=$(echo "" | $menu "Enter volume number [1.0]")
+  playerctl volume $vol
+}
+
+mpcplaylist()
+{
+  while true; do
+    pos=""
+    pos=$(mpc playlist | awk '{print NR,$0}' | $menu "(qq)" | awk '{print $1}')
+    [ "$pos" = "qq" ] && break
+
+    posdo=$(printf "Play\nMove\nDelete" | $menu "Do with track ${pos}:")
+    [ "$posdo" = "Play" ] && mpc play $pos
+    [ "$posdo" = "Move" ] && {
+      moveto=$(echo "" | $menu "Move to N:")
+      mpc move $pos $moveto
+    }
+    [ "$posdo" = "Delete" ] && mpc del $pos
+  done
+}
+
+mpcls()
+{
+  track="/"
+  while true; do
+    trackprev="$track"
+    track=$(mpc ls "$track" | $menu "(a | l | p | n | q | c | .. | qq)")
+    [ "$track" = "a" ] && mpc add "$trackprev" && notify-send -i info "Playerctl Tool" "Added: $trackprev" && track="/"
+    [ "$track" = "l" ] && mpc load "$trackprev" && notify-send -i info "Playerctl Tool" "Loaded: $trackprev" && track="/"
+    [ "$track" = "p" ] && mpc toggle && track="/"
+    [ "$track" = "n" ] && mpc next && track="/"
+    [ "$track" = "q" ] && mpcplaylist && track="/"
+    [ "$track" = "c" ] && mpc clear && notify-send -i info "Playerctl Tool" "Cleared mpd playlist" && track="/"
+    [ "$track" = ".." ] && track="/"
+    [ "$track" = "qq" ] && exit 0
+    [ "${track##*.}" == "mp3" ] || [ "${track##*.}" == "cue" ] || [ "${track##*.}" == "flac" ] && mpc add "$track" && notify-send -i info "Playerctl Tool" "Added: $track" && track="/"
+  done
+}
+
+stop()
+{
+  playerctl stop
+  getart
+  notify-send -i "$album_art" "Playerctl Tool" "Stopped on: $current"
+}
+
+mainchoice=$(printf "Play/Pause\nCurrent\nPrevious\nNext\nMPD\nVolume\nStop" | $menu "Choose:" -R -1 -n)
+
+[ "$mainchoice" = "Play/Pause" ] && playpause
+[ "$mainchoice" = "Current" ] && current
+[ "$mainchoice" = "Previous" ] && previous
+[ "$mainchoice" = "Next" ] && next
+[ "$mainchoice" = "MPD" ] && mpcls
+[ "$mainchoice" = "Volume" ] && volume
+[ "$mainchoice" = "Stop" ] && stop
+
+exit 0

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+open_in_file_man=true
+
+drivemount()
+{
+  drive=$(lsblk -lp | awk '{ print $1 " ("$4")" }' | tail -n +2 | $menu "Mount:" -R -1)
+  [ "$drive" = "" ] && exit 1
+  udisksctl mount -b "${drive%% *}"
+  mountpoint=$(lsblk -lp | grep "${drive%% *}" | awk '{$1=$2=$3=$4=$5=$6=""; print $0}' | cut -d\  -f7-)
+  notify-send -i info "Udisk Tool" "$drive was successfully mounted at $mountpoint"
+  [ "$open_in_file_man" = true ] && [ -n "$mountpoint" ] && xdg-open "$mountpoint"
+}
+
+driveunmount()
+{
+  [ -z "$(lsblk -lp | grep 'run')" ] && notify-send -i error "Udisk Tool" "No drives to unmount" && exit 1
+  drive=$(lsblk -lp | grep 'run' | awk '{print $1" ("$7" "$4")"}' | $menu "Unmount:" -R -1)
+  [ "$drive" = "" ] && exit 1
+  postunmount=$(printf ":b  Nothing\n:r  Power off\n:y  Eject" | $menu "After unmounting do:" -R -1 | $cutemoji)
+  udisksctl unmount -b "${drive%% *}"
+  [ "$postunmount" = "Power off" ] && udisksctl power-off -b "${drive%% *}"
+  [ "$postunmount" = "Eject" ] && eject "${drive%% *}"
+  notify-send -i info "Udisk Tool" "$drive was successfully unmounted"
+}
+
+drivebrowse()
+{
+  mountpoint=$(lsblk -lp | awk '{$1=$2=$3=$4=$5=$6=""; print $0}' | cut -d\  -f7- | tail -n +2 | sed '/^$/d' | $menu "Browse:" -R -1)
+  [ -n "$mountpoint" ] && xdg-open "$mountpoint"
+}
+
+mainchoice=$(printf ":g  Mount\n:r  Unmount\n:y  Browse" | $menu "Choose:" -R -1 -n | $cutemoji)
+[ "$mainchoice" = "Mount" ] && drivemount
+[ "$mainchoice" = "Unmount" ] && driveunmount
+[ "$mainchoice" = "Browse" ] && drivebrowse
+
+exit 0

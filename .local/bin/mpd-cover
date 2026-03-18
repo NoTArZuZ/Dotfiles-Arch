@@ -2,10 +2,19 @@
 
 set -eo pipefail
 
-[ "$1" ] || { echo "use option sixel, view or info"; exit 1; }
+[ "$1" ] || { echo "use option sixel, view, info or notification"; exit 1; }
 [ "$1" = "view" ] && mode="$1"
 [ "$1" = "sixel" ] && mode="$1"
 [ "$1" = "info" ] && mode="$1"
+[ "$1" = "notification" ] && mode="$1"
+
+notificationart()
+{
+  filename=$(mpc -f "%artist% - %album%" current)
+  filepath=$(mpc -f "%file%" current)
+  [ -f "/tmp/$filename" ] || ( mpc albumart "$filepath" > "/tmp/$filename" || mpc readpicture "$filepath" > "/tmp/$filename" )
+  album_art="/tmp/$filename"
+}
 
 waitmpd()
 {
@@ -13,7 +22,7 @@ waitmpd()
     while [ -z "$current" ]; do
       sleep 1
       current="$(mpc -f "%artist% - %album%" current)"
-      [ "$mode" = "info" ] && current="$(mpc -f "%artist% %album% %title%" current)"
+      [ "$mode" = "info" ] || [ "$mode" = "notification" ] && current="$(mpc -f "%artist% %album% %title%" current)"
     done
     cached="$current"
   }
@@ -21,7 +30,7 @@ waitmpd()
     while [ "$current" = "$cached" ]; do
       sleep 1
       current="$(mpc -f "%artist% - %album%" current)"
-      [ "$mode" = "info" ] && current="$(mpc -f "%artist% %album% %title%" current)"
+      [ "$mode" = "info" ] || [ "$mode" = "notification" ] && current="$(mpc -f "%artist% %album% %title%" current)"
       [ "$mode" = "view" ] && { ps -p $viewpid >/dev/null || exit 0; }
       [ -z "$current" ] && current="$cached"
     done
@@ -33,34 +42,36 @@ waitmpd()
 waitmpd init
 
 [ "$mode" = "sixel" ] && {
-  [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
-  command clear; echo -e "\n"
-  img2sixel -w 400 -h 400 "/tmp/$current"
   while true; do
-    waitmpd loop
     [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
     command clear; echo -e "\n"
     img2sixel -w 400 -h 400 "/tmp/$current"
+    waitmpd loop
   done
 }
 
 [ "$mode" = "view" ] && {
-  [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
-  nsxiv -b -a -p "/tmp/$current" &
-  viewpid="$!"
   while true; do
-    waitmpd loop
     [ -f "/tmp/$current" ] || { mpc albumart "$(mpc -f "%file%" current)" > "/tmp/$current" || mpc readpicture "$(mpc -f "%file%" current)" > "/tmp/$current"; }
-    kill $viewpid
+    kill $viewpid || :
     nsxiv -b -a -p "/tmp/$current" &
     viewpid="$!"
+    waitmpd loop
   done
 }
 
 [ "$mode" = "info" ] && {
-  command clear && mpc -f "TITLE: %title%\nARTIST: %artist%\nALBUM: %album%\nTIME: %time%\nTRACK: %track%\nDATE: %date%\nGENRE: %genre%\nCOMMENT: %comment%" current
   while true; do
     waitmpd loop
     command clear && mpc -f "TITLE: %title%\nARTIST: %artist%\nALBUM: %album%\nTIME: %time%\nTRACK: %track%\nDATE: %date%\nGENRE: %genre%\nCOMMENT: %comment%" current
   done
 }
+
+[ "$mode" = "notification" ] && {
+  while true; do
+    notificationart
+    notify-send -i "$album_art" "Music Player Daemon" "Now playing: $(mpc current)"
+    waitmpd loop
+  done
+}
+

@@ -6,6 +6,8 @@ setterm --blank=0 --powersave off --powerdown=0; xset s 0 0; xset dpms 0 0 0; xs
 xrdb -merge ~/.Xresources
 xsetroot -cursor_name left_ptr
 hub-script set-wallpaper restore
+~/.local/bin/mpd-cover notification &
+udiskie --tray &
 # exec cinnamon-session
 # exec startxfce4
 exec dbus-launch --exit-with-session dusk
