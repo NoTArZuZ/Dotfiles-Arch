@@ -4,6 +4,8 @@
 
 current=$(playerctl -f "{{title}} - {{artist}}" metadata)
 
+shutup="true"
+
 getart()
 {
   # MPD support via mpc
@@ -78,7 +80,10 @@ mpcplaylist()
     [ "$pos" = "qq" ] && break
 
     posdo=$(printf "Play\nMove\nDelete" | $menu "Do with track ${pos}:")
-    [ "$posdo" = "Play" ] && mpc play $pos
+    [ "$posdo" = "Play" ] && {
+      mpc play $pos
+      [ "$shutup" = "false" ] && getart && notify-send -i "$album_art" "Playerctl Tool" "Started from: $current"
+    }
     [ "$posdo" = "Move" ] && {
       moveto=$(echo "" | $menu "Move to N:")
       mpc move $pos $moveto
@@ -95,8 +100,14 @@ mpcls()
     track=$(mpc ls "$track" | $menu "(a | l | p | n | q | c | .. | qq)")
     [ "$track" = "a" ] && mpc add "$trackprev" && notify-send -i info "Playerctl Tool" "Added: $trackprev" && track="/"
     [ "$track" = "l" ] && mpc load "$trackprev" && notify-send -i info "Playerctl Tool" "Loaded: $trackprev" && track="/"
-    [ "$track" = "p" ] && mpc toggle && track="/"
-    [ "$track" = "n" ] && mpc next && track="/"
+    [ "$track" = "p" ] && {
+      mpc toggle
+      [ "$shutup" = "false" ] && getart && notify-send -i "$album_art" "Playerctl Tool" "Toggled: $current"
+    } && track="/"
+    [ "$track" = "n" ] && {
+      mpc next
+      [ "$shutup" = "false" ] && getart && notify-send -i "$album_art" "Playerctl Tool" "Now playing: $current"
+    } && track="/"
     [ "$track" = "q" ] && mpcplaylist && track="/"
     [ "$track" = "c" ] && mpc clear && notify-send -i info "Playerctl Tool" "Cleared mpd playlist" && track="/"
     [ "$track" = ".." ] && track="/"
