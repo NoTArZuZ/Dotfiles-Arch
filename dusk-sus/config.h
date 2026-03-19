@@ -447,6 +447,7 @@ static const char *conkytoggle[]    = { "conky-toggle", NULL };
 static const char *hubscript[]      = { "hub-script", NULL };
 static const char *winswitch[]      = { "hub-script", "win-switch", NULL };
 static const char *quitscr[]        = { "hub-script", "power-menu", NULL };
+static const char *clipmenu[]       = { "clipmenu", "-bw", "2", "-c", "-l", "10", NULL };
 static const char *spcmd_w[]        = {"w", "st", "-n", "spterm (w)", "-g", "120x34", NULL };
 static const char *spcmd_e[]        = {"e", "st", "-n", "spterm (e)", "-g", "120x34", NULL };
 static const char *spcmd_r[]        = {"r", "st", "-n", "spfm (r)", "-g", "144x41", "-e", "yazi", NULL };
@@ -461,6 +462,7 @@ static Key keys[] = {
 	{ KeyPress,   MODKEY,                       XK_c,            spawn,                  {.v = conkytoggle } }, // toggles the conky
 	{ KeyPress,   MODKEY|Ctrl,                  XK_d,            spawn,                  {.v = dmenuext } }, // spawn dmenu for launching other programs
 	{ KeyPress,   MODKEY|Shift,                 XK_d,            spawn,                  {.v = hubscript } }, // spawn dmenu for launching other programs
+	{ KeyPress,   MODKEY|Ctrl,                  XK_v,            spawn,                  {.v = clipmenu } }, // spawn dmenu for launching other programs
 	{ KeyPress,   Alt,                          XK_Tab,          spawn,                  {.v = winswitch } }, // spawn window switcher with dmenu
 
 	{ KeyPress,   MODKEY,                       XK_j,            focusstack,             {.i = +1 } }, // focus on the next client in the stack

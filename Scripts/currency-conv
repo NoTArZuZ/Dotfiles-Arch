@@ -10,8 +10,9 @@ histfile="$HOME/.cache/currencycache"
 [ ! -f "$histfile" ] && touch "$histfile"
 
 hist=$(cat $histfile)
-amount=$(printf "$hist\nClear" | $menu "Amount:")
+amount=$(printf "$hist\nClear\nUpdate" | $menu "Amount:")
 [ "$amount" = "Clear" ] && { rm "$histfile"; notify-send -i info "Currency Tool" "Successfully cleared history"; exit 0; }
+[ "$amount" = "Update" ] && { pkexec units_cur; notify-send -i info "Currency Tool" "Successfully updated units DB"; exit 0; }
 [ "$amount" = "$(grep -x -F "$amount" $histfile)" ] && echo "$amount" | awk '{print $4 " " $5}' | xclip -r -selection clipboard && exit 0
 from=$(printf "USD\nRUB\nEUR" | $menu "From:")
 to=$(printf "RUB\nUSD\nEUR" | $menu "To:")

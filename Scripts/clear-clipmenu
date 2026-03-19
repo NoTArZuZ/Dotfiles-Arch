@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+clipdel -d ".*"
+notify-send -i info "Clipmenu" "Cleared clipmenu history"
