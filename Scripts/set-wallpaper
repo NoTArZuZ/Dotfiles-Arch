@@ -1,12 +1,30 @@
 #!/usr/bin/env bash
-# Dependencies: Image viewer that outputs marked image path to stdout, xwinwrap (optional for gif and mp4)
+# Dependencies: Image viewer that outputs marked image path to stdout, xwinwrap (optional for gif and mp4), ffmpegthumbnailer, betterlockscreen, nsxiv-thumb
 
 set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
+update_lock=true
+
 # Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Functions
+
+lockupdate()
+{
+  [ $update_lock ] && {
+    case $bgfile in
+    *.mp4|*.gif)
+      ffmpegthumbnailer -i "$bgfile" -s 0 -o "$HOME/.cache/wallcachethumb"
+      betterlockscreen -u "$HOME/.cache/wallcachethumb"
+    ;;
+    *)
+      betterlockscreen -u "$bgfile"
+    ;;
+    esac
+  }
+}
+
 setwallpaper() {
   [ -z "$bgfile" ] && exit 0
   case $bgfile in
@@ -19,7 +37,7 @@ setwallpaper() {
   *)
     pkill -x xwinwrap || :
     echo "$bgfile" > "$HOME/.cache/wallcache"
-    $setbg $bgfile
+    $setbg "$bgfile"
   ;;
   esac
 }
@@ -28,7 +46,6 @@ selectbg() {
   bgfile=$($imgview "$wallpaperdir" | shuf -n 1)
   setwallpaper
   notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
-  exit 0
 }
 
 randombg() {
@@ -39,7 +56,6 @@ randombg() {
     notify-send --icon=info "Wallpaper Tool" "Changed wallpaper to $bgfile"
     rollmore=$(printf ":r  No\n:g  Yes" | $menu "Do you like it?" -1 -R -n | $cutemoji)
   done
-  exit 0
 }
 
 # Arguments
@@ -55,9 +71,9 @@ randombg() {
 [ "$mainmethod" ] || mainmethod=$(printf ":g  Select\n:p  Random" | $menu "New Wallpaper:" -1 -R -n | $cutemoji)
 
 # Main Program
-[ "$mainmethod" = "Select" ] && selectbg
-[ "$mainmethod" = "Random" ] && randombg
-[ "$mainmethod" = "Manual" ] && { bgfile="$2"; setwallpaper; exit 0; }
+[ "$mainmethod" = "Select" ] && { selectbg; lockupdate; }
+[ "$mainmethod" = "Random" ] && { randombg; lockupdate; }
+[ "$mainmethod" = "Manual" ] && { bgfile=$(echo "$*" | awk '{$1=""; print $0}' | cut -d\  -f2-); setwallpaper; lockupdate; exit 0; }
 [ "$mainmethod" = "Restore" ] && { bgfile=$(cat $HOME/.cache/wallcache); setwallpaper; exit 0; }
 
-exit 1
+exit 0

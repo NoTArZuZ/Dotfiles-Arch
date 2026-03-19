@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+sinks=$(pactl --format=json list sinks | jq -r '.[] | (.properties."object.id"|tostring) + " " + .description')
+
+mainchoice=$(printf "$sinks" | sort | $menu "New default sink:" -R -1)
+wpctl set-default "$mainchoice"
+notify-send -i info "Switch Output Tool" "Switched to sink: $mainchoice"

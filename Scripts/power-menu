@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+lock()
+{
+  betterlockscreen -l blur
+}
+
+logout()
+{
+  confirm=$(printf ":g  Yes\n:r  No" | $menu "Logout?" -R -1 -n | $cutemoji)
+  [ "$confirm" = "Yes" ] && {
+    pgrep slstatus && pkill -x slstatus || :
+    loginctl kill-user 1000
+  }
+}
+
+reboot()
+{
+  confirm=$(printf ":g  Yes\n:r  No" | $menu "Reboot?" -R -1 -n | $cutemoji)
+  [ "$confirm" = "Yes" ] && {
+    systemctl reboot
+  }
+}
+
+shutdown()
+{
+  confirm=$(printf ":g  Yes\n:r  No" | $menu "Shutdown?" -R -1 -n | $cutemoji)
+  [ "$confirm" = "Yes" ] && {
+    systemctl poweroff
+  }
+}
+
+mainchoice=$(printf ":b  Lock\n:p  Logout\n:g  Reboot\n:r  Shutdown" | $menu "Choose:" -R -1 | $cutemoji)
+[ "$mainchoice" = "Lock" ] && lock
+[ "$mainchoice" = "Logout" ] && logout
+[ "$mainchoice" = "Reboot" ] && reboot
+[ "$mainchoice" = "Shutdown" ] && shutdown
+
+exit 0
