@@ -18,6 +18,11 @@ logout()
   }
 }
 
+sleep()
+{
+  systemctl suspend
+}
+
 reboot()
 {
   confirm=$(printf ":g  Yes\n:r  No" | $menu "Reboot?" -R -1 -n | $cutemoji)
@@ -34,9 +39,10 @@ shutdown()
   }
 }
 
-mainchoice=$(printf ":b  Lock\n:p  Logout\n:g  Reboot\n:r  Shutdown" | $menu "Choose:" -R -1 | $cutemoji)
+mainchoice=$(printf ":y  Lock\n:p  Logout\n:b  Sleep\n:g  Reboot\n:r  Shutdown" | $menu "Choose:" -R -1 | $cutemoji)
 [ "$mainchoice" = "Lock" ] && lock
 [ "$mainchoice" = "Logout" ] && logout
+[ "$mainchoice" = "Sleep" ] && sleep
 [ "$mainchoice" = "Reboot" ] && reboot
 [ "$mainchoice" = "Shutdown" ] && shutdown
 
