@@ -66,12 +66,6 @@ next()
   notify-send -i "$album_art" "Playerctl Tool" "Now playing: $current"
 }
 
-volume()
-{
-  vol=$(echo "" | $menu "Enter volume number [1.0]")
-  playerctl volume $vol
-}
-
 mpcplaylist()
 {
   while true; do
@@ -90,6 +84,27 @@ mpcplaylist()
     }
     [ "$posdo" = "Delete" ] && mpc del $pos
   done
+}
+
+stop()
+{
+  playerctl stop
+  getart
+  notify-send -i "$album_art" "Playerctl Tool" "Stopped on: $current"
+}
+
+volume()
+{
+  sinks=$(pactl --format=json list sinks | jq -r '.[] | (.properties."object.id"|tostring) + " " + .description + " (sink)"')
+  inputs=$(pactl --format=json list sink-inputs | jq -r '.[] | (.properties."object.id"|tostring) + " " + .properties."application.name" + " (input)"')
+  [ -z "$sinks" ] && sinks="No sinks!"
+  [ -z "$inputs" ] && inputs="No inputs!"
+  id=$(printf "Default Sink\n$inputs" | $menu "Select:" -R -1 -n) || exit 0
+  [ "$id" = "Default Sink" ] && id="@DEFAULT_SINK@"
+  volume=$(wpctl get-volume ${id%% *} | awk '{print $2}')
+  setvolume=$(printf "$volume" | $menu "Volume for ${id%% *}:")
+  wpctl set-volume ${id%% *} $setvolume
+  notify-send -i info "Playerctl Tool" "Set volume: $setvolume for $id"
 }
 
 mpcls()
@@ -116,21 +131,14 @@ mpcls()
   done
 }
 
-stop()
-{
-  playerctl stop
-  getart
-  notify-send -i "$album_art" "Playerctl Tool" "Stopped on: $current"
-}
-
-mainchoice=$(printf ":g  Play/Pause\n:b  Current\n:p  Previous\n:p  Next\n:r  MPD\n:y  Volume\n:r  Stop" | $menu "Choose:" -R -1 -n | $cutemoji)
+mainchoice=$(printf ":g  Play/Pause\n:b  Current\n:p  Previous\n:p  Next\n:r  Stop\n:y  Volume\n:r  MPD" | $menu "Choose:" -R -1 -n | $cutemoji)
 
 [ "$mainchoice" = "Play/Pause" ] && playpause
 [ "$mainchoice" = "Current" ] && current
 [ "$mainchoice" = "Previous" ] && previous
 [ "$mainchoice" = "Next" ] && next
-[ "$mainchoice" = "MPD" ] && mpcls
-[ "$mainchoice" = "Volume" ] && volume
 [ "$mainchoice" = "Stop" ] && stop
+[ "$mainchoice" = "Volume" ] && volume
+[ "$mainchoice" = "MPD" ] && mpcls
 
 exit 0

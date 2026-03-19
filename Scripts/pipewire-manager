@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+sinks=$(pactl --format=json list sinks | jq -r '.[] | (.properties."object.id"|tostring) + " " + .description + " (sink)"')
+sources=$(pactl --format=json list sources | jq -r '.[] | if .properties."port.group" == "capture" then (.properties."object.id"|tostring) + " " + .description + " (source)" else empty end')
+inputs=$(pactl --format=json list sink-inputs | jq -r '.[] | (.properties."object.id"|tostring) + " " + .properties."application.name" + " (input)"')
+outputs=$(pactl --format=json list source-outputs | jq -r '.[] | (.properties."object.id"|tostring) + " " + .properties."node.name" + " (output)"')
+
+[ -z "$sinks" ] && sinks="No sinks!"
+[ -z "$sources" ] && sources="No sources!"
+[ -z "$inputs" ] && inputs="No inputs!"
+[ -z "$outputs" ] && outputs="No outputs!"
+
+switch_output()
+{
+  id=$(printf "$sinks" | sort | $menu "New default sink:" -R -1 -n)
+  wpctl set-default "$id"
+  notify-send -i info "Pipewire Tool" "Switched to sink: $id"
+}
+
+switch_input()
+{
+  id=$(printf "$sources" | sort | $menu "New default source:" -R -1 -n)
+  wpctl set-default "$id"
+  notify-send -i info "Pipewire Tool" "Switched to source: $id"
+}
+
+set_volume()
+{
+  id=$(printf "$sinks\n$sources\n$inputs\n$outputs" | sort | $menu "Select:" -R -1 -n)
+  volume=$(wpctl get-volume ${id%% *} | awk '{print $2}')
+  setvolume=$(printf "$volume" | $menu "Volume for ${id%% *}:")
+  wpctl set-volume ${id%% *} $setvolume
+  notify-send -i info "Pipewire Tool" "Set volume: $setvolume for $id"
+}
+
+toggle_mute()
+{
+  id=$(printf "$sinks\n$sources\n$inputs\n$outputs" | sort | $menu "Select:" -R -1 -n)
+  wpctl set-mute ${id%% *} toggle
+  notify-send -i info "Pipewire Tool" "Toggled: $id"
+}
+
+[ -z "$mainchoice" ] && mainchoice=$(printf ":g  Default Output\n:r  Default Input\n:g  Volume\n:r  Mute" | $menu "Choose:" -R -1 -n | $cutemoji)
+
+[ "$mainchoice" = "Default Output" ] && switch_output
+[ "$mainchoice" = "Default Input" ] && switch_input
+[ "$mainchoice" = "Volume" ] && set_volume
+[ "$mainchoice" = "Mute" ] && toggle_mute
+
+exit 0
