@@ -4,18 +4,19 @@ set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
-lock()
-{
-  betterlockscreen -l blur
-}
-
 logout()
 {
   confirm=$(printf ":g  Yes\n:r  No" | $menu "Logout?" -R -1 -n | $cutemoji)
   [ "$confirm" = "Yes" ] && {
     pgrep slstatus && pkill -x slstatus || :
+    pgrep dusk && duskc run_command quit
     loginctl kill-user 1000
   }
+}
+
+lock()
+{
+  betterlockscreen -l blur
 }
 
 sleep()
@@ -39,9 +40,11 @@ shutdown()
   }
 }
 
-mainchoice=$(printf ":y  Lock\n:p  Logout\n:b  Sleep\n:g  Reboot\n:r  Shutdown" | $menu "Choose:" -R -1 | $cutemoji)
-[ "$mainchoice" = "Lock" ] && lock
+[ "$1" = "-l" ] || [ "$1" = "logout" ] && mainchoice="Logout"
+
+[ -z "$mainchoice" ] && mainchoice=$(printf ":p  Logout\n:y  Lock\n:b  Sleep\n:g  Reboot\n:r  Shutdown" | $menu "Choose:" -R -1 | $cutemoji)
 [ "$mainchoice" = "Logout" ] && logout
+[ "$mainchoice" = "Lock" ] && lock
 [ "$mainchoice" = "Sleep" ] && sleep
 [ "$mainchoice" = "Reboot" ] && reboot
 [ "$mainchoice" = "Shutdown" ] && shutdown

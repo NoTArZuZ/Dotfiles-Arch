@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-[ -z "$confirm" ] && confirm=$(printf "Yes\nNo" | dmenu -bw 2 -l 2 -c -p "Quit?" -1 -R -n)
-
-[ "$confirm" = "Yes" ] && {
-	pkill -x slstatus
-	duskc run_command quit
-}
-
-exit 0
