@@ -2,10 +2,11 @@
 export XDG_SESSION_TYPE=x11
 export XDG_CURRENT_DESKTOP=dwm
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-setterm --blank=0 --powersave off --powerdown=0; xset s 0 0; xset dpms 0 0 0; xset s off; xset s noblank; xset -dpms
+setterm --bfreq=0 --blank=0 --powersave off --powerdown=0; xset s noblank; xset s 900 0; xset dpms 0 0 0; xset -dpms; xset b off
 xrdb -merge ~/.Xresources
 xsetroot -cursor_name left_ptr
 hub-script set-wallpaper restore
+xss-lock -- betterlockscreen -l dimblur -- --composite &
 clipmenud &
 udiskie --tray &
 # exec cinnamon-session

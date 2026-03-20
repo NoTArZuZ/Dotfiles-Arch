@@ -16,7 +16,7 @@ logout()
 
 lock()
 {
-  betterlockscreen -l blur
+  betterlockscreen -l dimblur
 }
 
 sleep()
