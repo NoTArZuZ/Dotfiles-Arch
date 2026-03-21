@@ -14,6 +14,12 @@ leftmb() {
 	esac
 }
 
+rightmb() {
+	case $BLOCK_STATUS in
+		4) ~/.config/slstatus/scripts/onclick/volume run_wiremix & ;;
+	esac
+}
+
 mscrollup() {
 	case $BLOCK_STATUS in
 		0) ~/.config/slstatus/scripts/onclick/date next & ;;
@@ -32,6 +38,7 @@ mscrolldown() {
 
 case $BLOCK_BUTTON in
 	1) leftmb ;;
+	3) rightmb ;;
 	4) mscrollup ;;
 	5) mscrolldown ;;
 	*) notify-send -i error "Dusk" "Invalid button ${BLOCK_BUTTON} for status ${BLOCK_STATUS}" & ;;

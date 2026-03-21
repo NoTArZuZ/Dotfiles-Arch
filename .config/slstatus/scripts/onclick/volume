@@ -93,4 +93,7 @@ case $1 in
     pactl set-sink-mute @DEFAULT_SINK@ toggle
     show_volume_notif
     ;;
+    run_wiremix)
+    st -c Nsxiv -g 125x38 -e "wiremix"
+    ;;
 esac
