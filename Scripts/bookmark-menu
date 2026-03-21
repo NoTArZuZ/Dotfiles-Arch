@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+urldir="$HOME"
+urlfile="${urldir}/.bookmarks"
+
+[ ! -d "$urldir" ] && mkdir -p "$urldir"
+[ ! -e "$urlfile" ] && touch "$urlfile"
+
+add() {
+	[ "$1" = "quick" ] && url=$(xclip -r -sel clipboard -o) || url=$(printf "" | $menu "Url:")
+	case "$url" in
+		*://*.*) true ;;
+		*) notify-send "Bookmark Tool" "Pasted invalid URL" && exit 1 ;;
+	esac
+	description=$(printf "" | $menu "Description:")
+	[ -z "$description" ] && echo "$url" >> $urlfile
+	[ -n "$description" ] && echo "$description - $url" >> $urlfile
+}
+
+delete() {
+	url=$(cat $urlfile | sort | awk '{print NR,$0}' | $menu "Delete:" -R -n -1 | awk '{print $1}')
+	[ -z "$url" ] && exit 1
+	sed -i "${url}d" $urlfile
+}
+
+while [ $? = 0 ]; do
+	mainchoice=$(printf "$(cat "$urlfile" | sort)\nQuickAdd\nAdd\nDelete" | $menu "Choose:" -R -n -1 | awk '{print $NF}')
+	case "$mainchoice" in
+		*://*.*) xdg-open $mainchoice && exit 0 ;;
+		QuickAdd) add quick ;;
+		Add) add ;;
+		Delete) delete ;;
+	esac
+done

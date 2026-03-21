@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+. $HOME/Scripts/script-vars
+
+session_file="$HOME/.cache/session_key"
+
+unlock()
+{
+  [ ! -e "$session_file" ] && printf "" | $menu "Password:" -P | bw unlock --raw > "$session_file"
+  export BW_SESSION="$(cat ~/.cache/session_key)"
+  bw sync
+}
+
+lock()
+{
+  rm "$session_file"
+  exit 0
+}
+
+generate()
+{
+  length=$(printf "" | $menu "Password length:")
+  bw generate -lusn --length "$length" | $cp2cb
+}
+
+config()
+{
+  server=$(printf "Advanced" | $menu "Server URL:")
+  if [ "$server" = "Advanced" ]; then
+    api=$(printf "" | $menu "API URL:")
+    identity=$(printf "" | $menu "Identity URL:")
+    bw config server --api "$api" --identity "$identity"
+  else
+    bw config server "$server"
+  fi
+}
+
+get_password()
+{
+  id=$(bw list items | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
+  msg=$(bw get item "$id" | jq -r '.name + " - " + .login.username')
+  bw get password "$id" | $cp2cb && notify-send -i info "Bitwarden Tool" "Copied password for $msg" || :
+  exit 0
+}
+
+create_item()
+{
+  folderid=$(bw list folders | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Copy folder id?" -R -1 | awk -F"[()]" '{print $2}') || vault
+  echo "$folderid" | $cp2cb
+  bw get template item | jq ".login=$(bw get template item.login)" > /tmp/bwitem
+  st $EDITOR /tmp/bwitem || :
+  cat /tmp/bwitem | bw encode | bw create item && notify-send -i info "Bitwarden Tool" "Created item: $(cat /tmp/bwitem | jq -r '.name')" || :
+  rm /tmp/bwitem
+}
+
+create_folder()
+{
+  foldername=$(printf "" | $menu "Folder name:") || vault
+  bw get template folder | jq ".name=$foldername" | bw encode | bw create folder && notify-send -i info "Bitwarden Tool" "Created folder: $foldername" || :
+}
+
+edit_item()
+{
+  folderid=$(bw list folders | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Copy folder id?" -R -1 | awk -F"[()]" '{print $2}') | $cp2cb || vault
+  id=$(bw list items | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
+  bw get item "$id" --pretty > /tmp/bwitem
+  st $EDITOR /tmp/bwitem || :
+  cat /tmp/bwitem | bw encode | bw edit item "$id" && notify-send -i info "Bitwarden Tool" "New edited item: $(cat /tmp/bwitem | jq -r '.name')" || :
+  rm /tmp/bwitem
+}
+
+edit_folder()
+{
+  id=$(bw list folders | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
+  foldername=$(printf "" | $menu "New name:") || vault
+  bw get folder "$id" | jq ".name=$foldername" | bw encode | bw edit folder "$id" && notify-send -i info "Bitwarden Tool" "New folder name: $foldername" || :
+}
+
+delete_item()
+{
+  id=$(bw list items | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
+  confirm=$(printf ":r  No\n:g  Yes" | $menu "Really delete?" -R -1 | $cutemoji) || vault
+  [ "$confirm" = "Yes" ] && bw delete item "$id" && notify-send -i info "Bitwarden Tool" "Deleted selected item" || vault
+}
+
+delete_folder()
+{
+  id=$(bw list folders | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
+  confirm=$(printf ":r  No\n:g  Yes" | $menu "Really delete?" -R -1 | $cutemoji) || vault
+  [ "$confirm" = "Yes" ] && bw delete folder "$id" && notify-send -i info "Bitwarden Tool" "Deleted selected folder" || vault
+}
+
+restore_item()
+{
+  id=$(bw list items --trash | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
+  bw restore item "$id" && notify-send -i info "Bitwarden Tool" "Restored selected item" || :
+}
+
+vault()
+{
+  while true; do
+    vaultchoice=$(printf ":b  Password\n:g  Create\n:y  Edit\n:r  Delete\n:p  Restore\n:r  Lock" | $menu "Choose:" -R -1 | $cutemoji)
+    case "$vaultchoice" in
+      Password)
+        get_password
+      ;;
+      Create)
+       type=$(printf ":g  Item\n:g  Folder" | $menu "Create:" -R -1 -n | $cutemoji) || :
+        if [ "$type" = "Item" ]; then
+          create_item
+        elif [ "$type" = "Folder" ]; then
+          create_folder
+        fi
+      ;;
+      Edit)
+       type=$(printf ":y  Item\n:y  Folder" | $menu "Edit:" -R -1 -n | $cutemoji) || :
+        if [ "$type" = "Item" ]; then
+          edit_item
+        elif [ "$type" = "Folder" ]; then
+          edit_folder
+        fi
+      ;;
+      Delete)
+       type=$(printf ":r  Item\n:r  Folder" | $menu "Delete:" -R -1 -n | $cutemoji) || :
+        if [ "$type" = "Item" ]; then
+          delete_item
+        elif [ "$type" = "Folder" ]; then
+          delete_folder
+        fi
+      ;;
+      Restore)
+        restore_item
+      ;;
+      Lock)
+        lock
+      ;;
+      *)
+        true
+      ;;
+    esac
+  done
+}
+
+mainchoice=$(printf ":g  Unlock\n:r  Lock\n:y  Generate\n:p  Config" | $menu "Choose:" -R -1 | $cutemoji)
+
+[ "$mainchoice" = "Unlock" ] && unlock && vault
+[ "$mainchoice" = "Lock" ] && lock
+[ "$mainchoice" = "Generate" ] && generate
+[ "$mainchoice" = "Config" ] && config
+
+exit 0
