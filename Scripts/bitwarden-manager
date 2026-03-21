@@ -8,14 +8,23 @@ session_file="$HOME/.cache/session_key"
 
 unlock()
 {
-  [ ! -e "$session_file" ] && printf "" | $menu "Password:" -P | bw unlock --raw > "$session_file"
+  [ ! -e "$session_file" ] && {
+    printf "" | $menu "Password:" -P | bw unlock --raw > "$session_file"
+    if [ $? = 0 ]; then
+      notify-send -i info "Bitwarden Tool" "Unlocked vault"
+    else
+      notify-send -i error "Bitwarden Tool" "Wrong password"
+      rm "$session_file"
+      exit 1
+    fi
+  }
   export BW_SESSION="$(cat ~/.cache/session_key)"
   bw sync
 }
 
 lock()
 {
-  rm "$session_file"
+  rm "$session_file" && notify-send -i info "Bitwarden Tool" "Locked vault" || notify-send -i error "Bitwarden Tool" "Vault is already locked"
   exit 0
 }
 
@@ -23,6 +32,17 @@ generate()
 {
   length=$(printf "" | $menu "Password length:")
   bw generate -lusn --length "$length" | $cp2cb
+}
+
+login()
+{
+  st -c Nsxiv -g 125x38 -e "$SHELL" -c 'bw login; read -p "Press enter to continue... " line'  
+}
+
+logout()
+{
+  confirm=$(printf ":r  No\n:g  Yes" | $menu "Really log out?" -R -1 | $cutemoji)
+  [ "$confirm" = "Yes" ] && { bw logout && notify-send -i info "Bitwarden Tool" "Logged out of current account" || notify-send -i error "Bitwarden Tool" "Already logged out"; }
 }
 
 config()
@@ -82,14 +102,14 @@ delete_item()
 {
   id=$(bw list items | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
   confirm=$(printf ":r  No\n:g  Yes" | $menu "Really delete?" -R -1 | $cutemoji) || vault
-  [ "$confirm" = "Yes" ] && bw delete item "$id" && notify-send -i info "Bitwarden Tool" "Deleted selected item" || vault
+  [ "$confirm" = "Yes" ] && { bw delete item "$id" && notify-send -i info "Bitwarden Tool" "Deleted selected item"; } || vault
 }
 
 delete_folder()
 {
   id=$(bw list folders | jq -r '.[] | .name + " (" + .id + ")"' | $menu "Select:" -R -1 | awk -F"[()]" '{print $2}') || vault
   confirm=$(printf ":r  No\n:g  Yes" | $menu "Really delete?" -R -1 | $cutemoji) || vault
-  [ "$confirm" = "Yes" ] && bw delete folder "$id" && notify-send -i info "Bitwarden Tool" "Deleted selected folder" || vault
+  [ "$confirm" = "Yes" ] && { bw delete folder "$id" && notify-send -i info "Bitwarden Tool" "Deleted selected folder"; } || vault
 }
 
 restore_item()
@@ -143,11 +163,13 @@ vault()
   done
 }
 
-mainchoice=$(printf ":g  Unlock\n:r  Lock\n:y  Generate\n:p  Config" | $menu "Choose:" -R -1 | $cutemoji)
+mainchoice=$(printf ":g  Unlock\n:r  Lock\n:y  Generate\n:b  Login\n:r  Logout\n:p  Config" | $menu "Choose:" -R -1 | $cutemoji)
 
 [ "$mainchoice" = "Unlock" ] && unlock && vault
 [ "$mainchoice" = "Lock" ] && lock
 [ "$mainchoice" = "Generate" ] && generate
+[ "$mainchoice" = "Login" ] && login
+[ "$mainchoice" = "Logout" ] && logout
 [ "$mainchoice" = "Config" ] && config
 
 exit 0

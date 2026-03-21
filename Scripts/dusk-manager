@@ -4,7 +4,7 @@ set -eo pipefail
 
 . ~/Scripts/script-vars
 
-mainmethod=$(printf "Reload Xresources\nSet Gaps\nIncrease Borders\nUnswallow" | $menu "Dusk Command:" -1 -R -n)
+mainmethod=$(printf ":b  Reload Xresources\n:g  Set Gaps\n:y  Increase Borders\n:r  Unswallow" | $menu "Dusk Command:" -1 -R -n | $cutemoji)
 
 [ "$mainmethod" = "Reload Xresources" ] && {
   duskc run_command xrdb
