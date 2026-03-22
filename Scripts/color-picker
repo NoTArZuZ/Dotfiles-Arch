@@ -5,45 +5,38 @@ set -eo pipefail
 
 . $HOME/Scripts/script-vars
 
+histfile="$HOME/.cache/colorcache"
+
 # Refactored version of https://github.com/NoTArZuZ/Dotfiles-NixOS
 # Functions
 pickcolor() {
   hex=$($colpick)
-  echo "$hex" >>  $HOME/.cache/colorcache
+  echo "$hex" >>  "$histfile"
   echo "$hex" | $cp2cb
   notify-send -i info "Color Picker Tool" "The picked color is: $hex (Copied to clipboard)"
   exit 0
 }
 
-listcache() {
-  [ ! -e $HOME/.cache/colorcache ] && notify-send -i error "Color Picker Tool" "Color cache is empty" && exit 1
-  hex=$(cat $HOME/.cache/colorcache | $menu "Select color:" -1 -R)
-  echo "$hex" | $cp2cb
-  notify-send -i info "Color Picker Tool" "The $hex color is copied to clipboard"
-  exit 0
-}
-
 clearcache() {
-  [ ! -e $HOME/.cache/colorcache ] && notify-send -i error "Color Picker Tool" "Color cache is empty, nothing is removed" && exit 1
-  rm $HOME/.cache/colorcache
+  [ ! -e "$histfile" ] && notify-send -i error "Color Picker Tool" "Color cache is empty, nothing is removed" && exit 1
+  rm "$histfile"
   notify-send -i info "Color Picker Tool" "Cleared color cache"
   exit 0
 }
 
-# Arguments
-[ $1 ] && {
-  [ "$1" = "pick" ] || [ "$1" = "-p" ] && mainmethod="Pick"
-  [ "$1" = "list" ] || [ "$1" = "-l" ] && mainmethod="List"
-  [ "$1" = "clear" ] || [ "$1" = "-c" ] && mainmethod="Clear"
-  [ "$mainmethod" ] || exit 1
-}
+[ "$1" = "pick" ] || [ "$1" = "-p" ] && mainmethod="Pick"
+[ "$1" = "clear" ] || [ "$1" = "-c" ] && mainmethod="Clear"
+
+[ ! -e "$hisfile" ] && touch "$histfile"
+history=$(cat "$histfile")
 
 # Dmenu Choice
-[ "$mainmethod" ] || mainmethod=$(printf ":g  Pick\n:y  List\n:r  Clear" | $menu "Choose:" -1 -R -n | $cutemoji)
+[ "$mainmethod" ] || mainmethod=$(printf "Pick\nClear\n$history" | $menu "Choose:" -1 -R -n)
 
 # Main Program
 [ "$mainmethod" = "Pick" ] && pickcolor
-[ "$mainmethod" = "List" ] && listcache
 [ "$mainmethod" = "Clear" ] && clearcache
+[ "$mainmethod" = "$(grep -x -F "$mainmethod" $histfile)" ] && echo "$mainmethod" | xclip -r -selection clipboard &&
+  notify-send -i info "Color Picker Tool" "Copied color: $mainmethod" && exit 0
 
 exit 1
