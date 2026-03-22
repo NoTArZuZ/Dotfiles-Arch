@@ -71,7 +71,7 @@ area()
 }
 
 browseshots() {
-  markedshot=$($imgview ${screenshotdir})
+  markedshot=$($imgview -r ${screenshotdir})
   [ "$markedshot" ] || exit 0
   cat "$markedshot" | $cp2cbimg
   notify-send --icon=info "Screenshot Tool" "Successfully copied $markedshot to clipboard"
