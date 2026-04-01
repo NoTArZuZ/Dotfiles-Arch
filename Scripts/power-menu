@@ -12,6 +12,7 @@ logout()
     pgrep -f mpd-notification && pkill -f -x mpd-notification || :
     pgrep dusk && duskc run_command quit
     loginctl kill-user 1000
+    systemctl --user daemon-reload
   }
 }
 
