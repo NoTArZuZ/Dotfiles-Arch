@@ -656,4 +656,3 @@ static Button buttons[] = {
 	{ ClkWorkspaceBar,           MODKEY,                  Button2,        togglepinnedws,   {0} }, // toggles the pinning of a workspace to the current monitor
 };
 
-#define GLOBAL_HZ 144

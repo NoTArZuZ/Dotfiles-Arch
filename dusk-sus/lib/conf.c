@@ -32,16 +32,16 @@ static StackerIcon *_cfg_stackericons = NULL;
 static int persist_client_states_across_restarts = 1;
 static int persist_workstate_states_across_restarts = 1;
 
-static int global_hz = 60;
-static int dragcfact_hz = 60;
-static int dragfact_hz = 60;
-static int dragmfact_hz = 60;
-static int dragwfact_hz = 60;
-static int movemouse_hz = 60;
-static int placemouse_hz = 60;
-static int resizemouse_hz = 60;
-static int swallowmouse_hz = 60;
-static int markmouse_hz = 60;
+static int global_hz = 144;
+static int dragcfact_hz = 144;
+static int dragfact_hz = 144;
+static int dragmfact_hz = 144;
+static int dragwfact_hz = 144;
+static int movemouse_hz = 144;
+static int placemouse_hz = 144;
+static int resizemouse_hz = 144;
+static int swallowmouse_hz = 144;
+static int markmouse_hz = 144;
 
 static int num_wsrules = 0;
 static int num_autostart = 0;
