@@ -9,6 +9,7 @@ logout()
   confirm=$(printf ":g  Yes\n:r  No" | $menu "Logout?" -R -1 -n | $cutemoji)
   [ "$confirm" = "Yes" ] && {
     pgrep slstatus && pkill -x slstatus || :
+    pgrep -f mpd-notification && pkill -f -x mpd-notification || :
     pgrep dusk && duskc run_command quit
     loginctl kill-user 1000
   }
