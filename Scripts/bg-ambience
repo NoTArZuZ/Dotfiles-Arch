@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Dependencies: wireplumber, jq, pipewire-pulse, mpv
 
 set -eo pipefail
 
@@ -19,15 +20,27 @@ startsound()
   notify-send -i info "Ambience Tool" "Now playing: $file :3"
 }
 
+volume()
+{
+  [ ! -f "$pidfile" ] && notify-send -i info "Ambience Tool" "No active mpv found!" && exit 1
+  pid=$(cat "$pidfile")
+  pwid=$(pactl -f json list sink-inputs | jq -r '.[] | .properties."application.process.id" + " " + .properties."object.id"' | grep "$pid" | awk '{print $2}')
+  volume=$(wpctl get-volume "$pwid" | awk '{print $2}')
+  setvolume=$(printf "$volume" | $menu "Volume for ambience:")
+  wpctl set-volume "$pwid" $setvolume
+  notify-send -i info "Pipewire Tool" "Set volume: $setvolume for ambience :3"
+}
+
 stopsound()
 {
   kill "$(cat $pidfile)" && notify-send -i info "Ambience Tool" "Stopped active sound :3" || notify-send -i error "Ambience Tool" "No sound is playing right now :("
   rm "$pidfile"
 }
 
-[ -z "$mainchoice" ] && mainchoice=$(printf ":g  Select sound\n:p  Random sound\n:r  Stop" | $menu "Choose:" -R -n -1 | $cutemoji)
+[ -z "$mainchoice" ] && mainchoice=$(printf ":g  Select sound\n:p  Random sound\n:y  Volume\n:r  Stop" | $menu "Choose:" -R -n -1 | $cutemoji)
 [ "$mainchoice" = "Select sound" ] && startsound select
 [ "$mainchoice" = "Random sound" ] && startsound random
+[ "$mainchoice" = "Volume" ] && volume
 [ "$mainchoice" = "Stop" ] && stopsound
 
 exit 0
