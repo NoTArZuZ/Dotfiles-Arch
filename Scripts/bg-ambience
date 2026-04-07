@@ -22,7 +22,7 @@ startsound()
 
 volume()
 {
-  [ ! -f "$pidfile" ] && notify-send -i info "Ambience Tool" "No active mpv found!" && exit 1
+  [ ! -f "$pidfile" ] && notify-send -i error "Ambience Tool" "No active mpv found!" && exit 1
   pid=$(cat "$pidfile")
   pwid=$(pactl -f json list sink-inputs | jq -r '.[] | .properties."application.process.id" + " " + .properties."object.id"' | grep "$pid" | awk '{print $2}')
   volume=$(wpctl get-volume "$pwid" | awk '{print $2}')

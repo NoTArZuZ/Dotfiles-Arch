@@ -7,8 +7,6 @@ xrdb -merge ~/.Xresources
 xsetroot -cursor_name left_ptr
 hub-script set-wallpaper restore
 xss-lock -- betterlockscreen -l dimblur -- --composite &
-clipmenud &
-udiskie --tray &
 # exec cinnamon-session
 # exec startxfce4
 exec dbus-launch --exit-with-session dusk

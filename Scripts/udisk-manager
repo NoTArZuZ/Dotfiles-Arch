@@ -24,7 +24,7 @@ driveunmount()
   postunmount=$(printf ":b  Nothing\n:r  Power off\n:y  Eject" | $menu "After unmounting do:" -R -1 | $cutemoji)
   udisksctl unmount -b "${drive%% *}"
   [ "$postunmount" = "Power off" ] && udisksctl power-off -b "${drive%% *}"
-  [ "$postunmount" = "Eject" ] && eject "${drive%% *}"
+  [ "$postunmount" = "Eject" ] && pkexec eject "${drive%% *}"
   notify-send -i info "Udisk Tool" "$drive was successfully unmounted"
 }
 
