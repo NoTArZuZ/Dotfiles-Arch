@@ -30,7 +30,6 @@ max_icon_size = 80
 
 enable_recursive_icon_lookup = true
 icon_theme = "Arc"
-default_icon = "info"
 
 sticky_history = true
 
